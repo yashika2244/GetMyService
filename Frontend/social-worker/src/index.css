@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@layer components{
+
+
+    .header{
+        @apply bg-[url('./assets/header-bg.png')] bg-no-repeat bg-center bg-cover w-full
+    }
+    .hero_container{
+        @apply bg-[url('./assets/hero-bg.png')] bg-no-repeat bg-center bg-cover w-full
+    }
+    .feature_container{
+        @apply bg-[url('./assets/hero-bg.png')] bg-no-repeat bg-center bg-cover
+    }
+}
