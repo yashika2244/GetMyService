@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BsArrowRightCircle } from "react-icons/bs";
 import Serviceslist from "../components/Services/Serviceslist";
 import About from "../components/About/About";
-import Best_s_list from "../components/best-services/Best_s_list";
+import Best_s_list from "../components/Best-services/Best_s_list";
 import Add_own_service from "../components/add_own_service/Add_own_service";
 import Faqlist from "../components/faq/Faqlist";
 
