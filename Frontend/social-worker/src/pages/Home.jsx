@@ -13,6 +13,11 @@ function Home() {
     navigate("/find-service");
   };
 
+  
+
+
+
+
   return (
     <div>
       <div className="hero_container lg:pb-24 pb-4   flex flex-col md:flex-row  lg:justify-center gap-4 lg:gap-16 ">

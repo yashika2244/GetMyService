@@ -58,15 +58,15 @@ function Header() {
 
       {/* Login Button */}
 
-      {/* <button
+      <button
        onClick={()=>navigate('/login')}
         className="mr-3 bg-yellow-400 text-gray-900 px-4 py-1 md:px-6 md:py-2 rounded-full font-semibold hover:bg-yellow-500 transition-all shadow-md hover:scale-[0.9] duration-300 cursor-pointer"
       >
         Login
-      </button> */}
+      </button>
 
       {/* img Container */}
-      <div className="flex flex-row justify-center items-center gap-2 mr-4 ">
+      {/* <div className="flex flex-row justify-center items-center gap-2 mr-4 ">
         <div className="w-[40px] h-[40px]  rounded-full  md:mr-0  overflow-hidden relative ">
           <img
             src={y}
@@ -80,7 +80,7 @@ function Header() {
           className="lg:text-3xl text-xl cursor-pointer transition-all transform hover:scale-[0.9] duration-300"
           onClick={() => navigate("/msg")}
         />
-      </div>
+      </div> */}
 
       {/* ✅ Now this is outside of the ternary */}
       <button
