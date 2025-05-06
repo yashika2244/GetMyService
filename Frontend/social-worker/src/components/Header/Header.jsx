@@ -106,7 +106,8 @@ function Header() {
         <ul className="mt-16 flex flex-col gap-8 text-lg ">
           {[
             { name: "Home", path: "/home" },
-            { name: "About", path: "/about" },
+            { name: "Find a service", path: "/find-Service" },
+
             { name: "Contact Us", path: "/contact" },
             { name: "Services +", path: "/services" },
           ].map(({ name, path }) => (

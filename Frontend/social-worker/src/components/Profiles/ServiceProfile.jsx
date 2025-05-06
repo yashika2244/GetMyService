@@ -3,12 +3,9 @@ import { MdOutlineVerified } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { smallProfile } from "./providers.js";
 import { FaArrowLeft } from "react-icons/fa6";
 import { useNavigate, useLocation } from "react-router-dom";
-import Star from "../../assets/Star.png";
 import { FaStar } from "react-icons/fa";
-import AccontList from "../account/AccontList.jsx";
 
 function ServiceProfile() {
   const [expanded, setExpanded] = useState(false);
