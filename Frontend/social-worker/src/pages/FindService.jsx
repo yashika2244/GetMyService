@@ -65,7 +65,7 @@ function FindService() {
         </div> */}
         <div className="flex flex-wrap gap-5 mt-5 mb-5">
   {/* Card 1 */}
-  <div className="w-full md:w-[48%] border border-gray-300 shadow-xl  rounded-2xl relative">
+  <div className="w-full md:w-[48%] border border-slate-200 shadow-xl  rounded-2xl relative">
     <h3 className="absolute top-2 right-2 md:mt-4 mt-1 text-yellow-400 px-2 py-1 text-sm font-semibold rounded">
       4.8
     </h3>
@@ -86,7 +86,7 @@ function FindService() {
   </div>
 
   {/* Card 2 */}
-  <div className="w-full md:w-[48%] border border-gray-300 shadow-xl  rounded-2xl relative">
+  <div className="w-full md:w-[48%] border border-slate-200 shadow-xl  rounded-2xl relative">
     <h3 className="absolute top-2 right-2 mt-4  text-yellow-400 px-2 py-1 text-sm font-semibold rounded">
       4.8
     </h3>
@@ -105,7 +105,7 @@ function FindService() {
       </div>
     </div>
   </div>
-  <div className="w-full md:w-[48%] border border-gray-300 shadow-xl  rounded-2xl relative">
+  <div className="w-full md:w-[48%] border border-slate-200 shadow-xl  rounded-2xl relative">
     <h3 className="absolute top-2 right-2 mt-4  text-yellow-400 px-2 py-1 text-sm font-semibold rounded">
       4.8
     </h3>
@@ -124,7 +124,7 @@ function FindService() {
       </div>
     </div>
   </div>
-  <div className="w-full md:w-[48%] border border-gray-300 shadow-xl  rounded-2xl relative">
+  <div className="w-full md:w-[48%] border border-slate-200 shadow-xl  rounded-2xl relative">
     <h3 className="absolute top-2 right-2 mt-4  text-yellow-400 px-2 py-1 text-sm font-semibold rounded">
       4.8
     </h3>
