@@ -21,7 +21,7 @@ function Home() {
   return (
     <div>
       <div className="hero_container lg:pb-24 pb-4   flex flex-col md:flex-row  lg:justify-center gap-4 lg:gap-16 ">
-        <div className="lg:max-w-[500px] mx-1  md:mx-3 lg:pt-[50px] md:pt-[5px]  mt-12 ">
+        <div className="lg:max-w-[500px] mx-2  md:mx-3 lg:pt-[50px] md:pt-[5px]  mt-12 ">
           <div className="flex flex-col lg:gap-3">
             <h1 className="font-[700] text-[18px] mt-2 md:text-[30px] leading-6 md:leading-9">
               Let's Make It Easy To Get

@@ -5,11 +5,51 @@ import doll from "../../assets/doll-1.jpeg";
 import { MdOutlineLogout } from "react-icons/md";
 import { MdArrowForwardIos } from "react-icons/md";
 import { useState } from "react";
+import {BASE_URL} from '../../config'
 
 function UserProfile() {
   const [settingOpen, setsettingOpen] = useState(false);
   const toggleSetting = () => {
     setsettingOpen(!settingOpen);
+  };
+
+  // const logoutHandler = async () => {
+  //   try {
+  //     const res = await fetch(`${BASE_URL}/api/auth/logout`, {
+  //       method: "POST",
+  //       credentials: "include"
+  //     });
+  
+  //     if (res.ok) {
+  //       // Redirect or update state after logout
+  //       window.location.href = "/"; // or use navigate() from react-router
+  //     } else {
+  //       const data = await res.json();
+  //       console.log(data.message || "Logout failed");
+  //     }
+  //   } catch (error) {
+  //     console.log("Logout error:", error.message);
+  //   }
+  // };
+  const logoutHandler = async () => {
+    try {
+      // Logout request to server (you can modify this part based on your API)
+      const res = await fetch(`${BASE_URL}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+  
+      if (res.ok) {
+        // Remove user details from localStorage and set user state to null
+        window.location.href = "/";
+        localStorage.removeItem("user");
+        setUser(null); // This will trigger re-render and login button will appear
+      } else {
+        console.log("Logout failed");
+      }
+    } catch (error) {
+      console.log("Logout error:", error.message);
+    }
   };
 
   return (
@@ -55,10 +95,10 @@ function UserProfile() {
       <div className="w-full mt-10 lg:h-[400px]">
         <div className="bg-[#e7ecf3c5]  border-t-2 border-gray-200 py-6">
           <div className="flex flex-col items-center justify-center max-w-[1000px] w-full mx-auto px-4">
-            <div className="w-full bg-white md:h-[45vh] sm:h-[40vh] h-[40vh]  rounded-lg">
+            <div className="w-full bg-white md:h-[45vh] sm:h-[40vh] h-[30vh]  rounded-lg">
               <div>
-                <h1 className=" p-8 text-2xl font-bold"> Intro</h1>
-                <div className="flex flex-col gap-8">
+                <h1 className=" md:p-8 p-5 text-2xl font-bold"> Intro</h1>
+                <div className="flex flex-col gap-4 md:gap-8">
                   <button className="lg:w-1/2  bg-gray-200 hover:bg-gray-300 cursor-pointer transition font-medium py-2 px-5 mx-8 rounded-lg">
                     Add Bio
                   </button>
@@ -70,7 +110,10 @@ function UserProfile() {
             </div>
           </div>
         </div>
-      </div>
+
+
+        
+            </div>
       {/* services */}
       <div className="w-full mt-2 min-h-[400px]">
         <div className="  py-6">
@@ -167,7 +210,8 @@ function UserProfile() {
                     </h1>
                     <div className="flex items-center gap-1 mt-3 transition hover:bg-gray-200 p-1 mx-3 rounded-md">
                       <MdOutlineLogout />
-                      <h1 className="text-md font-[500] cursor-pointer  ">
+                      <h1 className="text-md font-[500] cursor-pointer    " 
+                  onClick={logoutHandler}>
                         Logout
                       </h1>
                     </div>

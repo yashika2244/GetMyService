@@ -33,7 +33,7 @@ export const register = async (req, res) => {
         const hashPassword = await bcrypt.hash(password, salt);
 
         // Create user or doctor based on role
-        const Model = role === "customer" ? UserModels : service - provider;
+        const Model = role === "customer" ? UserModels : ServiceProviderModel;
         const newUser = new Model({
             name,
             email,
@@ -60,10 +60,8 @@ export const register = async (req, res) => {
 
 }
 
-// / login
-
 export const login = async (req, res) => {
-    let { email } = req.body;
+    let { email  } = req.body;
     try {
         let user = null
         const costomer = await UserModels.findOne({ email });
@@ -100,5 +98,18 @@ export const login = async (req, res) => {
     }
 
 }
+export const logout = async (req, res) => {
+    try {
+      res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Strict",
+      });
+      res.status(200).json({ success: true, message: "Logged out successfully" });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Logout failed", error: error.message });
+    }
+  };
+
 
 
