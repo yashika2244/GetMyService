@@ -1,210 +1,228 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { BASE_URL } from "../config";
 import { CiSearch } from "react-icons/ci";
+import { debounce } from "lodash";
+import { BsChatSquareText } from "react-icons/bs";
 
-function FindService() {
+const FindService = () => {
+  const [search, setSearch] = useState("");
+  const [query, setQuery] = useState("");
+  const [allResults, setAllResults] = useState([]); // Store all search groups
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
 
+  const fetchServices = async (searchQuery, pageNumber, e) => {
+    if (!searchQuery.trim()) return;
+
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/Services/search?search=${searchQuery}&page=${pageNumber}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch services");
+
+      const data = await response.json();
+
+      if (pageNumber === 1) {
+        setAllResults((prev) => {
+          const existingQueryGroup = prev.find(
+            (group) => group.query === searchQuery
+          );
+
+          if (existingQueryGroup) {
+            return prev.map((group) =>
+              group.query === searchQuery
+                ? {
+                    ...group,
+                    data: [
+                      ...group.data,
+                      ...data.filter(
+                        (newItem) =>
+                          !group.data.some(
+                            (existing) => existing._id === newItem._id
+                          )
+                      ),
+                    ],
+                  }
+                : group
+            );
+          } else {
+            return [...prev, { query: searchQuery, data }];
+          }
+        });
+      } else {
+        setAllResults((prev) =>
+          prev.map((group) =>
+            group.query === searchQuery
+              ? {
+                  ...group,
+                  data: [
+                    ...group.data,
+                    ...data.filter(
+                      (newItem) =>
+                        !group.data.some(
+                          (existing) => existing._id === newItem._id
+                        )
+                    ),
+                  ],
+                }
+              : group
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch services when query or page changes
+  useEffect(() => {
+    if (query) {
+      fetchServices(query, page);
+    }
+  }, [query, page]);
+
+  const handleSearch = () => {
+    if (!search.trim()) return;
+    setPage(1);
+    // setAllResults([]); // Clear previous results before setting the new query
+    setQuery(search);
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") handleSearch();
+  };
+
+  const handleScroll = useCallback(
+    debounce(() => {
+      if (
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 100 &&
+        !loading
+      ) {
+        setPage((prev) => prev + 1);
+      }
+    }, 200),
+    [loading]
+  );
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   return (
-    <div className=" md:mt-12 mt-5 flex justify-center bg-gradient-to-b from-blue-50 to-white min-h-screen pt-10 w-full">
+    <div className="md:mt-12 mt-5 flex justify-center bg-gradient-to-b from-blue-50 to-white min-h-screen pt-10 w-full">
       <div className="max-w-[1100px] w-full px-6">
-        {/* Page Title */}
+        {/* Title and Search Bar */}
         <div className="text-center flex flex-col items-center">
-          <h2 className="md:text-4xl text-2xl font-bold text-gray-800 mb-3 0 md:mb-6 animate-fade-in">
-            Find a Doctor
+          <h2 className="md:text-4xl text-2xl font-bold text-gray-800 mb-6">
+            Find Services
           </h2>
-          {/* Search Bar  */}
-          <div className="max-w-[570px] w-full flex items-center bg-white shadow-lg rounded-xl  px-2 md:px-4 md:py-2 py-1  border border-gray-300 transition-all hover:shadow-xl ">
+          {/* <div className=" w-full flex items-center md:gap-1 bg-white shadow-lg rounded-xl px-2 md:px-4 md:py-2 py-1 border border-gray-300 hover:shadow-xl transition-all">
             <span className="mr-1 md:text-2xl text-sm">
-              {" "}
-              <CiSearch />
+              <CiSearch className="text-gray-700 md:text-lg text-sm" />
             </span>
             <input
               type="search"
-              placeholder="Search for a doctor..."
-              className="flex-1 bg-transparent outline-none text-gray-700 md:text-lg text-[15px]"
+              placeholder="Search for a service..."
+              className="flex-1 bg-transparent outline-none text-gray-700 md:text-lg text-sm"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
-            <button className="bg-blue-600 hover:bg-blue-700 text-white rounded-2xl px-2 py-1 md:px-6 md:py-2 font-semibold transition-all duration-300 shadow-md cursor-pointer ">
+            <BsChatSquareText />
+          </div> */}
+          {/* <button
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all"
+              onClick={handleSearch}
+            >
               Search
+            </button> */}
+          <div className="w-full flex items-center gap-2">
+            {/* Search Input Box */}
+            <div className="flex items-center md:gap-1 bg-white shadow-lg rounded-xl px-2 md:px-4 md:py-2 py-2 border border-gray-300 hover:shadow-xl transition-all w-full">
+              <span className="mr-1 md:text-2xl text-sm text-gray-700">
+                <CiSearch className=" text-gray-700" />
+              </span>
+              <input
+                type="search"
+                aria-label="Search for a service"
+                placeholder="Search for a service..."
+                className="flex-1 bg-transparent outline-none text-gray-700 md:text-lg text-sm"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+            </div>
+
+            {/* Chat Icon Outside Input Box */} 
+            <button
+              type="button"
+              value={search}
+              onClick={handleSearch}
+              // aria-label="Open chat"
+              className="p-2 bg-white border border-gray-300 rounded-xl shadow-lg hover:shadow-xl transition-all"
+            >
+              <BsChatSquareText className="text-gray-700 md:text-xl text-base" />
             </button>
           </div>
         </div>
 
-        {/* find service */}
-        {/* <div className="flex flex-col md:flex-row md:mt-10 mt-5 md:gap-10 gap-5  md:flex-wrap mb-5">
-          <div className="   border  rounded-2xl  ">
-          <div className=" flex p-2 gap-2">
-            <div className=" w-32 h-36 rounded-lg ">
-              <img
-                src="https://images.pexels.com/photos/675920/pexels-photo-675920.jpeg?cs=srgb&dl=pexels-minan1398-675920.jpg&fm=jpg"
-                className="h-full object-cover  rounded-lg"
-                alt=""
-              />
+        {/* All Search Results */}
+        <div className="flex flex-col lg:flex-row lg:flex-wrap md:gap-10  mt-1 md:mt-10 md:mb-5 ">
+          {allResults.map((group, index) => (
+            <div key={index} className=" mt-5 md:mt-0  w-full">
+              {/* <h3 className="text-xl font-semibold mb-4 text-blue-700">
+              Results for "{group.query}"
+            </h3> */}
+              <div className="flex flex-wrap ">
+                {group.data.map((service) => (
+                  <div
+                    key={service._id}
+                    className="w-full  border border-slate-200 shadow-xl rounded-2xl relative"
+                  >
+                    <h3 className="absolute top-2 right-2 text-yellow-400 px-2 py-1 text-sm font-semibold rounded">
+                      {service.rating || "N/A"}
+                    </h3>
+                    <div className="flex p-2 gap-4">
+                      <div className="md:w-33 md:h-56 w-28 h-28 rounded-lg overflow-hidden">
+                        <img
+                          src={
+                            service.imageUrl ||
+                            "https://via.placeholder.com/150"
+                          }
+                          className="h-full w-full object-cover"
+                          alt={service.name}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-4 md:mt-8 md:ml-8 mt-1">
+                        <h1 className="text-lg font-bold">{service.name}</h1>
+                        <h2 className="text-sm text-gray-600">
+                          {service.description || "No description available"}
+                        </h2>
+                        <h3 className="mt-3 md:mt-8 text-sm text-gray-700">
+                          {service.location || "Location not specified"}
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="flex  ">
-            <h1>Service care</h1>
-            <span className=" flex justify-end">
+          ))}
+        </div>
 
-            <h3>4.8</h3>
-            </span>
-
-            </div>
-
-          </div>
-          </div>
-
-            
-          <div className=" md:w-1/2 py-15  border rounded-2xl ">
-            <h1>Service care</h1>
-          </div>
-          <div className=" md:w-1/2 py-15 border rounded-2xl ">
-            <h1>Service care</h1>
-          </div>
-          <div className=" md:w-1/3 py-15 border rounded-2xl ">
-            <h1>Service care</h1>
-          </div>
-        </div> */}
-        <div className="flex flex-wrap gap-5 mt-5 mb-5">
-  {/* Card 1 */}
-  <div className="w-full md:w-[48%] border border-slate-200 shadow-xl  rounded-2xl relative">
-    <h3 className="absolute top-2 right-2 md:mt-4 mt-1 text-yellow-400 px-2 py-1 text-sm font-semibold rounded">
-      4.8
-    </h3>
-    <div className="flex p-2 gap-4">
-      <div className="md:w-32 md:h-36 w-28 h-28 rounded-lg overflow-hidden">
-        <img
-          src="https://images.pexels.com/photos/675920/pexels-photo-675920.jpeg"
-          className="h-full w-full object-cover"
-          alt=""
-        />
-      </div>
-      <div className="flex flex-col md:mt-4 mt-1 ">
-        <h1 className="text-lg font-bold">Service care</h1>
-        <h2>about</h2>
-        <h3 className="mt-3">Loations</h3>
-      </div>
-    </div>
-  </div>
-
-  {/* Card 2 */}
-  <div className="w-full md:w-[48%] border border-slate-200 shadow-xl  rounded-2xl relative">
-    <h3 className="absolute top-2 right-2 mt-4  text-yellow-400 px-2 py-1 text-sm font-semibold rounded">
-      4.8
-    </h3>
-    <div className="flex p-2 gap-4">
-      <div className="w-32 h-36 rounded-lg overflow-hidden">
-        <img
-          src="https://images.pexels.com/photos/675920/pexels-photo-675920.jpeg"
-          className="h-full w-full object-cover"
-          alt=""
-        />
-      </div>
-      <div className="flex flex-col mt-4 ">
-        <h1 className="text-lg font-bold">Service care</h1>
-        <h2>about</h2>
-        <h3 className="mt-3">Loations</h3>
-      </div>
-    </div>
-  </div>
-  <div className="w-full md:w-[48%] border border-slate-200 shadow-xl  rounded-2xl relative">
-    <h3 className="absolute top-2 right-2 mt-4  text-yellow-400 px-2 py-1 text-sm font-semibold rounded">
-      4.8
-    </h3>
-    <div className="flex p-2 gap-4">
-      <div className="w-32 h-36 rounded-lg overflow-hidden">
-        <img
-          src="https://images.pexels.com/photos/675920/pexels-photo-675920.jpeg"
-          className="h-full w-full object-cover"
-          alt=""
-        />
-      </div>
-      <div className="flex flex-col mt-4 ">
-        <h1 className="text-lg font-bold">Service care</h1>
-        <h2>about</h2>
-        <h3 className="mt-3">Loations</h3>
-      </div>
-    </div>
-  </div>
-  <div className="w-full md:w-[48%] border border-slate-200 shadow-xl  rounded-2xl relative">
-    <h3 className="absolute top-2 right-2 mt-4  text-yellow-400 px-2 py-1 text-sm font-semibold rounded">
-      4.8
-    </h3>
-    <div className="flex p-2 gap-4">
-      <div className="w-32 h-36 rounded-lg overflow-hidden">
-        <img
-          src="https://images.pexels.com/photos/675920/pexels-photo-675920.jpeg"
-          className="h-full w-full object-cover"
-          alt=""
-        />
-      </div>
-      <div className="flex flex-col mt-4 ">
-        <h1 className="text-lg font-bold">Service care</h1>
-        <h2>about</h2>
-        <h3 className="mt-3">Loations</h3>
-      </div>
-    </div>
-  </div><div className="w-full md:w-[48%] border border-gray-300 shadow-xl  rounded-2xl relative">
-    <h3 className="absolute top-2 right-2 mt-4  text-yellow-400 px-2 py-1 text-sm font-semibold rounded">
-      4.8
-    </h3>
-    <div className="flex p-2 gap-4">
-      <div className="w-32 h-36 rounded-lg overflow-hidden">
-        <img
-          src="https://images.pexels.com/photos/675920/pexels-photo-675920.jpeg"
-          className="h-full w-full object-cover"
-          alt=""
-        />
-      </div>
-      <div className="flex flex-col mt-4 ">
-        <h1 className="text-lg font-bold">Service care</h1>
-        <h2>about</h2>
-        <h3 className="mt-3">Loations</h3>
-      </div>
-    </div>
-  </div><div className="w-full md:w-[48%] border border-gray-300 shadow-xl  rounded-2xl relative">
-    <h3 className="absolute top-2 right-2 mt-4  text-yellow-400 px-2 py-1 text-sm font-semibold rounded">
-      4.8
-    </h3>
-    <div className="flex p-2 gap-4">
-      <div className="w-32 h-36 rounded-lg overflow-hidden">
-        <img
-          src="https://images.pexels.com/photos/675920/pexels-photo-675920.jpeg"
-          className="h-full w-full object-cover"
-          alt=""
-        />
-      </div>
-      <div className="flex flex-col mt-4 ">
-        <h1 className="text-lg font-bold">Service care</h1>
-        <h2>about</h2>
-        <h3 className="mt-3">Loations</h3>
-      </div>
-    </div>
-  </div><div className="w-full md:w-[48%] border border-gray-300 shadow-xl  rounded-2xl relative">
-    <h3 className="absolute top-2 right-2 mt-4  text-yellow-400 px-2 py-1 text-sm font-semibold rounded">
-      4.8
-    </h3>
-    <div className="flex p-2 gap-4">
-      <div className="md:w-32 w-28 md:h-36 rounded-lg overflow-hidden">
-        <img
-          src="https://images.pexels.com/photos/675920/pexels-photo-675920.jpeg"
-          className="h-full w-full object-cover"
-          alt=""
-        />
-      </div>
-      <div className="flex flex-col mt-4 ">
-        <h1 className="text-lg font-bold">Service care</h1>
-        <h2>about</h2>
-        <h3 className="mt-3">Loations</h3>
-      </div>
-    </div>
-  </div>
-
- 
-
-      </div>
-     
+        {/* Loading Indicator */}
+        {loading && (
+          <p className="text-center text-gray-500 mt-10">
+            {page === 1 ? "Loading services..." : "Loading more services..."}
+          </p>
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default FindService;

@@ -20,7 +20,6 @@ const beset_s_card = ({ service }) => {
 
   return (
     <div className="md:p-6 p-2 bg-gradient-to-b from-white to-gray-100 shadow-xl rounded-2xl transition-transform transform hover:scale-105 hover:shadow-2xl duration-300 border border-gray-200">
-      {/* Doctor Image */}
       <div className="overflow-hidden rounded-lg">
         <img
           src={photo}

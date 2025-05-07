@@ -3,6 +3,7 @@ import authRouter from './Router/authRouter.js';
 import dotenv from 'dotenv'
 import cookieParser from "cookie-parser";
 import cors from 'cors'
+import serviceRouter from './Router/serviceRouter.js';
 
 dotenv.config();
 const app = express();
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 
 app.use(cookieParser());
 app.use("/api/auth",authRouter)
+app.use("/api/Services",serviceRouter)
 
 app.listen(port, () => {
     console.log(`Server started on http://localhost:${port}`)
