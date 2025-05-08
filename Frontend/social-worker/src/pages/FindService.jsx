@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { BASE_URL } from "../config";
-import { CiSearch } from "react-icons/ci";
+import { IoMdSearch } from "react-icons/io";
 import { debounce } from "lodash";
 import { BsChatSquareText } from "react-icons/bs";
+import { FaStar } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
+
 
 const FindService = () => {
   const [search, setSearch] = useState("");
@@ -120,12 +123,12 @@ const FindService = () => {
           <h2 className="md:text-4xl text-2xl font-bold text-gray-800 mb-6">
             Find Services
           </h2>
-       
+
           <div className="w-full flex items-center gap-2">
             {/* Search Input Box */}
             <div className="flex items-center md:gap-1 bg-white shadow-lg rounded-xl px-2 md:px-4 md:py-2 py-2 border border-gray-300 hover:shadow-xl transition-all w-full">
               <span className="mr-1 md:text-2xl text-sm text-gray-700">
-                <CiSearch className=" text-gray-700" />
+                <IoMdSearch  className=" text-gray-400" />
               </span>
               <input
                 type="search"
@@ -138,7 +141,7 @@ const FindService = () => {
               />
             </div>
 
-            {/* Chat Icon Outside Input Box */} 
+            {/* Chat Icon Outside Input Box */}
             <button
               type="button"
               value={search}
@@ -164,28 +167,42 @@ const FindService = () => {
                     key={service._id}
                     className="w-full  border border-slate-200 shadow-xl rounded-2xl relative"
                   >
-                    <h3 className="absolute top-2 right-2 text-yellow-400 px-2 py-1 text-sm font-semibold rounded">
-                      {service.rating || "N/A"}
+                    <div className="flex  absolute top-2 right-2 px-2 py-1 gap-1 ">
+                    <FaStar className="text-yellow-400" /> 
+                    <h3 className=" text-yellow-400  text-sm font-semibold rounded">
+                      {service.rating}
                     </h3>
+                    </div>
+
+                  
                     <div className="flex p-2 gap-4">
-                      <div className="md:w-33 md:h-56 w-28 h-28 rounded-lg overflow-hidden">
+                      <div className="md:w-44 md:h-56 w-28 h-28 rounded-lg overflow-hidden">
                         <img
                           src={
-                            service.imageUrl ||
-                            "https://via.placeholder.com/150"
+                            service.photo?.startsWith("http")
+                              ? service.photo
+                              : `${BASE_URL}/${service.photo?.replace(
+                                  /^\//,
+                                  ""
+                                )}`
                           }
                           className="h-full w-full object-cover"
                           alt={service.name}
                         />
                       </div>
-                      <div className="flex flex-col gap-4 md:mt-8 md:ml-8 mt-1">
-                        <h1 className="text-lg font-bold">{service.name}</h1>
+
+                      <div className="flex flex-col gap-4 md:mt-5 md:ml-8 mt-1">
+                        <h1 className="md:text-lg text-md  text-gray-800 font-bold">{service.name}</h1>
                         <h2 className="text-sm text-gray-600">
                           {service.description || "No description available"}
                         </h2>
-                        <h3 className="mt-3 md:mt-8 text-sm text-gray-700">
+                        <div className="mt-3 md:mt-8 text-sm text-gray-700 flex items-center gap-1">
+                        <FaLocationDot className=""/>
+                        <h3 className="">
                           {service.location || "Location not specified"}
                         </h3>
+
+                        </div>
                       </div>
                     </div>
                   </div>

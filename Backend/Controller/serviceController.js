@@ -1,4 +1,3 @@
-// import BookingModel from "../Models/BookingModel";
 
 import ServiceProviderModel from "../Models/ServiceProviderModel.js";
 
@@ -55,7 +54,6 @@ export const updateService = async (req, res) => {
       updateService,
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({
       success: false,
       message: "Failed to update service",
