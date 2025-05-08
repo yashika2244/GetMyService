@@ -1,29 +1,5 @@
 
 
-// import ServiceProviderModel from "../Models/ServiceProviderModel.js";
-
-// export const SearchService =  async (req, res) => {
-//     try {
-//         const { search } = req.query;
-//         let query = {};
-
-
-//         if (search) {
-//             query = {
-//               $or: [
-//                 { name: { $regex: search, $options: 'i' } },
-//                 { location: { $regex: search, $options: 'i' } },
-//               ]
-//             };
-//           }
-//           const services = await ServiceProviderModel.find(query);
-//           res.json(services);
-//         } catch (err) {
-//             console.error(err);
-//             res.status(500).json({ error: 'Failed to fetch services' });
-//           }
-// }
-
 import ServiceProviderModel from "../Models/ServiceProviderModel.js";
 
 export const SearchService = async (req, res) => {

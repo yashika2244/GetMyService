@@ -10,6 +10,7 @@ function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    role :""
   });
 
   const [loading, setLoading] = useState(false);
@@ -20,12 +21,24 @@ function Login() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  
+
+
   const submitHandler = async (event) => {
     event.preventDefault();
     if (loading) return; // Prevent multiple clicks
     setLoading(true);
 
     try {
+        // Prevent invalid role submission
+    if (formData.role === "select" || !formData.role) {
+      alert("Please select a valid role.");
+      setLoading(false);
+      return;
+    }
+
+    // Normalize role value
+    formData.role = formData.role.trim().toLowerCase();
       const res = await fetch(`${BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -49,6 +62,7 @@ function Login() {
 
 
       localStorage.setItem("user", JSON.stringify(result.data));
+      localStorage.setItem("token", result.token); 
       navigate("/");
       window.location.reload();
     } catch (error) {

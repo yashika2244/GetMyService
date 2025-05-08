@@ -17,7 +17,7 @@ const FindService = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${BASE_URL}/api/Services/search?search=${searchQuery}&page=${pageNumber}`
+        `${BASE_URL}/api/Services-find/search?search=${searchQuery}&page=${pageNumber}`
       );
       if (!response.ok) throw new Error("Failed to fetch services");
 
@@ -120,26 +120,7 @@ const FindService = () => {
           <h2 className="md:text-4xl text-2xl font-bold text-gray-800 mb-6">
             Find Services
           </h2>
-          {/* <div className=" w-full flex items-center md:gap-1 bg-white shadow-lg rounded-xl px-2 md:px-4 md:py-2 py-1 border border-gray-300 hover:shadow-xl transition-all">
-            <span className="mr-1 md:text-2xl text-sm">
-              <CiSearch className="text-gray-700 md:text-lg text-sm" />
-            </span>
-            <input
-              type="search"
-              placeholder="Search for a service..."
-              className="flex-1 bg-transparent outline-none text-gray-700 md:text-lg text-sm"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-            <BsChatSquareText />
-          </div> */}
-          {/* <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all"
-              onClick={handleSearch}
-            >
-              Search
-            </button> */}
+       
           <div className="w-full flex items-center gap-2">
             {/* Search Input Box */}
             <div className="flex items-center md:gap-1 bg-white shadow-lg rounded-xl px-2 md:px-4 md:py-2 py-2 border border-gray-300 hover:shadow-xl transition-all w-full">
