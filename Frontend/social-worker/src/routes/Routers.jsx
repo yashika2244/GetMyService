@@ -9,8 +9,8 @@ import Signup from '../pages/SignUp'
 import FindService from '../pages/FindService'
 import Msg from '../components/msg/Msg'
 import Chat from '../components/msg/Chat'
-import ServiceProfile from '../components/Profiles/ServiceProfile'
-import UserProfile from '../components/Profiles/UserProfile'
+import ServiceProfile from '../components/ServiceProfile/ServiceProfile'
+import UserProfile from '../components/UserProfile/UserProfile'
 
 
 

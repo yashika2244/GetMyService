@@ -13,24 +13,6 @@ function UserProfile() {
     setsettingOpen(!settingOpen);
   };
 
-  // const logoutHandler = async () => {
-  //   try {
-  //     const res = await fetch(`${BASE_URL}/api/auth/logout`, {
-  //       method: "POST",
-  //       credentials: "include"
-  //     });
-  
-  //     if (res.ok) {
-  //       // Redirect or update state after logout
-  //       window.location.href = "/"; // or use navigate() from react-router
-  //     } else {
-  //       const data = await res.json();
-  //       console.log(data.message || "Logout failed");
-  //     }
-  //   } catch (error) {
-  //     console.log("Logout error:", error.message);
-  //   }
-  // };
   const logoutHandler = async () => {
     try {
       // Logout request to server (you can modify this part based on your API)

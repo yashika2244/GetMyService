@@ -1,49 +1,214 @@
-import React from "react";
-import healthCare from "../../assets/healthCare.jpeg";
-import foodDel from "../../assets/foodDel.jpeg";
-import homeCare from "../../assets/homeCare.jpeg";
-import petFood from "../../assets/petFood.jpeg";
-import grocery from "../../assets/grocery.webp";
-import repair from "../../assets/repair.webp";
-import emagencyCare from "../../assets/emagencyCare.jpeg";
-import events from "../../assets/events.jpg";
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
+// import {BASE_URL,token} from '../../config.js'
+
+// function AccountList () {
+//   // const [accounts, setAccounts] = useState([]);  // State to hold service data
+//   // const [loading, setLoading] = useState(true);  // Loading state
+//   // const [error, setError] = useState(null);  // Error state
+//   // const navigate = useNavigate();
+
+//   // // Fetch data when the component mounts
+//   // useEffect(() => {
+//   //   const fetchAccounts = async () => {
+//   //     try {
+//   //       const response = await fetch(`${BASE_URL}/api/services`); // Replace with your backend API URL
+
+//   //       if (!response.ok) {
+//   //         throw new Error("Failed to fetch data");
+//   //       }
+
+//   //       const data = await response.json();
+//   //       console.log("Fetched Data:", data);
+//   //       setAccounts(data);  // Store the fetched services in state
+//   //       setLoading(false);  // Stop loading
+//   //     } catch (err) {
+//   //       setError("Failed to load service data");
+//   //       setLoading(false);
+//   //     }
+//   //   };
+
+//   //   fetchAccounts();
+//   // }, []);  // Empty array ensures this runs only once when the component mounts
+
+//   // if (loading) {
+//   //   return <div>Loading...</div>;  // Display loading text while fetching data
+//   // }
+
+//   // if (error) {
+//   //   return <div>{error}</div>;  // Display error if data fetch fails
+//   // }
+//   const [loading, setLoading] = useState(true);  // Loading state
+//   const [error, setError] = useState(null);  // Error state
+//   const [accounts, setAccounts] = useState([]);
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     const fetchAccounts = async () => {
+//       try {
+//         const token = localStorage.getItem("token");  // Get token from localStorage
+//         if (!token) {
+//           setError("No token found.");
+//           return;
+//         }
+
+//         const response = await fetch(`${BASE_URL}/api/services`, {
+//           method: "GET",
+//           headers: {
+//             "Authorization": `Bearer ${token}`, // Add token to Authorization header
+//           },
+//         });
+
+//         if (!response.ok) {
+//           throw new Error("Failed to fetch data");
+//         }
+
+//         const data = await response.json();
+//         setAccounts(data);  // Store the fetched services in state
+//         setLoading(false);  // Stop loading
+//       } catch (err) {
+//         setError("Failed to load service data");
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchAccounts();
+//   }, []);  // Empty array ensures this runs only once when the component mounts
+
+//   if (loading) {
+//     return <div>Loading...</div>;  // Display loading text while fetching data
+//   }
+
+//   if (error) {
+//     return <div>{error}</div>;  // Display error if data fetch fails
+//   }
+//   return (
+//     <section className="mt-4 md:ml-6 ">
+//       <div className="flex flex-col gap-4">
+//         {accounts.map((account) => (
+//           <div key={account._id} className="flex items-center gap-4">
+//            <div className="w-[50px] h-[50px] rounded-full overflow-hidden shadow-sm">
+//               <img
+//                 src={account.photo}  // Display service photo
+//                 alt={account.title}  // Alt text for the image
+//                 className="w-full h-full object-cover"
+//               />
+//             </div>
+//             <h2
+//             className="text-base font-medium cursor-pointer"
+//               onClick={() =>
+//                 navigate("/chat", {
+//                   state: {
+//                     name: account.name,
+//                     photo: account.photo,
+//                     id: account._id,
+//                     loc: account.loc,
+//                     peragraph: account.peragraph,
+//                     accounts: accounts,
+//                   },
+//                 })
+//               }
+//             >
+//                {account.name ? account.name : "Service Name Not Available"} {/* Updated field */}
+//             </h2>
+//           </div>
+//         ))}
+//       </div>
+//     </section>
+//   );
+// }
+
+// export default AccountList;
+
+
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from '../../config.js'; // Assuming BASE_URL is defined in your config file
 
-function AccontList() {
-  const accounts = [
-    { id: 1, title: "Health Care", photo: healthCare, loc:"At Mount Adora Hospital, Sylhet", peragraph:"Health care promotes well-being through prevention, treatment, and support.",   buttonText: "Message",},
-    { id: 2, title: "Food & Delivery", photo: foodDel, loc:"Lettuce Eat Bistro",peragraph:"Enjoy fresh, hot meals delivered exactly as requested."},
-    { id: 3, title: "Home Care", photo: homeCare, loc:"Serenity in Home Care", peragraph:"Home care offers personalized services in the comfort of home." },
-    { id: 4, title: "Pet Food Delivery", photo: petFood , loc:"San Francisco Bay Area", peragraph:"Pet food delivery ensures your furry friend never runs out."},
-    { id: 5, title: "Grocery Order", photo: grocery, loc:"Los Angeles" , peragraph:"Order groceries online and get them delivered to your door."},
-    { id: 6, title: "Emergency Care", photo: emagencyCare , loc:"Central City Emergency", peragraph:"Accessible 24/7, offering expert care for accidents and illnesses."},
-    { id: 7, title: "Repair & Installation", photo: repair, loc:"Yamaha Service Center" , peragraph:"Repair and installation services ensure the smooth functioning of appliances."},
-    { id: 8, title: "Creative & Events", photo: events , loc:"JS Event Management", peragraph:"Creative and event services bring your vision to life."},
-    // {id:9, buttonText: "Message",}
-
-  ];
-
+function AccountList() {
+  const [accounts, setAccounts] = useState([]);  // State to hold service data
+  const [loading, setLoading] = useState(true);   // Loading state
+  const [error, setError] = useState(null);       // Error state
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const token = localStorage.getItem("token");  // Get token from localStorage
+        if (!token) {
+          setError("No token found.");
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(`${BASE_URL}/api/services`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`, // Add token to Authorization header
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch data: " + response.statusText);
+        }
+
+        const data = await response.json();
+        if (data.length === 0) {
+          setError("No services available.");
+        } else {
+          setAccounts(data);  // Store the fetched services in state
+        }
+        setLoading(false);  // Stop loading
+      } catch (err) {
+        setError("Failed to load service data: " + err.message);  // Capture error message
+        setLoading(false);
+      }
+    };
+
+    fetchAccounts();
+  }, []);  // Empty array ensures this runs only once when the component mounts
+
+  // If data is loading, show loading state
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  // If an error occurs, show error message
+  if (error) {
+    return <div className="text-red-500">{error}</div>;  // Display error message with styling
+  }
+
   return (
-    <section className="mt-4  ">
+    <section className="mt-4 md:ml-6">
       <div className="flex flex-col gap-4">
         {accounts.map((account) => (
-          <div key={account.id} className="flex items-center gap-4">
-            <div className="w-[50px] h-[50px] rounded-full overflow-hidden shadow-sm"
-             
-            >
+          <div key={account._id} className="flex items-center gap-4">
+            <div className="w-[50px] h-[50px] rounded-full overflow-hidden shadow-sm">
               <img
-                src={account.photo}
-                alt={account.title}
+                src={account.photo || '/path/to/default/image.jpg'}  // Handle missing photo by providing a default image
+                alt={account.title || "Service Name Not Available"}
                 className="w-full h-full object-cover"
               />
             </div>
             <h2
               className="text-base font-medium cursor-pointer"
-              onClick={() => navigate("/chat",  { state: { title: account.title, photo: account.photo ,id:account.id,loc:account.loc, peragraph:account.peragraph,accounts: accounts} })}
+              onClick={() =>
+                navigate("/chat", {
+                  state: {
+                    name: account.name,
+                    photo: account.photo,
+                    id: account._id,
+                    loc: account.loc,
+                    peragraph: account.peragraph,
+                    accounts: accounts,
+                  },
+                })
+              }
             >
-              {account.title}
+              {account.name || "Service Name Not Available"} {/* Ensure service name is always available */}
             </h2>
           </div>
         ))}
@@ -52,4 +217,4 @@ function AccontList() {
   );
 }
 
-export default AccontList;
+export default AccountList;

@@ -2,16 +2,31 @@ import React from "react";
 import { MdOutlineVerified } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
+import { MdOutlineLogout } from "react-icons/md";
+import { MdArrowForwardIos } from "react-icons/md";
+import { IoIosSettings } from "react-icons/io";
+import { authContext ,useAuth } from "../../context/AppContext";
+import { token } from "../../config";
+// import MyDetails from "./MyDetails";
+
 
 function ServiceProfile() {
+  const { user, setUserData } = useAuth();
   const [expanded, setExpanded] = useState(false);
+  const [settingOpen, setsettingOpen] = useState(false);
+  const toggleSetting = () => {
+    setsettingOpen(!settingOpen);
+  };
+
   const navigate = useNavigate();
   const location = useLocation();
-  const { title, photo, id, loc, peragraph, accounts } = location.state || {};
+  const { name, photo, id, loc, peragraph, accounts } = location.state || {};
+  console.log(location.state);
+  // console.log(id); // The current user's id
 
   const text = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi rerum modi dicta voluptatem deleniti!
   Molestias veniam quis deserunt vero vitae. Lorem ipsum dolor, sit amet consectetur adipisicing elit.
@@ -21,6 +36,31 @@ function ServiceProfile() {
 
   const shortText = text.slice(0, 270);
   const rating = 4;
+
+  const logoutHandler = async () => {
+    try {
+      // Logout request to server (you can modify this part based on your API)
+      const res = await fetch(`${BASE_URL}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        setUserData(null);
+        // Remove user details from localStorage and set user state to null
+        window.location.href = "/";
+        localStorage.removeItem("user");
+        setUser(null); // This will trigger re-render and login button will appear
+      } else {
+        console.log("Logout failed");
+      }
+    } catch (error) {
+      console.log("Logout error:", error.message);
+    }
+  };
+
+  console.log(accounts);
+
 
   return (
     <section className="min-h-screen bg-purple-100 md:mt-13 pt-6  md:px-7 flex">
@@ -37,7 +77,6 @@ function ServiceProfile() {
             <div className="md:absolute top-0    md:mt-14 ">
               <img
                 src={photo}
-                alt={title}
                 className="md:w-36  md:h-36 w-28 h-28 mt-8 md:mt-0 rounded-full  shadow-lg object-cover"
               />
             </div>
@@ -53,7 +92,7 @@ function ServiceProfile() {
           <div className="flex  md:justify-start md:mt-8 mt-3">
             <div className="flex flex-col justify-start ">
               <div className="flex items-center md:gap-2 md:text-2xl text-xl font-semibold">
-                <h1>{title}</h1>
+                <h1>{name}</h1>
                 <MdOutlineVerified className="text-slate-700 mt-1" />
               </div>
               <h2 className="text-gray-7=800 font-normal text-md">
@@ -61,7 +100,9 @@ function ServiceProfile() {
               </h2>
               <div className="flex flex-wrap items-center gap-1 md:mt-0 mt-2 text-sm text-slate-500">
                 <FaLocationDot />
-                <p>{loc}</p>
+                <h2 className="text-gray-7=800 font-normal text-md">
+                {loc || "not location available"}
+              </h2>
                 <span className="font-bold text-lg md:mb-1">·</span>
                 <Link
                   to="/contact"
@@ -132,11 +173,13 @@ function ServiceProfile() {
             </button>
           </span>
         </div>
+
         {/* experience */}
         <div className="max-w-[800px] ml:5 md:ml-20 bg-white border border-gray-300 shadow-lg rounded-xl p-2 md:p-5 mb-2">
           <h1 className="font-semibold text-xl text-gray-900"> Experience</h1>
           <h2 className="pt-3 pl-2 text-slate-800 font-medium"> 4 years +</h2>
         </div>
+
         {/* Rating */}
         <div className="max-w-[800px] ml:5 md:ml-20 bg-white border mb-2 border-gray-300 shadow-lg rounded-xl p-2 md:p-5 ">
           <h1 className="font-semibold text-xl text-gray-900">Rate</h1>
@@ -153,6 +196,49 @@ function ServiceProfile() {
               ))}
             </div>
           </span>
+        </div>
+        {/* setting */}
+        <div className="max-w-[800px] ml:5 md:ml-20 bg-white border border-gray-300 shadow-lg rounded-xl p-2 mb-2">
+          {/* <div className="bg-[#e3e8f0c5]  border-t-2 border-gray-200 py-6"> */}
+          <div className="flex flex-col items-center justify-center max-w-[1000px] w-full mx-auto ">
+            <div className="w-full bg-white   rounded-lg">
+              <div>
+                <div className="flex items-center gap-2 md:py-4 text-slate-700">
+                  <IoIosSettings className="md:text-3xl text-2xl" />
+                  <h1 className=" font-semibold text-xl text-gray-900">
+                    {" "}
+                    Setting
+                  </h1>
+                  <MdArrowForwardIos
+                    onClick={toggleSetting}
+                    className={`ml-5 mt-2 text-xl cursor-pointer transition-transform ${
+                      settingOpen ? "rotate-90" : ""
+                    }`}
+                  />
+                </div>
+                {settingOpen && (
+                  <div
+                    className={`overflow-y-auto transition-all duration-500 pl-5 p-3 text-slate-600 flex flex-col ${
+                      settingOpen ? "max-h-[300px]" : "max-h-0"
+                    }`}
+                  >
+                    <h1 className=" text-[14px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md">
+                      Delete Account{" "}
+                    </h1>
+                    <div className="flex items-center gap-1   md:mt-3 mt-1 transition hover:bg-gray-200 p-1 mx-3 rounded-md">
+                      <MdOutlineLogout />
+                      <h1
+                        className=" text-[14px] font-[500] cursor-pointer    "
+                        onClick={logoutHandler}
+                      >
+                        Logout
+                      </h1>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       {/* side div */}
@@ -188,7 +274,7 @@ function ServiceProfile() {
                         className="text-md font-semibold"
                         onClick={() => navigate(`/Service-profile/${id}`)}
                       >
-                        {profile.title}
+                        {profile.name} 
                       </h2>
                       <p className="text-[14px] text-gray-800">
                         {profile.peragraph}
@@ -213,3 +299,4 @@ function ServiceProfile() {
 }
 
 export default ServiceProfile;
+

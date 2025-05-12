@@ -4,11 +4,13 @@ import AccontList from "../account/AccontList";
 import { IoSend } from "react-icons/io5";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa6";
+import { useAuth } from "../../context/AppContext";
 
 function Chat() {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { title, photo, id, loc, peragraph , accounts} = location.state || {};
+  const { name, photo, id, loc, peragraph , accounts} = location.state || {};
   return (
     <section className="md:pt-10 mt-10 md:pl-20 md:pr-20 md:mb-20">
       <div className="border border-gray-300 rounded-2xl shadow-lg min-h-screen  mx-auto flex flex-col relative">
@@ -20,17 +22,29 @@ function Chat() {
               className="md:text-lg "
             />
 
-            <img
-              src={photo}
-              alt=""
+            {/* <img */}
+              {/* // src={photo} */}
+              <img src={photo} alt="Profile" 
               className="w-10 h-10 rounded-full object-cover "
             />
-
+            {/* , { state: { title, photo, id, loc,peragraph, accounts} } */}
             <h2
               className="text-lg font-semibold"
-              onClick={() => navigate(`/Service-profile/${id}`, { state: { title, photo, id, loc,peragraph, accounts} })}
+              // onClick={() => navigate(`/Service-profile/${id}`)}
+              onClick={() => navigate(`/Service-profile/${id}` , {
+                state: {
+                  name,
+                  photo,
+                  id,
+                  loc,
+                  peragraph,
+                  accounts,
+                }
+              })
+            }
             >
-              {title || "User Name"}
+              {/* {name || "User Name"} */}
+              {name}
             </h2>
           </div>
         </nav>
