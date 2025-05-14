@@ -30,7 +30,7 @@ const AddServiceSection = () => {
       <button
         // onClick={() => setShowModal(true)}
         className="mt-4 px-4 py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 cursor-pointer transition-transform hover:scale-[0.9] duration-300 "
-        onClick={()=>navigate('/register')}  >
+        onClick={()=>navigate('/register-service-provider')}  >
         Add Service
       </button>
     </div>

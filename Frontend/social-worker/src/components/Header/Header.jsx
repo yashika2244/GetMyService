@@ -5,17 +5,27 @@ import { NavLink, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import y from "../../assets/y-2.jpg";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
-import  {  useEffect } from "react";
+import { useEffect } from "react";
+import { useAuth } from "../../context/AppContext";
 
 function Header() {
+  const { user, role, logout } = useAuth();
+
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+
+  const handleProfileClick = () => {
+    if (role === "service-provider") {
+      // navigate(`/Service-profile/${user?.id}`);
+      navigate("/Service-profile/:id"); // Replace :id with actual ID if needed
+    } else if (role === "customer") {
+      navigate("/user-profile");
     }
-  }, []);
+  };
+  const logoutHandler = () => {
+    logout(); // Call logout from context to clear user data
+    navigate("/login"); // Redirect to login page after logout
+  };
+
 
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
@@ -58,35 +68,37 @@ function Header() {
         ))}
       </ul>
 
-      {/* Login Button */}
-
-      
-      {!user && (  <button
-    onClick={() => navigate("/login")}
-    className="mr-3 bg-yellow-400 text-gray-900 px-4 py-1 md:px-6 md:py-2 rounded-full font-semibold hover:bg-yellow-500 transition-all shadow-md hover:scale-[0.9] duration-300 cursor-pointer"
-  >
-    Login
-  </button>
-)}
-      {/* img Container */}
-      {user && ( <div className="flex flex-row justify-center items-center gap-2 mr-4 ">
-        <div className="w-[40px] h-[40px]  rounded-full  md:mr-0  overflow-hidden relative ">
-          <img
-            src={y}
-            alt=""
-            className="object-cover md:w-full md:h-full  absolute inset-0 cursor-pointer "
-            onClick={() => navigate("/User-profile")}
+          {/* Login/Logout Button */}
+            {!user ? (
+        // Show login button if not logged in
+        <button
+          onClick={() => navigate("/login")}
+          className="mr-3 bg-yellow-400 text-gray-900 px-4 py-1 md:px-6 md:py-2 rounded-full font-semibold hover:bg-yellow-500 transition-all shadow-md hover:scale-[0.9] duration-300 cursor-pointer"
+        >
+          Login
+        </button>
+      ) : (
+        // Show profile and chat buttons if user is logged in
+        <div className="flex flex-row justify-center items-center gap-2 mr-4">
+          <div
+            className="w-[40px] h-[40px] rounded-full md:mr-0 overflow-hidden relative"
+            onClick={handleProfileClick}
+          >
+            <img
+              src={user?.photo || "/default-profile.jpg"}
+              alt="Profile"
+              className="object-cover md:w-full md:h-full absolute inset-0 cursor-pointer"
+            />
+          </div>
+          <IoChatbubbleEllipsesOutline
+            className="lg:text-3xl text-xl cursor-pointer transition-all transform hover:scale-[0.9] duration-300"
+            onClick={() => navigate("/msg")}
           />
+          {/* Logout Button (we will remove it) */}
         </div>
+      )}
 
-        <IoChatbubbleEllipsesOutline
-          className="lg:text-3xl text-xl cursor-pointer transition-all transform hover:scale-[0.9] duration-300"
-          onClick={() => navigate("/msg")}
-        />
-      </div>
-
-)}
-
+    
       {/* ✅ Now this is outside of the ternary */}
       <button
         className="md:hidden text-white text-2xl cursor-pointer absolute top-1 right-3"
@@ -138,3 +150,38 @@ function Header() {
 }
 
 export default Header;
+
+
+
+//  {!user ?(
+//         <button
+//           onClick={() => navigate("/login")}
+//           className="mr-3 bg-yellow-400 text-gray-900 px-4 py-1 md:px-6 md:py-2 rounded-full font-semibold hover:bg-yellow-500 transition-all shadow-md hover:scale-[0.9] duration-300 cursor-pointer"
+//         >
+//           Login
+//         </button>
+//       ):(
+
+//       <div className="flex flex-row justify-center items-center gap-2 mr-4 ">
+//       {/* img Container */}
+   
+//           <div
+//             className="w-[40px] h-[40px]  rounded-full  md:mr-0  overflow-hidden relative "
+//             onClick={handleProfileClick}
+//           >
+//             <img
+//               src={user?.photo || "/default-profile.jpg"}
+//               alt=""
+//               className="object-cover md:w-full md:h-full  absolute inset-0 cursor-pointer "
+//               // onClick={() => navigate("/User-profile")}
+//             />
+//           </div>
+//           <IoChatbubbleEllipsesOutline
+//             className="lg:text-3xl text-xl cursor-pointer transition-all transform hover:scale-[0.9] duration-300"
+//             onClick={() => navigate("/msg")}
+//           />
+//         </div>
+//       )}
+
+
+

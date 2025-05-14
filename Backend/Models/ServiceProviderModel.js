@@ -18,6 +18,10 @@ const ServiceProviderSchema = new mongoose.Schema({
       type: String,
       enum: ["male", "female", "other"], 
     },
+      location: {
+    type: String,
+    required: true, // if needed, you can remove this if not required
+  },
       // Fields for services only
       experience: [   {
         startdate:{ type: String,},
@@ -27,7 +31,6 @@ const ServiceProviderSchema = new mongoose.Schema({
       } ],
       bio: { type: String, maxLength: 50 },
       about: { type: String ,
-        default:"it is good service"
       },
       timeSlots: [   {
         date:{ type: String,},

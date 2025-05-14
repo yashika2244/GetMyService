@@ -44,7 +44,7 @@ export const updateService = async (req, res) => {
     }
     // Apply other updates
 
-    const updateService = await ServiceProviderModel.findByIdAndUpdate(id, { $set: updates }, { new: true });
+ const updateService = await ServiceProviderModel.findByIdAndUpdate(id, { $set: updates }, { new: true });
 
     // Save the doctor with new array entries
     await service.save();
@@ -64,30 +64,6 @@ export const updateService = async (req, res) => {
 };
 
 
-// service Profile
-
-// export const getServiceProfile = async (req, res) => {
-//   const serviceId = req.serviceId;
-//   // const serviceId = req.params.id;
-//   try {
-//     const service = await ServiceProviderModel.findById(serviceId);
-//     if (!service) {
-//       return res.status(404).json({ success: false, message: 'service not found' });
-      
-//     }
-
-//     const {password, ...rest} = service._doc;
-//     const appointments =await BookingModel.find({service:serviceId})
-
-  
-//     res.status(200).json({ success: true, message: 'Profile info is getting', data: { ...rest } });
-
-//   } catch (error) {
-//     res.status(500).json({ success: false, message: 'Something went wrong' });
-//   }
-
-  
-// }
 
 
 export const AllServices = async (req, res) => {

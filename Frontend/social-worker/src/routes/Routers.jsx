@@ -5,12 +5,16 @@ import Services from "../pages/Services"
 import {Routes,Route} from 'react-router-dom'
 import About from '../components/About/About'
 import Login from '../pages/Login'
-import Signup from '../pages/SignUp'
+import SignUp from '../pages/signUp/CustomerSignUP'
 import FindService from '../pages/FindService'
 import Msg from '../components/msg/Msg'
 import Chat from '../components/msg/Chat'
-import ServiceProfile from '../components/ServiceProfile/ServiceProfile'
+import AllServiceProfile from '../components/ServiceProfile/AllServiceProfile'
 import UserProfile from '../components/UserProfile/UserProfile'
+import RollSelection from '../components/RollSelection/RollSelection'
+import CustomerSignUp from '../pages/signUp/CustomerSignUP'
+import ServiceProviderSignUp from '../pages/signUp/ServiceProviderSignUp'
+import ServicerAccount from '../components/ServiceProfile/ServicerAccount'
 
 
 
@@ -22,13 +26,25 @@ const Routers = () => {
     <Route path='/services' element={<Services/>} />
     <Route path='/contact' element={<Contact/>} />
     <Route path='/about' element={<About/>} />
-    <Route path='/login' element={<Login/>} />
-    <Route path='/register' element={<Signup/>} />
+    {/* <Route path='/user-signup' element={<Login/>} /> */}
+    {/* <Route path='/register' element={<SignUp/>} /> */}
     <Route path='/msg' element={<Msg/>} />
     <Route path='/find-Service' element={<FindService/>} />
     <Route path='/chat' element={<Chat/>} />
     <Route path='/User-profile' element={<UserProfile/>} />
-    <Route path='/Service-profile/:id' element={<ServiceProfile/>} />
+    <Route path="/Service-profile/:id" element={<AllServiceProfile/>} />
+
+
+  <Route path="/select-role" element={<RollSelection />} />
+  {/* <Route path="/servier-account" element={<ServicerAccount />} /> */}
+
+
+    <Route path='/login' element={<Login/>} />
+    {/* <Route path='/service-provider-signup' element={<ServiceProviderSignUp />} /> */}
+
+      <Route path="/cutomer-register" element={<CustomerSignUp />} />
+  <Route path="/register-service-provider" element={<ServiceProviderSignUp />} />
+
 
 
 

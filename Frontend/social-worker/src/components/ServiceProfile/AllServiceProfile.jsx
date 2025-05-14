@@ -1,66 +1,91 @@
+
+
 import React from "react";
 import { MdOutlineVerified } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
-import { MdOutlineLogout } from "react-icons/md";
 import { MdArrowForwardIos } from "react-icons/md";
 import { IoIosSettings } from "react-icons/io";
-import { authContext ,useAuth } from "../../context/AppContext";
-import { token } from "../../config";
-// import MyDetails from "./MyDetails";
+import { useAuth } from "../../context/AppContext";
+import { BASE_URL } from "../../config";
 
-
-function ServiceProfile() {
-  const { user, setUserData } = useAuth();
+function AllServiceProfile() {
+  // Get user data from context
+  const { user, setUserData, dispatch  } = useAuth();
   const [expanded, setExpanded] = useState(false);
-  const [settingOpen, setsettingOpen] = useState(false);
+  const [settingOpen, setSettingOpen] = useState(false);
+
   const toggleSetting = () => {
-    setsettingOpen(!settingOpen);
+    setSettingOpen(!settingOpen);
   };
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { name, photo, id, loc, peragraph, accounts } = location.state || {};
-  console.log(location.state);
-  // console.log(id); // The current user's id
+  // const logoutHandler = async () => {
+  //   try {
+  //     // Logout request to server
+  //     const res = await fetch(`${BASE_URL}/api/auth/logout`, {
+  //       method: "POST",
+  //       credentials: "include",
+  //     });
 
-  const text = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi rerum modi dicta voluptatem deleniti!
-  Molestias veniam quis deserunt vero vitae. Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-  Deleniti unde quod dolor deserunt, nulla hic! Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-  Vel praesentium ipsum sint velit officiis blanditiis iure id dignissimos minima dolores, enim minus ad,
-  quos qui sed corporis? Deleniti, nulla quisquam.`;
+  //     if (res.ok) {
+  //       // Clear user data from context and localStorage
+  //       // setUserData(null); // Update context
 
-  const shortText = text.slice(0, 270);
-  const rating = 4;
+  //       localStorage.removeItem("userData");
+  //       window.location.href = "/"; // Redirect to home
+  //     } else {
+  //       console.log("Logout failed");
+  //     }
+  //   } catch (error) {
+  //     console.log("Logout error:", error.message);
+  //   }
+  // };
+
 
   const logoutHandler = async () => {
     try {
-      // Logout request to server (you can modify this part based on your API)
       const res = await fetch(`${BASE_URL}/api/auth/logout`, {
         method: "POST",
         credentials: "include",
       });
 
       if (res.ok) {
-        setUserData(null);
-        // Remove user details from localStorage and set user state to null
-        window.location.href = "/";
+        // Dispatch logout action
+        dispatch({ type: "LOGOUT" });
+
+        // Clear localStorage
         localStorage.removeItem("user");
-        setUser(null); // This will trigger re-render and login button will appear
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        localStorage.removeItem("chatUser");
+
+        // Redirect to home page
+        navigate("/");
       } else {
         console.log("Logout failed");
+        // alert("Logout failed, please try again.");
       }
     } catch (error) {
       console.log("Logout error:", error.message);
+      alert("An error occurred while logging out. Please try again.");
     }
   };
 
-  console.log(accounts);
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  // Get user profile data from the location state or context
+  const { name, photo, id, loc, about, accounts, rating, experience } =
+    location.state || user || {};
+
+  const text = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi rerum modi dicta voluptatem deleniti! 
+    Molestias veniam quis deserunt vero vitae. Lorem ipsum dolor, sit amet consectetur adipisicing elit.`;
+
+  const shortText = text.slice(0, 270);
 
   return (
     <section className="min-h-screen bg-purple-100 md:mt-13 pt-6  md:px-7 flex">
@@ -69,7 +94,7 @@ function ServiceProfile() {
           {/* Top Section */}
           <FaArrowLeft
             className="text-xl md:mt-0 mt-4 ml-3"
-            onClick={() => navigate("/chat")}
+            onClick={() => navigate("/chat", { state: { name, photo, id } })}
           />
 
           <div className="md:relative w-full rounded-xl ">
@@ -95,14 +120,12 @@ function ServiceProfile() {
                 <h1>{name}</h1>
                 <MdOutlineVerified className="text-slate-700 mt-1" />
               </div>
-              <h2 className="text-gray-7=800 font-normal text-md">
-                {peragraph}
-              </h2>
+              <h2 className="text-gray-7=800 font-normal text-md">{about}</h2>
               <div className="flex flex-wrap items-center gap-1 md:mt-0 mt-2 text-sm text-slate-500">
                 <FaLocationDot />
                 <h2 className="text-gray-7=800 font-normal text-md">
-                {loc || "not location available"}
-              </h2>
+                  {loc || "not location available"}
+                </h2>
                 <span className="font-bold text-lg md:mb-1">·</span>
                 <Link
                   to="/contact"
@@ -222,18 +245,18 @@ function ServiceProfile() {
                       settingOpen ? "max-h-[300px]" : "max-h-0"
                     }`}
                   >
-                    <h1 className=" text-[14px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md">
-                      Delete Account{" "}
+                    <h1 className=" text-[15px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md">
+                      Book Now
                     </h1>
-                    <div className="flex items-center gap-1   md:mt-3 mt-1 transition hover:bg-gray-200 p-1 mx-3 rounded-md">
-                      <MdOutlineLogout />
+                   
+               
                       <h1
-                        className=" text-[14px] font-[500] cursor-pointer    "
+                        className="text-[14px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md"
                         onClick={logoutHandler}
                       >
                         Logout
                       </h1>
-                    </div>
+                  
                   </div>
                 )}
               </div>
@@ -258,29 +281,43 @@ function ServiceProfile() {
               More profile for you
             </h2>
           </div>
-          {/*  */}
-          {Array.isArray(accounts) &&
+
+          {Array.isArray(accounts) && accounts.length > 0 ? (
             accounts
-              .filter((profile) => profile.id !== id)
+              .filter((profile) => profile._id !== id) // Exclude current profile based on _id
               .map((profile, index) => (
-                <div key={profile.id} className="pt-4 pl-4 ">
-                  <div className="flex  ">
+                <div key={index} className="pt-4 pl-4">
+                  <div className="flex">
                     <img
-                      src={profile.photo || "default-profile.png"}
+                      src={profile.photo || "default-profile.png"} // Default image if photo is missing
                       className="w-12 h-12 rounded-full border border-gray-200 object-cover"
                     />
                     <div className="flex flex-col justify-center ml-2">
                       <h2
                         className="text-md font-semibold"
-                        onClick={() => navigate(`/Service-profile/${id}`)}
+                        onClick={() =>
+                          navigate(`/Service-profile/${profile._id}`, {
+                            state: {
+                              id: profile._id,
+                              name: profile.name,
+                              photo: profile.photo,
+                              loc: profile.loc,
+                              about: profile.about,
+                              accounts: accounts,
+                            },
+                          })
+                        }
                       >
-                        {profile.name} 
+                        {profile.name || "No Name Available"}{" "}
+                        {/* Default text if name is missing */}
                       </h2>
+
                       <p className="text-[14px] text-gray-800">
-                        {profile.peragraph}
+                        {profile.about || "No details available"}{" "}
+                        {/* Default text if about is missing */}
                       </p>
                       <button
-                        className=" mr-2 py-1 w-[150px]  mt-2 rounded-xl border border-sky-700   text-sky-700 bg-white font-semibold hover:text-sky-900 hover:outline cursor-pointer hover:bg-sky-50 transition duration-300"
+                        className="mr-2 py-1 w-[150px] mt-2 rounded-xl border border-sky-700 text-sky-700 bg-white font-semibold hover:text-sky-900 hover:outline cursor-pointer hover:bg-sky-50 transition duration-300"
                         onClick={() => navigate("/chat")}
                       >
                         Message
@@ -288,15 +325,17 @@ function ServiceProfile() {
                     </div>
                   </div>
                   {index !== accounts.length - 1 && (
-                    <div className="border-b border-gray-300 mt-5 mr-6 mb-4 " />
+                    <div className="border-b border-gray-300 mt-5 mr-6 mb-4" />
                   )}
                 </div>
-              ))}
+              ))
+          ) : (
+            <div className="pl-4 mt-2 text-[14px]">No other profiles found</div>
+          )}
         </div>
       </div>
     </section>
   );
 }
 
-export default ServiceProfile;
-
+export default AllServiceProfile;

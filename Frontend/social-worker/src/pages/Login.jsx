@@ -1,12 +1,14 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { useState, useContext } from "react";
-import { authContext } from "../context/AppContext";
+import { useState, useContext, useEffect } from "react";
+import {authContext} from '../context/AppContext'
 import { BASE_URL } from "../config";
+// import { useAuth } from "../context/AppContext";
 
 function Login() {
   // const {BASE_URL} = use
+  // const { user, token } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -16,6 +18,11 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { dispatch } = useContext(authContext);
+  const [accounts, setAccounts] = useState([]);  // State to hold service data
+  // const [loading, setLoading] = useState(true);   // Loading state
+  const [error, setError] = useState(null);       // Error state
+  // const navigate = useNavigate();
+
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,13 +31,59 @@ function Login() {
   
 
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
-    if (loading) return; // Prevent multiple clicks
-    setLoading(true);
+  // const submitHandler = async (event) => {
+  //   event.preventDefault();
+  //   if (loading) return; // Prevent multiple clicks
+  //   setLoading(true);
 
-    try {
-        // Prevent invalid role submission
+  //   try {
+  //       // Prevent invalid role submission
+  //   if (formData.role === "select" || !formData.role) {
+  //     alert("Please select a valid role.");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   // Normalize role value
+  //   formData.role = formData.role.trim().toLowerCase();
+  //     const res = await fetch(`${BASE_URL}/api/auth/login`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(formData),
+  //     });
+
+  //     const result = await res.json();
+
+  //     if (!res.ok) {
+  //       throw new Error(result.message);
+  //     }
+
+  //     dispatch({
+  //       type: "LOGIN_SUCCESS",
+  //       payload: {
+  //         user: result.data,
+  //         token: result.token,
+  //         role: result.role,
+  //       },
+  //     });
+
+
+  //     localStorage.setItem("user", JSON.stringify(result.data));
+  //     localStorage.setItem("token", result.token); 
+  //     navigate("/");
+  //     window.location.reload();
+  //   } catch (error) {
+  //     console.error("Login error:", error);
+  //     setLoading(false);
+  //   }
+  // };
+  const submitHandler = async (event) => {
+  event.preventDefault();
+  if (loading) return; // Prevent multiple clicks
+  setLoading(true);
+
+  try {
+    // Prevent invalid role submission
     if (formData.role === "select" || !formData.role) {
       alert("Please select a valid role.");
       setLoading(false);
@@ -39,37 +92,48 @@ function Login() {
 
     // Normalize role value
     formData.role = formData.role.trim().toLowerCase();
-      const res = await fetch(`${BASE_URL}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
 
-      const result = await res.json();
+    const res = await fetch(`${BASE_URL}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
 
-      if (!res.ok) {
-        throw new Error(result.message);
-      }
+    const result = await res.json();
 
-      dispatch({
-        type: "LOGIN_SUCCESS",
-        payload: {
-          user: result.data,
-          token: result.token,
-          role: result.role,
-        },
-      });
-
-
-      localStorage.setItem("user", JSON.stringify(result.data));
-      localStorage.setItem("token", result.token); 
-      navigate("/");
-      window.location.reload();
-    } catch (error) {
-      console.error("Login error:", error);
-      setLoading(false);
+    if (!res.ok) {
+      throw new Error(result.message);
     }
-  };
+
+    dispatch({
+      type: "LOGIN_SUCCESS",
+      payload: {
+        user: result.data,
+        token: result.token,
+        role: result.role,
+      },
+    });
+
+    // Store the role, user data, and token in localStorage
+    localStorage.setItem("user", JSON.stringify(result.data));
+    localStorage.setItem("token", result.token); 
+    localStorage.setItem("role", result.role); // Store the role
+
+    // Redirect based on role
+    if (result.role === "customer") {
+      navigate("/user-profile");
+    } else if (result.role === "service-provider") {
+      navigate("/Service-profile/:id");
+    }
+    window.location.reload();
+  } catch (error) {
+    console.error("Login error:", error);
+    setLoading(false);
+  }
+};
+
+
+
 
   return (
     <section className="md:px-5 px-2 lg:px-0 mt-16 mb-32 md:mt-24 ">
@@ -150,7 +214,8 @@ function Login() {
             {" "}
             Don't have an account?{" "}
             <Link
-              to="/register"
+              // to="/register"
+              to="/select-role"
               className="text-sky-600 font-medium ml-1 border-b"
             >
               {" "}

@@ -1,115 +1,188 @@
+
+
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken';
 import UserModels from '../Models/UserModels.js';
 import ServiceProviderModel from '../Models/ServiceProviderModel.js';
 
+
 //  generated token
 const generateToken = (user) => {
-    return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET)
+  return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET)
 
 }
 
-// /register
-export const register = async (req, res) => {
-    const { email, password, name, role, photo, gender } = req.body;
-    try {
-        // Valid Input
-
-        if (!email || !password || !name || !role || !gender) {
-            return res.status(400).json({ message: "All fields are required" });
-        }
-        if (role !== "customer" && role !== "service-provider") {
-            return res.status(400).json({ message: "Invalid role" });
-        }
-        // Check if user already exists
-        let user = await UserModels.findOne({ email })
-        if (user) {
-
-            return res.status(400).json({ message: "User already exists" });
-
-        }
-        // Hash password
-        const salt = await bcrypt.genSalt(10)
-        const hashPassword = await bcrypt.hash(password, salt);
-
-        // Create user or doctor based on role
-        const Model = role === "customer" ? UserModels : ServiceProviderModel;
-        const newUser = new Model({
-            name,
-            email,
-            password: hashPassword,
-            photo,
-            gender,
-            role,
-
-        })
-        // Save user
-        await newUser.save();
-        res.status(201).json({ success: true, message: "User successfully created" });
 
 
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: error.message });
-
+export const registerCustomer = async (req, res) => {
+  const { email, password, name, photo, gender } = req.body;
+  try {
+    // Validate input
+    if (!email || !password || !name || !gender) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
+    // Check if customer exists
+    let user = await UserModels.findOne({ email });
+    if (user) {
+      return res.status(400).json({ message: "Customer already exists" });
+    }
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create new customer
+    const newUser = new UserModels({
+      name,
+      email,
+      password: hashedPassword,
+      photo,
+      gender,
+      role: "customer",  // Ensure it's a customer
+    });
+
+    // Save new customer
+    await newUser.save();
+    res.status(201).json({ success: true, message: "Customer successfully created" });
+
+  } catch (error) {
+    console.error("Error during customer registration:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const registerServiceProvider = async (req, res) => {
+  const { email, password, name, photo, gender, specialization, location, about } = req.body;
+  try {
+    // Validate input
+    if (!email || !password || !name || !gender || !specialization || !location) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Check if service provider exists
+    let user = await ServiceProviderModel.findOne({ email });
+    if (user) {
+      return res.status(400).json({ message: "Service provider already exists" });
+    }
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create new service provider
+    const newServiceProvider = new ServiceProviderModel({
+      name,
+      email,
+      password: hashedPassword,
+      photo,
+      gender,
+      role: "service-provider",  // Ensure it's a service provider
+      specialization,
+      location, // Include location in the service provider model
+      about
+    });
+
+    // Save new service provider
+    await newServiceProvider.save();
+    res.status(201).json({ success: true, message: "Service provider successfully created" });
+
+  } catch (error) {
+    console.error("Error during service provider registration:", error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 
 
-}
+
+
 
 export const login = async (req, res) => {
-    let { email  } = req.body;
-    try {
-        let user = null
-        const costomer = await UserModels.findOne({ email });
-        const ServiceProvider = await ServiceProviderModel.findOne({ email });
-        if (req.body.role === "customer") {
-            user = costomer
-        }
-        else if (req.body.role === "service-provider") {
-            user = ServiceProvider
-        }
+  try {
+    const { email, password, role } = req.body;
 
-        if (!user) {
-            return res.status(404).json({ message: "User Not found" })
-        }
-        // if user exist then check password
-        const isPasswordMatch = await bcrypt.compare(req.body.password, user.password)
-        if (!isPasswordMatch) {
-            return res.status(400).json({ status: false, message: "wrong password" })
-        }
-        //get token--
-
-        const token = generateToken(user);
-        const { password, role, ...rest } = user._doc
-
-        return res.status(200).cookie("token", token).json({ status: true, message: "sucessfully", token, data: { ...rest }, role })
-
-
-
-
-
-    } catch (error) {
-        return res.status(500).json({ status: false, message: "login failed" })
-
+    if (!email || !password || !role) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
-}
+    let user;
+
+    // Find user based on role
+    if (role === "customer") {
+      user = await UserModels.findOne({ email });
+    } else if (role === "service-provider") {
+      user = await ServiceProviderModel.findOne({ email });
+    } else {
+      return res.status(400).json({ message: "Invalid role" });
+    }
+
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    // Validate password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Password is Invalid" });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+
+    // Send successful login response with token and user data
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      data: user,
+      role: user.role,
+    });
+  } catch (error) {
+    console.error("Login backend error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// logout
 export const logout = async (req, res) => {
-    try {
-      res.clearCookie("token", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "Strict",
-      });
-      res.status(200).json({ success: true, message: "Logged out successfully" });
-    } catch (error) {
-      res.status(500).json({ success: false, message: "Logout failed", error: error.message });
-    }
-  };
-
-
-
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+    });
+    res.status(200).json({ success: true, message: "Logged out successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Logout failed", error: error.message });
+  }
+};

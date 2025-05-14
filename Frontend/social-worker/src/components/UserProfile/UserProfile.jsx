@@ -6,8 +6,18 @@ import { MdOutlineLogout } from "react-icons/md";
 import { MdArrowForwardIos } from "react-icons/md";
 import { useState } from "react";
 import {BASE_URL} from '../../config'
+import  {  useEffect } from "react";
+
+
 
 function UserProfile() {
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    }, []);
   const [settingOpen, setsettingOpen] = useState(false);
   const toggleSetting = () => {
     setsettingOpen(!settingOpen);
@@ -52,14 +62,16 @@ function UserProfile() {
           <div className="flex justify-center">
             <div className=" w-40 h-40 border-2  shadow-xl shadow-white border-gray-300 rounded-full overflow-hidden flex items-center justify-center">
               {/* Image */}
-              <img src={doll} className="w-full h-full object-cover" />
+              <img    
+               src={user?.photo || "https://static.vecteezy.com/system/resources/previews/026/434/417/original/default-avatar-profile-icon-of-social-media-user-photo-vector.jpg"} alt="Profile" 
+               className="w-full h-full object-cover" />
             </div>
           </div>
 
           {/* Details */}
           <div className="flex flex-col items-center lg:items-start md:flex-row lg:gap-4 lg:justify-between lg:pr-12   mt-3 lg:mt-25 w-full text-center md:text-left">
             <div className="">
-              <h1 className="text-3xl font-bold">Yashi Rajput</h1>
+              <h1 className="text-3xl font-bold">{user?.name}</h1>
               <h2 className="text-md text-gray-600 font-medium">My Location</h2>
             </div>
             {/* edit button */}
