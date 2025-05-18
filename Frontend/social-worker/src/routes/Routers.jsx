@@ -14,7 +14,8 @@ import UserProfile from '../components/UserProfile/UserProfile'
 import RollSelection from '../components/RollSelection/RollSelection'
 import CustomerSignUp from '../pages/signUp/CustomerSignUP'
 import ServiceProviderSignUp from '../pages/signUp/ServiceProviderSignUp'
-import ServicerAccount from '../components/ServiceProfile/ServicerAccount'
+import GetProfileFromSearch from '../components/ServiceProfile/GetProfileFromSearch'
+// import ServicerAccount from '../components/ServiceProfile/ServicerAccount'
 
 
 
@@ -32,7 +33,9 @@ const Routers = () => {
     <Route path='/find-Service' element={<FindService/>} />
     <Route path='/chat' element={<Chat/>} />
     <Route path='/User-profile' element={<UserProfile/>} />
+    
     <Route path="/Service-profile/:id" element={<AllServiceProfile/>} />
+    <Route path="/Services-profile/:id" element={<GetProfileFromSearch/>} />
 
 
   <Route path="/select-role" element={<RollSelection />} />

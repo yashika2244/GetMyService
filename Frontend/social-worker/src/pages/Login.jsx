@@ -7,12 +7,11 @@ import { BASE_URL } from "../config";
 // import { useAuth } from "../context/AppContext";
 
 function Login() {
-  // const {BASE_URL} = use
-  // const { user, token } = useAuth();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    role :""
+    // role :""
   });
 
   const [loading, setLoading] = useState(false);
@@ -31,52 +30,6 @@ function Login() {
   
 
 
-  // const submitHandler = async (event) => {
-  //   event.preventDefault();
-  //   if (loading) return; // Prevent multiple clicks
-  //   setLoading(true);
-
-  //   try {
-  //       // Prevent invalid role submission
-  //   if (formData.role === "select" || !formData.role) {
-  //     alert("Please select a valid role.");
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   // Normalize role value
-  //   formData.role = formData.role.trim().toLowerCase();
-  //     const res = await fetch(`${BASE_URL}/api/auth/login`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(formData),
-  //     });
-
-  //     const result = await res.json();
-
-  //     if (!res.ok) {
-  //       throw new Error(result.message);
-  //     }
-
-  //     dispatch({
-  //       type: "LOGIN_SUCCESS",
-  //       payload: {
-  //         user: result.data,
-  //         token: result.token,
-  //         role: result.role,
-  //       },
-  //     });
-
-
-  //     localStorage.setItem("user", JSON.stringify(result.data));
-  //     localStorage.setItem("token", result.token); 
-  //     navigate("/");
-  //     window.location.reload();
-  //   } catch (error) {
-  //     console.error("Login error:", error);
-  //     setLoading(false);
-  //   }
-  // };
   const submitHandler = async (event) => {
   event.preventDefault();
   if (loading) return; // Prevent multiple clicks
@@ -100,6 +53,7 @@ function Login() {
     });
 
     const result = await res.json();
+        console.log( "result is",result);
 
     if (!res.ok) {
       throw new Error(result.message);
@@ -171,10 +125,9 @@ function Login() {
               onChange={handleInputChange}
             >
               <option value="select">select</option>
-              <option value="customer">Customer</option> {/* Correct Role */}
-              <option value="service-provider">Service Provider</option>{" "}
-              {/* Correct Role */}
-            </select>
+              <option value="customer">Customer</option> 
+            <option value="service-provider">Service Provider</option>{" "} 
+            </select> 
           </div>
 
           <div className="flex justify-center md:mt-8">

@@ -6,6 +6,7 @@ import { BASE_URL } from "../../config";
 
 function ServiceProviderSignUp() {
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,13 +27,16 @@ function ServiceProviderSignUp() {
 
   const handleFileInputChange = async (event) => {
     const file = event.target.files[0];
+      setUploading(true);
     try {
       const data = await uploadImageToClodinary(file);
       setPreviewUrl(data.url);
       setFormData({ ...formData, photo: data.url });
     } catch {
       setErrorMessage("Error uploading image. Please try again.");
-    }
+    } finally {
+    setUploading(false); // finish uploading
+  }
   };
 
   const submitHandler = async (event) => {
@@ -71,9 +75,9 @@ function ServiceProviderSignUp() {
               {[
                 { name: "name", placeholder: "Full Name" },
                 { name: "email", placeholder: "Email", type: "email" },
-                { name: "password", placeholder: "Password", type: "password" },
+                { name: "password", placeholder: "Password", type: "password",  },
                 { name: "specialization", placeholder: "Specialization (e.g., Dentist)" },
-                { name: "experience", placeholder: "Experience (e.g., 5 years)" },
+                { name: "experience", placeholder: "Experience (e.g., 5 years)" ,type:"number" },
                 { name: "consultationFee", placeholder: "Consultation Fee", type: "number" },
                 { name: "about", placeholder: "About your service", type: "text" },
                 { name: "location", placeholder: "Location (e.g., Delhi)" }, // ✅
@@ -81,12 +85,12 @@ function ServiceProviderSignUp() {
                 <div key={field.name} className="mb-4">
                   <input
                     type={field.type || "text"}
+                    required
                     name={field.name}
                     placeholder={field.placeholder}
                     value={formData[field.name]}
                     onChange={handleInputChange}
                     className="w-full px-4 py-1 border-b border-[#0066ff61] rounded-md text-gray-600 outline-none text-[15px]"
-                    required
                   />
                 </div>
               ))}
@@ -122,9 +126,10 @@ function ServiceProviderSignUp() {
                   />
                   <label
                     htmlFor="customfile"
-                    className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-blue-600 text-white font-bold rounded-lg md:text-[15px] text-[13px] cursor-pointer hover:bg-blue-700 transition"
+                    className="absolute top-0 left-0 w-full h-full flex items-center justify-center
+                       ${uploading ?  bg-blue-600 text-white font-bold rounded-lg md:text-[15px] text-[13px] cursor-pointer hover:bg-blue-700 transition"
                   >
-                    Upload Picture
+                {uploading ? "Uploading..." : "Upload Picture"}
                   </label>
                 </div>
               </div>

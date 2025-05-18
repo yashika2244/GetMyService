@@ -81,13 +81,13 @@ function Header() {
         // Show profile and chat buttons if user is logged in
         <div className="flex flex-row justify-center items-center gap-2 mr-4">
           <div
-            className="w-[40px] h-[40px] rounded-full md:mr-0 overflow-hidden relative"
+            className=" md:w-[40px] md:h-[40px] w-[30px] h-[30px] rounded-full md:mr-0 overflow-hidden  relative"
             onClick={handleProfileClick}
           >
             <img
               src={user?.photo || "/default-profile.jpg"}
               alt="Profile"
-              className="object-cover md:w-full md:h-full absolute inset-0 cursor-pointer"
+              className="object-cover w-full h-full  rounded-full absolute inset-0 cursor-pointer"
             />
           </div>
           <IoChatbubbleEllipsesOutline
@@ -122,7 +122,7 @@ function Header() {
         {/* Sidebar Links */}
         <ul className="mt-16 flex flex-col gap-8 text-lg ">
           {[
-            { name: "Home", path: "/home" },
+            { name: "Home", path: "/" },
             { name: "Find a service", path: "/find-Service" },
 
             { name: "Contact Us", path: "/contact" },

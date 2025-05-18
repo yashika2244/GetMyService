@@ -21,6 +21,10 @@ export const registerCustomer = async (req, res) => {
     if (!email || !password || !name || !gender) {
       return res.status(400).json({ message: "All fields are required" });
     }
+   //  Validate password length before hashing
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters long" });
+    }
 
     // Check if customer exists
     let user = await UserModels.findOne({ email });
@@ -59,6 +63,12 @@ export const registerServiceProvider = async (req, res) => {
     if (!email || !password || !name || !gender || !specialization || !location) {
       return res.status(400).json({ message: "All fields are required" });
     }
+    
+    //  Validate password length before hashing
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters long" });
+    }
+
 
     // Check if service provider exists
     let user = await ServiceProviderModel.findOne({ email });
