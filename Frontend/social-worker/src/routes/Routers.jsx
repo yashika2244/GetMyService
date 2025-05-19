@@ -32,9 +32,15 @@ const Routers = () => {
     <Route path='/msg' element={<Msg/>} />
     <Route path='/find-Service' element={<FindService/>} />
     <Route path='/chat' element={<Chat/>} />
-    <Route path='/User-profile' element={<UserProfile/>} />
     
+    <Route path='/User-profile' element={<UserProfile/>} />
     <Route path="/Service-profile/:id" element={<AllServiceProfile/>} />
+    
+
+
+
+
+
     <Route path="/Services-profile/:id" element={<GetProfileFromSearch/>} />
 
 

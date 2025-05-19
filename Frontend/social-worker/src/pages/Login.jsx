@@ -1,13 +1,13 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import { useState, useContext, useEffect } from "react";
 import {authContext} from '../context/AppContext'
 import { BASE_URL } from "../config";
 // import { useAuth } from "../context/AppContext";
+import { useAuth } from "../context/AppContext";
 
 function Login() {
-
+  const { user, role, logout } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -15,6 +15,7 @@ function Login() {
   });
 
   const [loading, setLoading] = useState(false);
+  
   const navigate = useNavigate();
   const { dispatch } = useContext(authContext);
   const [accounts, setAccounts] = useState([]);  // State to hold service data
@@ -37,14 +38,14 @@ function Login() {
 
   try {
     // Prevent invalid role submission
-    if (formData.role === "select" || !formData.role) {
-      alert("Please select a valid role.");
-      setLoading(false);
-      return;
-    }
+    // if (formData.role === "select" || !formData.role) {
+     
+    //   setLoading(false);
+    //   return;
+    // }
 
     // Normalize role value
-    formData.role = formData.role.trim().toLowerCase();
+    // formData.role = formData.role.trim().toLowerCase();
 
     const res = await fetch(`${BASE_URL}/api/auth/login`, {
       method: "POST",
@@ -71,12 +72,13 @@ function Login() {
     // Store the role, user data, and token in localStorage
     localStorage.setItem("user", JSON.stringify(result.data));
     localStorage.setItem("token", result.token); 
-    localStorage.setItem("role", result.role); // Store the role
+    // localStorage.setItem("role", result.role); // Store the role
 
+       
     // Redirect based on role
-    if (result.role === "customer") {
+    if (role === "customer") {
       navigate("/user-profile");
-    } else if (result.role === "service-provider") {
+    } else if (role === "service-provider") {
       navigate("/Service-profile/:id");
     }
     window.location.reload();
@@ -84,8 +86,7 @@ function Login() {
     console.error("Login error:", error);
     setLoading(false);
   }
-};
-
+  }
 
 
 
@@ -116,7 +117,7 @@ function Login() {
               required
             />
           </div>
-          <div className="mb-5">
+          {/* <div className="mb-5">
            
             <select
               name="role"
@@ -128,7 +129,7 @@ function Login() {
               <option value="customer">Customer</option> 
             <option value="service-provider">Service Provider</option>{" "} 
             </select> 
-          </div>
+          </div> */}
 
           <div className="flex justify-center md:mt-8">
             <button

@@ -21,7 +21,7 @@ export const registerCustomer = async (req, res) => {
     if (!email || !password || !name || !gender) {
       return res.status(400).json({ message: "All fields are required" });
     }
-   //  Validate password length before hashing
+    //  Validate password length before hashing
     if (password.length < 6) {
       return res.status(400).json({ message: "Password must be at least 6 characters long" });
     }
@@ -63,7 +63,7 @@ export const registerServiceProvider = async (req, res) => {
     if (!email || !password || !name || !gender || !specialization || !location) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    
+
     //  Validate password length before hashing
     if (password.length < 6) {
       return res.status(400).json({ message: "Password must be at least 6 characters long" });
@@ -110,22 +110,40 @@ export const registerServiceProvider = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password, role } = req.body;
+    const { email, password } = req.body;
 
-    if (!email || !password || !role) {
+    if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     let user;
 
-    // Find user based on role
-    if (role === "customer") {
+    if (email && password) {
       user = await UserModels.findOne({ email });
-    } else if (role === "service-provider") {
-      user = await ServiceProviderModel.findOne({ email });
-    } else {
-      return res.status(400).json({ message: "Invalid role" });
+      let role = "";
+
+
+
+
+      if (!user) {
+        user = await ServiceProviderModel.findOne({ email });
+
+      }
+
     }
+
+
+    // // Find user based on role
+    // if (role === "customer") {
+    //   user = await UserModels.findOne({ email });
+    // } else if (role === "service-provider") {
+    //   user = await ServiceProviderModel.findOne({ email });
+    // } else {
+    //   return res.status(400).json({ message: "Invalid role" });
+    // }
+
+
+
 
     if (!user) {
       return res.status(401).json({ message: "User not found" });
@@ -139,7 +157,7 @@ export const login = async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
+      // expiresIn: "d",
     });
 
     // Send successful login response with token and user data
@@ -147,7 +165,8 @@ export const login = async (req, res) => {
       message: "Login successful",
       token,
       data: user,
-      role: user.role,
+      role,
+
     });
   } catch (error) {
     console.error("Login backend error:", error);
