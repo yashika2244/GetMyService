@@ -92,4 +92,5 @@ export const getServiceProfile = async (req, res) => {
     console.error("Error in getServiceProfile:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
-};
+}
+

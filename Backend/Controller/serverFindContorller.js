@@ -38,3 +38,15 @@ export const SearchService = async (req, res) => {
   }
 };
 
+
+export const defaultServices = async (req, res) => {
+
+   try {
+    // Top 6 services sorted by rating (or createdAt if you prefer latest)
+    const services = await ServiceProviderModel.find().sort({ rating: -1 }).limit(6);
+    res.status(200).json(services);
+  } catch (error) {
+    console.error("Error fetching default services:", error);
+    res.status(500).json({ message: "Failed to load default services" });
+  }
+}

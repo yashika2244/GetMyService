@@ -1,85 +1,3 @@
-// // import React, {
-// //   createContext,
-// //   useReducer,
-// //   useContext,
-// //   useState,
-// //   useEffect,
-// // } from "react";
-
-// // // Initial auth state from localStorage
-// // const initialState = {
-// //   user: localStorage.getItem("user")
-// //     ? JSON.parse(localStorage.getItem("user"))
-// //     : null,
-// //   role: localStorage.getItem("role") || null,
-// //   token: localStorage.getItem("token") || null,
-// // };
-
-// // // Create context
-// //   export const authContext = createContext(initialState);
-
-// // // Custom hook for easy context usage
-// // export const useAuth = () => useContext(authContext);
-
-// // // Reducer to manage auth actions
-// // const authReducer = (state, action) => {
-// //   switch (action.type) {
-// //     case "LOGIN_START":
-// //       return { user: null, role: null, token: null };
-
-// //     case "LOGIN_SUCCESS":
-// //       return {
-// //         user: action.payload.user,
-// //         token: action.payload.token,
-// //         role: action.payload.role,
-// //       };
-
-// //     case "LOGOUT":
-// //       return { user: null, role: null, token: null };
-
-// //     default:
-// //       return state;
-// //   }
-// // };
-
-// // // Provider component
-// // export const AuthContextProvider = ({ children }) => {
-// //   const [state, dispatch] = useReducer(authReducer, initialState);
-// //   const [chatUser, setChatUser] = useState(() => {
-// //     const stored = localStorage.getItem("chatUser");
-// //     return stored ? JSON.parse(stored) : null;
-// //   });
-
-// //   // Persist auth state in localStorage
-// //   useEffect(() => {
-// //     localStorage.setItem("user", JSON.stringify(state.user));
-// //     localStorage.setItem("token", state.token || "");
-// //     localStorage.setItem("role", state.role || "");
-// //   }, [state]);
-
-// //   // Persist chatUser separately
-// //   useEffect(() => {
-// //     if (chatUser) {
-// //       localStorage.setItem("chatUser", JSON.stringify(chatUser));
-// //     }
-// //   }, [chatUser]);
-
-// //   return (
-// //     <authContext.Provider
-// //       value={{
-// //         user: state.user,
-// //         token: state.token,
-// //         role: state.role,
-// //         dispatch,
-// //         chatUser,
-// //         setChatUser,
-// //       }}
-// //     >
-// //       {children}
-// //     </authContext.Provider>
-// //   );
-// // };
-
 // import React, {
 //   createContext,
 //   useReducer,
@@ -87,6 +5,7 @@
 //   useState,
 //   useEffect,
 // } from "react";
+// import { BASE_URL } from "../config";
 
 // // Function to safely get user data from localStorage
 // const getUserFromLocalStorage = () => {
@@ -100,60 +19,66 @@
 //   }
 // };
 
-// // Initial auth state from localStorage
-// const initialState = {
+// // ==================== AUTH CONTEXT ====================
+// const initialAuthState = {
 //   user: getUserFromLocalStorage(),
 //   role: localStorage.getItem("role") || null,
 //   token: localStorage.getItem("token") || null,
 // };
 
-// // Create context
-// export const authContext = createContext(initialState);
-
-// // Custom hook for easy context usage
+// export const authContext = createContext(initialAuthState);
 // export const useAuth = () => useContext(authContext);
 
-// // Reducer to manage auth actions
 // const authReducer = (state, action) => {
 //   switch (action.type) {
 //     case "LOGIN_START":
 //       return { user: null, role: null, token: null };
-
 //     case "LOGIN_SUCCESS":
 //       return {
 //         user: action.payload.user,
 //         token: action.payload.token,
 //         role: action.payload.role,
 //       };
-
 //     case "LOGOUT":
 //       return { user: null, role: null, token: null };
-
 //     default:
 //       return state;
 //   }
 // };
 
-// // Provider component
+// // ==================== ACCOUNTS CONTEXT ====================
+// export const accountsContext = createContext();
+// export const useAccounts = () => useContext(accountsContext);
+
+// // ==================== PROVIDER ====================
 // export const AuthContextProvider = ({ children }) => {
-//   const [state, dispatch] = useReducer(authReducer, initialState);
+//   const [authState, dispatch] = useReducer(authReducer, initialAuthState);
 //   const [chatUser, setChatUser] = useState(() => {
 //     const stored = localStorage.getItem("chatUser");
 //     return stored ? JSON.parse(stored) : null;
 //   });
 
-//   // Persist auth state in localStorage
+//   const [accounts, setAccounts] = useState([]);
+//   const [accountsLoading, setAccountsLoading] = useState(true);
+//   const [accountsError, setAccountsError] = useState(null);
+
+//   // Auth localStorage persistence
 //   useEffect(() => {
-//     if (state.user) {
-//       localStorage.setItem("user", JSON.stringify(state.user));
+//     if (authState.user) {
+//       localStorage.setItem("user", JSON.stringify(authState.user));
 //     } else {
 //       localStorage.removeItem("user");
 //     }
-//     localStorage.setItem("token", state.token || "");
-//     localStorage.setItem("role", state.role || "");
-//   }, [state]);
+//     // localStorage.setItem("token", authState.token || "");
+//     if (authState.token) {
+//   localStorage.setItem("token", authState.token);
+// } else {
+//   localStorage.removeItem("token");
+// }
+//     localStorage.setItem("role", authState.role || "");
+//   }, [authState]);
 
-//   // Persist chatUser separately
+//   // ChatUser localStorage persistence
 //   useEffect(() => {
 //     if (chatUser) {
 //       localStorage.setItem("chatUser", JSON.stringify(chatUser));
@@ -162,18 +87,265 @@
 //     }
 //   }, [chatUser]);
 
+//   // Fetch accounts when token is available
+//   useEffect(() => {
+//     const fetchAccounts = async () => {
+//       try {
+//         if (!authState.token) return;
+//         const res = await fetch(`${BASE_URL}/api/services`, {
+//           headers: {
+//   Authorization: `Bearer ${authState.token}`,
+// }
+//         });
+
+//         if (!res.ok) throw new Error("Failed to fetch accounts");
+//         const data = await res.json();
+//         setAccounts(data);
+//         setAccountsLoading(false);
+//       } catch (err) {
+//         setAccountsError(err.message);
+//         setAccountsLoading(false);
+//       }
+//     };
+
+//     fetchAccounts();
+//   }, [authState.token]);
+
 //   return (
 //     <authContext.Provider
 //       value={{
-//         user: state.user,
-//         token: state.token,
-//         role: state.role,
+//         user: authState.user,
+//         token: authState.token,
+//         role: authState.role,
 //         dispatch,
 //         chatUser,
 //         setChatUser,
 //       }}
 //     >
-//       {children}
+//       <accountsContext.Provider
+//         value={{ accounts, loading: accountsLoading, error: accountsError }}
+//       >
+//         {children}
+//       </accountsContext.Provider>
+//     </authContext.Provider>
+//   );
+// };
+
+// import React, {
+//   createContext,
+//   useReducer,
+//   useContext,
+//   useState,
+//   useEffect,
+// } from "react";
+// import { BASE_URL } from "../config";
+
+// // Safely parse user data from localStorage
+// const getUserFromLocalStorage = () => {
+//   try {
+//     const user = localStorage.getItem("user");
+//     return user ? JSON.parse(user) : null;
+//   } catch (error) {
+//     console.error("Error parsing user data from localStorage:", error);
+//     return null;
+//   }
+// };
+
+// // ====== Initial auth state =======
+// const initialAuthState = {
+//   user: getUserFromLocalStorage(),
+//   role: localStorage.getItem("role") || null,
+//   token: localStorage.getItem("token") || null,
+// };
+
+// export const authContext = createContext(initialAuthState);
+// export const useAuth = () => useContext(authContext);
+
+// const authReducer = (state, action) => {
+//   switch (action.type) {
+//     case "LOGIN_START":
+//       return { user: null, role: null, token: null };
+//     case "LOGIN_SUCCESS":
+//       return {
+//         user: action.payload.user,
+//         token: action.payload.token,
+//         role: action.payload.role,
+//       };
+//     case "LOGOUT":
+//       return { user: null, role: null, token: null };
+//     default:
+//       return state;
+//   }
+// };
+
+// export const accountsContext = createContext();
+// export const useAccounts = () => useContext(accountsContext);
+
+// export const AuthContextProvider = ({ children }) => {
+//   const [authState, dispatch] = useReducer(authReducer, initialAuthState);
+//   const [chatUser, setChatUser] = useState(() => {
+//     const stored = localStorage.getItem("chatUser");
+//     return stored ? JSON.parse(stored) : null;
+//   });
+
+//   const [accounts, setAccounts] = useState([]);
+//   const [accountsLoading, setAccountsLoading] = useState(true);
+//   const [accountsError, setAccountsError] = useState(null);
+
+//   // Persist authState to localStorage
+//   useEffect(() => {
+//     if (authState.user) {
+//       localStorage.setItem("user", JSON.stringify(authState.user));
+//     } else {
+//       localStorage.removeItem("user");
+//     }
+
+//     if (authState.token) {
+//       localStorage.setItem("token", authState.token);
+//     } else {
+//       localStorage.removeItem("token");
+//     }
+
+//     if (authState.role) {
+//       localStorage.setItem("role", authState.role);
+//     } else {
+//       localStorage.removeItem("role");
+//     }
+//   }, [authState]);
+// useEffect(() => {
+//   console.log("Token:", authState.token); // check token in console
+
+// //   const fetchAccounts = async () => {
+// //     if (!authState.token) {
+// //       console.log("No token found, skipping fetch");
+// //       return;
+// //     }
+// //     try {
+// //       const res = await fetch(`${BASE_URL}/api/services`, {
+// //       headers: {
+// //   "Content-Type": "application/json",
+// //   Authorization: `Bearer ${authState.token}`,
+// // },
+// //       });
+// //       if (!res.ok) throw new Error("Failed to fetch accounts: " + res.status);
+// //       const data = await res.json();
+// //       setAccounts(data);
+// //       setAccountsLoading(false);
+// //     } catch (err) {
+// //       setAccountsError(err.message);
+// //       setAccountsLoading(false);
+// //     }
+// //   };
+
+// //   fetchAccounts();
+// // }, [authState.token]);
+
+//   // Persist chatUser to localStorage
+//   useEffect(() => {
+//     if (chatUser) {
+//       localStorage.setItem("chatUser", JSON.stringify(chatUser));
+//     } else {
+//       localStorage.removeItem("chatUser");
+//     }
+//   }, [chatUser]);
+
+//   // Fetch accounts when token is available
+//   useEffect(() => {
+//     const fetchAccounts = async () => {
+//       if (!authState.token) {
+//         setAccounts([]);
+//         setAccountsLoading(false);
+//         setAccountsError("No token available");
+//         return;
+//       }
+
+//       try {
+//         const res = await fetch(`${BASE_URL}/api/services`, {
+//           headers: {
+//             Authorization: `Bearer ${authState.token}`,
+//           },
+//         });
+
+//         if (res.status === 401) {
+//           setAccountsError("Unauthorized: Invalid or expired token.");
+//           setAccounts([]);
+//           setAccountsLoading(false);
+//           return;
+//         }
+
+//         if (!res.ok) {
+//           throw new Error(`Failed to fetch accounts: ${res.statusText}`);
+//         }
+
+//         const data = await res.json();
+//         setAccounts(data);
+//         setAccountsLoading(false);
+//         setAccountsError(null);
+//       } catch (error) {
+//         setAccountsError(error.message);
+//         setAccounts([]);
+//         setAccountsLoading(false);
+//       }
+//     };
+
+//     fetchAccounts();
+//   }, [authState.token]);
+
+//   // Example login function you can call from your login form/component
+//   const loginUser = async (email, password) => {
+//     dispatch({ type: "LOGIN_START" });
+
+//     try {
+//       const res = await fetch(`${BASE_URL}/api/auth/login`, {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({ email, password }),
+//       });
+
+//       if (!res.ok) {
+//         throw new Error("Login failed: Invalid credentials");
+//       }
+
+//       const data = await res.json();
+
+//       // Expecting data to contain user, token, and role
+//       dispatch({
+//         type: "LOGIN_SUCCESS",
+//         payload: {
+//           user: data.user,
+//           token: data.token,
+//           role: data.role,
+//         },
+//       });
+//     } catch (error) {
+//       dispatch({ type: "LOGOUT" });
+//       alert(error.message); // You can handle error UI better
+//     }
+//   };
+
+//   const logoutUser = () => {
+//     dispatch({ type: "LOGOUT" });
+//     setChatUser(null);
+//   };
+
+//   return (
+//     <authContext.Provider
+//       value={{
+//         user: authState.user,
+//         token: authState.token,
+//         role: authState.role,
+//         dispatch,
+//         chatUser,
+//         setChatUser,
+//         loginUser,
+//         logoutUser,
+//       }}
+//     >
+//       <accountsContext.Provider
+//         value={{ accounts, loading: accountsLoading, error: accountsError }}
+//       >
+//         {children}
+//       </accountsContext.Provider>
 //     </authContext.Provider>
 //   );
 // };
@@ -198,9 +370,6 @@ const getUserFromLocalStorage = () => {
     return null;
   }
 };
-
-
-
 
 // ==================== AUTH CONTEXT ====================
 const initialAuthState = {

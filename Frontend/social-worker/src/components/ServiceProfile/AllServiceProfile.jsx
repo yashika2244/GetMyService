@@ -9,61 +9,29 @@ import { FaStar } from "react-icons/fa";
 import { MdArrowForwardIos } from "react-icons/md";
 import { IoIosSettings } from "react-icons/io";
 import { useAuth } from "../../context/AppContext";
-import { BASE_URL ,token} from "../../config";
+import { BASE_URL, token } from "../../config";
 import { useEffect } from "react";
-
+import { useAccounts } from "../../context/AppContext";
 import { useParams } from "react-router-dom";
 
 function AllServiceProfile() {
-  // Get user data from context
-  const { user, setUserData, dispatch } = useAuth();
-  const [expanded, setExpanded] = useState(false);
-  const [settingOpen, setSettingOpen] = useState(false);
-  const [profile, setProfile] = useState(null);
-    const toggleSetting = () => {
-    setSettingOpen(!settingOpen);
-  };
-  
+
   const navigate = useNavigate();
   const location = useLocation();
+const { dispatch } = useAuth();
+  const [expanded, setExpanded] = useState(false);
+  const [settingOpen, setSettingOpen] = useState(false);
+  const currentUserId = localStorage.getItem("userId"); // ya aap context/state se bhi le sakte ho
+  const { accounts: allAccounts } = useAccounts(); // 🔁 fallback accounts from context
 
-  // const [service, setService] = useState(location.state || null);
-
-
-  // useEffect(() => {
-  //   fetch(`${BASE_URL}/api/services/${id}`, {
-  //     credentials: 'include',
-  //       headers: {
-  //     Authorization: `Bearer ${token}`, // <- Add token here if needed
-  //   }
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log("Service fetched: ", data);
-  //       setService(data);
-  //     })
-  //     .catch((err) => {
-  //       console.error("Error:", err);
-  //     });
-  // }, [id]);
-  // const toggleSetting = () => {
-  //   setsettingOpen(!settingOpen);
-  // };
-
-
-  //  useEffect(() => {
-  //   if (!service && id) {
-  //     fetch(`${BASE_URL}/api/services/${id}`)
-  //       .then((res) => res.json())
-  //       .then((data) => setService(data))
-  //       .catch((err) => console.error("Error fetching:", err));
-  //   }
-  // }, [id, location.state]);
-
-  // if (!service) return <p>Loading...</p>;
-
-
-
+  const [profile, setProfile] = useState(null);
+  const toggleSetting = () => {
+    setSettingOpen(!settingOpen);
+  };
+  const { id } = useParams(); // id = current profile id from URL
+  const user = JSON.parse(localStorage.getItem("user")); // logged-in user
+  // const isOwnProfile = path.includes(user._id);
+  // const isOwnProfile = user && id && user._id.toString() === id.toString();
   const logoutHandler = async () => {
     try {
       const res = await fetch(`${BASE_URL}/api/auth/logout`, {
@@ -95,7 +63,12 @@ function AllServiceProfile() {
 
 
   // Get user profile data from the location state or context
-  const { name, photo, id, loc, about, accounts, rating, experience } = location.state || user || {};
+  const { name, photo, loc, about, accounts, rating, experience } =
+    location.state || user || {};
+    console.log("accounts h yha pr profiles  me",accounts )
+useEffect(() => {
+  console.log("Accounts from location state:", accounts);
+}, [accounts]);
 
   const text = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi rerum modi dicta voluptatem deleniti! 
     Molestias veniam quis deserunt vero vitae. Lorem ipsum dolor, sit amet consectetur adipisicing elit.`;
@@ -110,7 +83,8 @@ function AllServiceProfile() {
             {/* Top Section */}
             <FaArrowLeft
               className="text-xl md:mt-0 mt-4 ml-3"
-              onClick={() => navigate("/chat", { state: { name, photo, id } })}
+              // onClick={() => navigate("/chat", { state: { name, photo, id } })}
+              onClick={()=> navigate(-1)}
             />
 
             <div className="md:relative w-full rounded-xl ">
@@ -157,16 +131,18 @@ function AllServiceProfile() {
 
                 {/* Buttons */}
                 <div className="md:flex flex-wrap gap-3 mt-4 hidden ">
-                  <button className="px-6   py-1 rounded-full bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer ">
-                    Connect
+                  <button
+                    onClick={() =>
+                      navigate("/chat", { state: { name, photo, id } })
+                    }
+                    className="px-6   py-1 rounded-full bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer "
+                  >
+                    Message
                   </button>
                   <button
                     className="px-4 py-[2px] rounded-4xl text-sky-700 border-1 border-sky-700  font-[600] hover:text-sky-900
         hover:outline hover:bg-sky-100  transition transform duration-300 cursor-pointer "
                   >
-                    Message
-                  </button>
-                  <button className="px-4    rounded-4xl bg-white text-slate-700 border border-slate-700 font-[600]  hover:outline hover:text-slate-900  hover:bg-slate-100     transition-all transform duration-300 cursor-pointer ">
                     More
                   </button>
                 </div>
@@ -257,22 +233,21 @@ function AllServiceProfile() {
                       }`}
                     />
                   </div>
+          
                   {settingOpen && (
-                    <div
-                      className={`overflow-y-auto transition-all duration-500 pl-5 p-3 text-slate-600 flex flex-col ${
-                        settingOpen ? "max-h-[300px]" : "max-h-0"
-                      }`}
-                    >
-                      <h1 className=" text-[15px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md">
+                    <div className="overflow-y-auto transition-all duration-500 pl-5 p-3 text-slate-600 flex flex-col max-h-[300px]">
+                      <h1 className="text-[15px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md">
                         Book Now
                       </h1>
 
-                      <h1
-                        className="text-[14px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md"
-                        onClick={logoutHandler}
-                      >
-                        Logout
-                      </h1>
+                    
+                        <h1
+                          className="text-[15px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md"
+                          onClick={logoutHandler}
+                        >
+                          Logout
+                        </h1>
+                     
                     </div>
                   )}
                 </div>
@@ -280,7 +255,6 @@ function AllServiceProfile() {
             </div>
           </div>
         </div>
-
         {/* side div */}
 
         <div className="hidden  md:flex flex-col ml-6   ">
@@ -335,7 +309,9 @@ function AllServiceProfile() {
                         </p>
                         <button
                           className="mr-2 py-1 w-[150px] mt-2 rounded-xl border border-sky-700 text-sky-700 bg-white font-semibold hover:text-sky-900 hover:outline cursor-pointer hover:bg-sky-50 transition duration-300"
-                          onClick={() => navigate("/chat")}
+                          onClick={() =>
+                            navigate("/chat", { state: { name, photo, id } })
+                          }
                         >
                           Message
                         </button>
