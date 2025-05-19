@@ -10,7 +10,7 @@ import userRouter from './Router/user.js';
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000
-const allowdOrigns = ['http://localhost:5173', 'https://serivce.vercel.app']
+const allowdOrigns = ['http://localhost:5173',"http://localhost:5174", 'https://serivce.vercel.app']
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

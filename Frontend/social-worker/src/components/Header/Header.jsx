@@ -9,15 +9,15 @@ import { useEffect } from "react";
 import { useAuth } from "../../context/AppContext";
 
 function Header() {
-  const { user, role, logout } = useAuth();
+  const { user,logout } = useAuth();
 
   const navigate = useNavigate();
 
   const handleProfileClick = () => {
-    if (role === "service-provider") {
+    if (user.role === "service-provider") {
       // navigate(`/Service-profile/${user?.id}`);
       navigate("/Service-profile/:id"); // Replace :id with actual ID if needed
-    } else if (role === "customer") {
+    } else if (user.role === "customer") {
       navigate("/user-profile");
     }
   };
