@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import signup from "../../assets/signup.gif";
 import uploadImageToClodinary from "../../../utils/uploadCloudinary";
 import { BASE_URL } from "../../config";
+import {toast} from 'react-toastify'
 
 function ServiceProviderSignUp() {
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -50,10 +51,12 @@ function ServiceProviderSignUp() {
 
       const { message } = await res.json();
       if (!res.ok) throw new Error(message);
+      toast.success('Registration Successful! Please login.');  // Success toast
 
       navigate("/login");
     } catch (error) {
-      setErrorMessage(error.message);
+      // setErrorMessage(error.message);
+       toast.error(error.message); 
     }
   };
 

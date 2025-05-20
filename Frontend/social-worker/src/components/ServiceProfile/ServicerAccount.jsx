@@ -15,20 +15,14 @@ import { useAccounts } from "../../context/AppContext";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import uploadImageToCloudinary from '../../../utils/uploadCloudinary';
+import uploadImageToCloudinary from "../../../utils/uploadCloudinary";
 
+import { FaUserEdit } from "react-icons/fa";
 
+function ServicerAccount() {
+  const { user, role, logout } = useAuth();
+  const { accounts, loading, error } = useAccounts();
 
-
-
-
-
-
-
-
-
-
-function AllServiceProfile() {
   const navigate = useNavigate();
   const location = useLocation();
   const { dispatch } = useAuth();
@@ -41,46 +35,44 @@ function AllServiceProfile() {
     setSettingOpen(!settingOpen);
   };
   const { id } = useParams(); // id = current profile id from URL
-  const user = JSON.parse(localStorage.getItem("user")); // logged-in user
+  //   const user = JSON.parse(localStorage.getItem("user")); // logged-in user
 
+  console.log("user is in profile", user);
 
-  console.log("user is in profile", user)
+  const logoutHandler = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
 
+      if (res.ok) {
+        // Dispatch logout action
+        dispatch({ type: "LOGOUT" });
 
-  // const logoutHandler = async () => {
-  //   try {
-  //     const res = await fetch(`${BASE_URL}/api/auth/logout`, {
-  //       method: "POST",
-  //       credentials: "include",
-  //     });
+        // Clear localStorage
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        localStorage.removeItem("chatUser");
 
-  //     if (res.ok) {
-  //       // Dispatch logout action
-  //       dispatch({ type: "LOGOUT" });
-
-  //       // Clear localStorage
-  //       localStorage.removeItem("user");
-  //       localStorage.removeItem("token");
-  //       localStorage.removeItem("role");
-  //       localStorage.removeItem("chatUser");
-
-  //       // Redirect to home page
-  //       navigate("/");
-  //     } else {
-  //       toast.error("Logout failed, please try again.");
-  //       // alert("Logout failed, please try again.");
-  //     }
-  //   } catch (error) {
-  //     toast.error("An error occurred while logging out.");
-  //   }
-  // };
+        // Redirect to home page
+        navigate("/");
+      } else {
+        toast.error("Logout failed, please try again.");
+        // alert("Logout failed, please try again.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while logging out.");
+    }
+  };
 
   // Get user profile data from the location state or context
-  const { name, photo, loc, about, accounts, rating, experience } =
-    location.state || user || {};
-  useEffect(() => {
-    console.log("Accounts from location state:", accounts);
-  }, [accounts]);
+  //   const { name, photo, loc, about, accounts, rating, experience } =
+  //     location.state || user || {};
+  //   useEffect(() => {
+  //     console.log("Accounts from location state:", accounts);
+  //   }, [accounts]);
 
   const text = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi rerum modi dicta voluptatem deleniti! 
     Molestias veniam quis deserunt vero vitae. Lorem ipsum dolor, sit amet consectetur adipisicing elit.`;
@@ -89,9 +81,9 @@ function AllServiceProfile() {
 
   return (
     <div>
-      <section className="min-h-screen bg-purple-100 md:mt-13 pt-6  md:px-7 flex">
+      <section className="min-h-screen bg-purple-100 md:mt-13 pt-6  flex  ">
         <div>
-          <div className="max-w-[800px] ml:5 md:ml-20 bg-white border border-gray-300 shadow-lg rounded-xl p-2 md:p-10 mb-2">
+          <div className="max-w-[800px] ml:5 md:ml-20 bg-white border border-gray-300 shadow-lg rounded-xl p-2 md:p-10   mb-2">
             {/* Top Section */}
             <FaArrowLeft
               className="text-xl md:mt-0 mt-4 ml-3"
@@ -104,7 +96,7 @@ function AllServiceProfile() {
               <div className="md:absolute top-0    md:mt-14 ">
                 <img
                   src={
-                    photo ||
+                    user.photo ||
                     "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
                   }
                   className="md:w-36  md:h-36 w-28 h-28 mt-8 md:mt-0 rounded-full  shadow-lg object-cover"
@@ -122,14 +114,16 @@ function AllServiceProfile() {
             <div className="flex  md:justify-start md:mt-8 mt-3">
               <div className="flex flex-col justify-start ">
                 <div className="flex items-center md:gap-2 md:text-2xl text-xl font-semibold">
-                  <h1>{name}</h1>
+                  <h1>{user.name}</h1>
                   <MdOutlineVerified className="text-slate-700 mt-1" />
                 </div>
-                <h2 className="text-gray-7=800 font-normal text-md">{about}</h2>
+                <h2 className="text-gray-7=800 font-normal text-md">
+                  {user.about}
+                </h2>
                 <div className="flex flex-wrap items-center gap-1 md:mt-0 mt-2 text-sm text-slate-500">
                   <FaLocationDot />
                   <h2 className="text-gray-7=800 font-normal text-md">
-                    {loc || "not location available"}
+                    {user.location || "not location available"}
                   </h2>
                   <span className="font-bold text-lg md:mb-1">·</span>
                   <Link
@@ -154,22 +148,35 @@ function AllServiceProfile() {
                   >
                     Message
                   </button>
+
                   <button
-                    className="px-4 py-[2px] rounded-4xl text-sky-700 border-1 border-sky-700  font-[600] hover:text-sky-900
+                    className="px-4 py-[2px] rounded-4xl bg-sky-100 text-sky-700 border-1 border-sky-700  font-[600] hover:text-sky-900
         hover:outline hover:bg-sky-100  transition transform duration-300 cursor-pointer "
                   >
                     More
                   </button>
+                  <div onClick={()=> navigate(`/update_service/${user._id}`)}>
+                    <button className="px-3   py-1 rounded-full bg-gray-200 outline outline-gray-400  hover:outline text-gray-600 font-semibold hover:bg-gray-300 transition duration-300 cursor-pointer ">
+                      <FaUserEdit  className="text-gray-700  inline" /> Edit
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
             {/* mini screen btn */}
 
-            <div className="flex md:hidden justify-center items-center mt-7">
-              <button className="bg-blue-400 w-full py-2 rounded-4xl text-white font-semibold cursor-pointer hover:bg-sky-600 duration-300 ">
+            <div className="flex md:hidden mt-5 gap-2">
+              <button className="px-12   py-1 rounded-xl bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer ">
                 {" "}
-                Open to
+                message
               </button>
+
+              <div onClick={()=> navigate(`/update_service/${user._id}`)}>
+              <button className="px-12 py-1   rounded-xl bg-gray-200 outline  hover:outline outline-gray-300  text-gray-600 font-semibold hover:bg-gray-300 transition duration-300 cursor-pointer ">
+                <FaUserEdit  className="text-gray-600 inline" /> Edit
+              </button>
+
+              </div>
             </div>
 
             {/* Open to Work Section */}
@@ -220,7 +227,7 @@ function AllServiceProfile() {
                   <FaStar
                     key={index}
                     className={`text-lg ${
-                      index < rating ? "text-yellow-500" : "text-gray-300"
+                      index < user.rating ? "text-yellow-500" : "text-gray-300"
                     }`}
                   />
                 ))}
@@ -255,15 +262,12 @@ function AllServiceProfile() {
                         Book Now
                       </h1>
 
-                          {/* <h1
+                      <h1
                         className="text-[15px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md"
                         onClick={logoutHandler}
                       >
                         Logout
-                      </h1> */}
-
-
-                    
+                      </h1>
                     </div>
                   )}
                 </div>
@@ -350,4 +354,4 @@ function AllServiceProfile() {
   );
 }
 
-export default AllServiceProfile;
+export default ServicerAccount;

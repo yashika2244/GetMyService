@@ -5,6 +5,8 @@ import {authContext} from '../context/AppContext'
 import { BASE_URL } from "../config";
 // import { useAuth } from "../context/AppContext";
 import { useAuth } from "../context/AppContext";
+import {toast} from 'react-toastify'
+
 
 function Login() {
   const { user, role, logout } = useAuth();
@@ -58,6 +60,8 @@ function Login() {
 
     if (!res.ok) {
       throw new Error(result.message);
+      toast.success("Registration successful! Please login.");
+
     }
 
     dispatch({
@@ -79,12 +83,12 @@ function Login() {
     if (role === "customer") {
       navigate("/user-profile");
     } else if (role === "service-provider") {
-      navigate("/Service-profile/:id");
+      navigate("/servicer-account/:id");
     }
     navigate("/");
     window.location.reload();
   } catch (error) {
-    console.error("Login error:", error);
+      toast.error(error.message || "Registration failed. Try again.");
     setLoading(false);
   }
   }

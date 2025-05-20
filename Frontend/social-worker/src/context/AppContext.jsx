@@ -393,6 +393,16 @@ const authReducer = (state, action) => {
       };
     case "LOGOUT":
       return { user: null, role: null, token: null };
+    // default:
+    //   return state;
+  // };
+   case "UPDATE_USER":
+      return {
+        // ...state,
+        // user: action.payload,
+      ...state, user: action.payload 
+      };
+    // other cases...
     default:
       return state;
   }

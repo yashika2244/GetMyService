@@ -9,29 +9,39 @@ import { FaStar } from "react-icons/fa";
 import { MdArrowForwardIos } from "react-icons/md";
 import { IoIosSettings } from "react-icons/io";
 import { BASE_URL, token } from "../../config";
+import { toast } from "react-toastify";
+import { useAccounts } from "../../context/AppContext";
 
 function GetProfileFromSearch() {
   const [expanded, setExpanded] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
   const [searchService, setService] = useState(null);
+  const [getService, setGetService] = useState(null);
+
   const [allProfiles, setAllProfiles] = useState([]);
+
+  const { accounts, loading, error } = useAccounts();
 
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
 
+
+  console.log("location-state", location.state)
   // Toggle setting section
   const toggleSetting = () => setSettingOpen(!settingOpen);
+  const {name, locate, photo, rating, about}  = location.state
+
 
   // Fetch single profile by id if not passed from state
   useEffect(() => {
     if (location.state) {
-      setService(location.state);
+      setGetService(location.state);
     } else if (id) {
       fetch(`${BASE_URL}/api/services/${id}`)
         .then((res) => res.json())
-        .then((data) => setService(data))
-        .catch((err) => console.error("Error fetching single service:", err));
+        .then((data) => setGetService(data))
+        .catch((err) => toast.error("Error fetching single service:", err));
     }
   }, [id, location.state]);
 
@@ -48,9 +58,9 @@ function GetProfileFromSearch() {
         return res.json();
       })
       .then((data) => setAllProfiles(data))
-      .catch((err) => console.error("Error fetching all profiles:", err));
+      .catch((err) => toast.error("Error fetching all profiles:", err));
   }, []);
-  if (!searchService) return <p>Loading...</p>;
+  if (!accounts) return <p>Loading...</p>;
 
   const text = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi rerum modi dicta voluptatem deleniti! 
     Molestias veniam quis deserunt vero vitae. Lorem ipsum dolor, sit amet consectetur adipisicing elit.`;
@@ -72,8 +82,9 @@ function GetProfileFromSearch() {
               {/* Profile Image */}
               <div className="md:absolute top-0 md:mt-14 ">
                 <img
-                  src={searchService.photo}
-                  alt={searchService.name}
+                  // src={accounts.photo}
+                  src={photo}
+                  alt={accounts.name}
                   className="md:w-36 md:h-36 w-28 h-28 mt-8 md:mt-0 rounded-full shadow-lg object-cover"
                 />
               </div>
@@ -89,16 +100,16 @@ function GetProfileFromSearch() {
             <div className="flex md:justify-start md:mt-8 mt-3">
               <div className="flex flex-col justify-start ">
                 <div className="flex items-center md:gap-2 md:text-2xl text-xl font-semibold">
-                  <h1>{searchService.name}</h1>
+                  <h1>{name}</h1>
                   <MdOutlineVerified className="text-slate-700 mt-1" />
                 </div>
                 <h2 className="text-gray-700 font-normal text-md">
-                  {searchService.about}
+                  {about}
                 </h2>
                 <div className="flex flex-wrap items-center gap-1 md:mt-0 mt-2 text-sm text-slate-500">
                   <FaLocationDot />
                   <h2 className="text-gray-800 font-normal text-md">
-                    {searchService.location || "not location available"}
+                    {locate || "not location available"}
                   </h2>
                   <span className="font-bold text-lg md:mb-1">·</span>
                   <Link
@@ -183,7 +194,7 @@ function GetProfileFromSearch() {
                   <FaStar
                     key={index}
                     className={`text-lg ${
-                      index < searchService.rating
+                      index < rating
                         ? "text-yellow-500"
                         : "text-gray-300"
                     }`}
@@ -250,11 +261,11 @@ function GetProfileFromSearch() {
                     key={profile._id}
                     className="flex cursor-pointer  px-5 py-2 gap-4 "
                     onClick={() =>
-                      navigate(`/Services-profile/${searchService._id}`, { state: profile,  })
+                      navigate(`/Services-profile/${profile._id}`, { state: profile,  })
                     }
                   >
                     <img
-                      src={profile.photo}
+                      src={profile.photo && profile.photo.trim() !== "" ? profile.photo : "/default-placeholder.png"}
                       alt={profile.name}
                       className="w-10 h-10 rounded-full object-cover"
                     />

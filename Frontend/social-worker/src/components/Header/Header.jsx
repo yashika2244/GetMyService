@@ -25,7 +25,7 @@ const role = user?.role;
     // } else if (user.role === "customer") {
     if (role === "service-provider") {
       // navigate('/Service-profile/:id');
-        navigate(`/Service-profile/${user?._id}`); // 👈 replace :id with actual user id
+        navigate(`/servicer-account/${user?._id}`); // 👈 replace :id with actual user id
       // navigate("/Service-profile/:id"); // Replace :id with actual ID if needed
     } else if (role === "customer") {
       navigate("/user-profile");
@@ -103,7 +103,7 @@ const role = user?.role;
             onClick={handleProfileClick}
           >
             <img
-              src={user?.photo || "/default-profile.jpg"}
+              src={user?.photo ||  "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"}
               alt="Profile"
               className="object-cover w-full h-full  rounded-full absolute inset-0 cursor-pointer"
             />
@@ -113,8 +113,7 @@ const role = user?.role;
           {/* Logout Button (we will remove it) */}
         </div>
       )}
-
-    
+ 
       {/* ✅ Now this is outside of the ternary */}
       <button
         className="md:hidden text-white text-2xl cursor-pointer absolute top-1 right-3"

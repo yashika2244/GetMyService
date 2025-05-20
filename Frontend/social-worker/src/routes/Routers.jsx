@@ -15,6 +15,8 @@ import RollSelection from '../components/RollSelection/RollSelection'
 import CustomerSignUp from '../pages/signUp/CustomerSignUP'
 import ServiceProviderSignUp from '../pages/signUp/ServiceProviderSignUp'
 import GetProfileFromSearch from '../components/ServiceProfile/GetProfileFromSearch'
+import UpdateServicerProfile from '../components/ServiceProfile/UpdateServicerProfile'
+import ServicerAccount from '../components/ServiceProfile/ServicerAccount'
 // import ServicerAccount from '../components/ServiceProfile/ServicerAccount'
 
 
@@ -32,30 +34,15 @@ const Routers = () => {
     <Route path='/msg' element={<Msg/>} />
     <Route path='/find-Service' element={<FindService/>} />
     <Route path='/chat' element={<Chat/>} />
-    
     <Route path='/User-profile' element={<UserProfile/>} />
     <Route path="/Service-profile/:id" element={<AllServiceProfile/>} />
-    
-
-
-
-
-
+    <Route path='/update_service/:id' element={<UpdateServicerProfile/>} />
     <Route path="/Services-profile/:id" element={<GetProfileFromSearch/>} />
-
-
   <Route path="/select-role" element={<RollSelection />} />
-  {/* <Route path="/servier-account" element={<ServicerAccount />} /> */}
-
-
     <Route path='/login' element={<Login/>} />
-    {/* <Route path='/service-provider-signup' element={<ServiceProviderSignUp />} /> */}
-
       <Route path="/cutomer-register" element={<CustomerSignUp />} />
   <Route path="/register-service-provider" element={<ServiceProviderSignUp />} />
-
-
-
+    <Route path='/servicer-account/:id' element={<ServicerAccount/>} />
 
   
    
