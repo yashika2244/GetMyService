@@ -5,6 +5,7 @@ const RollSelection = () => {
   const navigate = useNavigate();
 
   const handleRoleSelect = (role) => {
+    console.log("role h :", role)
     if (role === "customer") {
       navigate("/cutomer-register");
     } else if (role === "service-provider") {

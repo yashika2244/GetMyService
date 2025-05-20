@@ -120,7 +120,7 @@ export const login = async (req, res) => {
 
     if (email && password) {
       user = await UserModels.findOne({ email });
-      let role = "";
+      // let role = "";
 
 
 
@@ -165,7 +165,7 @@ export const login = async (req, res) => {
       message: "Login successful",
       token,
       data: user,
-      role,
+      // role,
 
     });
   } catch (error) {

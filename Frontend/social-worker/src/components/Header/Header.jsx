@@ -9,12 +9,13 @@ import { useEffect } from "react";
 import { useAuth } from "../../context/AppContext";
 
 function Header() {
-  const { user, logout } = useAuth();
+  // const { user, logout } = useAuth();
 const { id } = useParams();
   const navigate = useNavigate();
 
-
-const role = user.role;
+  // const user = JSON.parse(localStorage.getItem('user'));
+const user = JSON.parse(localStorage.getItem("user"));
+const role = user?.role;
   console.log("user is:", role)
 
 
@@ -31,10 +32,10 @@ const role = user.role;
 
 
 
-  const logoutHandler = () => {
-    logout(); // Call logout from context to clear user data
-    navigate("/login"); // Redirect to login page after logout
-  };
+  // const logoutHandler = () => {
+  //   logout(); // Call logout from context to clear user data
+  //   navigate("/login"); // Redirect to login page after logout
+  // };
 
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 

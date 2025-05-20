@@ -75,7 +75,7 @@ function ServiceProviderSignUp() {
               {[
                 { name: "name", placeholder: "Full Name" },
                 { name: "email", placeholder: "Email", type: "email" },
-                { name: "password", placeholder: "Password", type: "password",  },
+                { name: "password", placeholder: "Password", type: "password"  },
                 { name: "specialization", placeholder: "Specialization (e.g., Dentist)" },
                 { name: "experience", placeholder: "Experience (e.g., 5 years)" ,type:"number" },
                 { name: "consultationFee", placeholder: "Consultation Fee", type: "number" },

@@ -81,6 +81,7 @@ function Login() {
     } else if (role === "service-provider") {
       navigate("/Service-profile/:id");
     }
+    navigate("/");
     window.location.reload();
   } catch (error) {
     console.error("Login error:", error);
