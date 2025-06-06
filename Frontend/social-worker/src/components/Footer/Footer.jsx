@@ -5,9 +5,9 @@ import { AiFillYoutube, AiFillGithub, AiOutlineInstagram } from "react-icons/ai"
 
 const socialLinks = [
   { path: "#", icon: <AiFillYoutube className="text-[24px] hover:text-red-500 transition-all duration-300" /> },
-  { path: "#", icon: <AiFillGithub className="text-[24px] hover:text-gray-400 transition-all duration-300" /> },
+  { path: "https://github.com/yashika2244/Serivce", icon: <AiFillGithub className="text-[24px] hover:text-gray-400 transition-all duration-300" /> },
   { path: "#", icon: <AiOutlineInstagram className="text-[24px] hover:text-pink-400 transition-all duration-300" /> },
-  { path: "#", icon: <BsLinkedin className="text-[24px] hover:text-blue-500 transition-all duration-300" /> },
+  { path: "https://www.linkedin.com/in/yashika-chauhan-082155367/", icon: <BsLinkedin className="text-[24px] hover:text-blue-500 transition-all duration-300" /> },
 ];
 
 const quickLinks = [

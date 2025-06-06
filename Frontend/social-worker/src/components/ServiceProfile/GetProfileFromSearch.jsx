@@ -12,6 +12,7 @@ import { BASE_URL, token } from "../../config";
 import { toast } from "react-toastify";
 import { useAccounts } from "../../context/AppContext";
 
+
 function GetProfileFromSearch() {
   const [expanded, setExpanded] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
@@ -83,7 +84,7 @@ function GetProfileFromSearch() {
               <div className="md:absolute top-0 md:mt-14 ">
                 <img
                   // src={accounts.photo}
-                  src={photo}
+                  src={photo || "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"}
                   alt={accounts.name}
                   className="md:w-36 md:h-36 w-28 h-28 mt-8 md:mt-0 rounded-full shadow-lg object-cover"
                 />

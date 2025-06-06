@@ -1,3 +1,4 @@
+
 @import "tailwindcss";
 
 @layer components{
@@ -13,3 +14,21 @@
         @apply bg-[url('./assets/hero-bg.png')] bg-no-repeat bg-center bg-cover
     }
 }
+
+
+
+.flex-userContainer  ::-webkit-scrollbar {
+    display: none;
+}
+
+/* .chat-bubble.relative::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background: #60a5fa; /* Tailwind blue-400, same as chat-bubble-info bg */
+  /* clip-path: polygon(100% 0, 0% 100%, 100% 100%); */
+/* } */ 
+

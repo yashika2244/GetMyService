@@ -17,6 +17,7 @@ function CustomerSignUp() {
     password: "",
     photo: "",
     gender: "male",
+    location :""
   });
   const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
@@ -110,6 +111,17 @@ function CustomerSignUp() {
                   value={formData.password}
                   onChange={handleInputChange}
                   name="password"
+                  className="w-full px-4 py-3 border-b border-[#0066ff61] rounded-md text-gray-600 text-[20px] outline-none"
+                  required
+                />
+              </div>
+               <div className="mb-5">
+                <input
+                  type="text"
+                  placeholder="Location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  name="location"
                   className="w-full px-4 py-3 border-b border-[#0066ff61] rounded-md text-gray-600 text-[20px] outline-none"
                   required
                 />

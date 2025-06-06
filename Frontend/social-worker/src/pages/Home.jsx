@@ -6,6 +6,7 @@ import About from "../components/About/About";
 import Best_s_list from "../components/Best-services/Best_s_list";
 import Add_own_service from "../components/add_own_service/Add_own_service";
 import Faqlist from "../components/faq/Faqlist";
+import CustomerRiview from "../components/Riview/CustomerRiview";
 
 function Home() {
   let navigate = useNavigate();
@@ -23,15 +24,15 @@ function Home() {
       <div className="hero_container lg:pb-24 pb-4   flex flex-col md:flex-row  lg:justify-center gap-4 lg:gap-16 ">
         <div className="lg:max-w-[500px] mx-2  md:mx-3 lg:pt-[50px] md:pt-[5px]  mt-12 ">
           <div className="flex flex-col lg:gap-3">
-            <h1 className="font-[700] text-[18px] mt-2 md:text-[30px] leading-6 md:leading-9">
+            {/* <h1 className="font-[700] text-[23px] md:mt-7   mt-2 md:text-[40px] leading-7 md:leading-14"> */}
+             <h1 className="font-[700] text-[18px] text-slate-700 mt-2 md:text-[40px] leading-6 md:leading-9 md:mt-12 ">
               Let's Make It Easy To Get
             </h1>
-            <h1 className="font-[700] text-[18px]  md:text-[30px] leading-6 md:leading-9">
+            <h1 className="font-[700] text-[18px] text-slate-800  md:text-[30px] leading-6 md:leading-9">
               {" "}
               Any Services !
             </h1>
-
-            <p className="md:text-[20px] md:mt-4   ">
+            <p className="md:text-[17px] md:mt-3 text-slate-600  "> 
               {" "}
               Lorem ipsum dolor sit amet consectetur, adipisi cing elit . Animi
               quibusdam voluptate reiciendis temp ore exercita tionem dolor ali
@@ -244,3 +245,5 @@ function Home() {
 }
 
 export default Home;
+
+

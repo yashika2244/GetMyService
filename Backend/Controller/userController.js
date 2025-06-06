@@ -12,7 +12,7 @@ const generateToken=user=>{
   
 
     const { id } = req.params;
-    const { name, email, password, photo, gender, age } = req.body;
+    const { name, email, photo, gender, age , location} = req.body;
       // Prepare the updates object
       const updates = {};
   if (name) updates.name = name;
@@ -20,13 +20,15 @@ const generateToken=user=>{
   if (gender) updates.gender = gender;
   if (age) updates.age = age;
   if (photo) updates.photo = photo;
+  if (location) updates.location = location;
+
 
 try {
      // Handle password change
-     if (password) {
-        const salt = await bcrypt.genSalt(10);
-        updates.password = await bcrypt.hash(password, salt);
-      }
+    //  if (password) {
+    //     const salt = await bcrypt.genSalt(10);
+    //     updates.password = await bcrypt.hash(password, salt);
+    //   }
       // Perform the update using findByIdAndUpdate
       const updatedUser = await UserModels.findByIdAndUpdate(id, { $set: updates }, { new: true });
       
@@ -52,4 +54,24 @@ try {
 }
 
 
+ }
+
+
+ export const getAllUSersPorfile = async (req,res) => {
+  try {
+// const loggedInUsers = req.UserModels._id
+    const userId = req.userId;
+
+    // console.log("userId is", userId)
+
+    const filterUser =  await UserModels.find({_id:{$ne:userId}}).select("-password")
+    res.status(201).json ({filterUser})
+  } catch (error) {
+    console.log(error)
+    
+    res.status(500).json ({message:"Server Error"})
+
+    
+  }
+  
  }

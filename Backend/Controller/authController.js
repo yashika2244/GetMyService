@@ -15,7 +15,7 @@ const generateToken = (user) => {
 
 
 export const registerCustomer = async (req, res) => {
-  const { email, password, name, photo, gender } = req.body;
+  const { email, password, name, photo, gender, location } = req.body;
   try {
     // Validate input
     if (!email || !password || !name || !gender) {
@@ -43,7 +43,8 @@ export const registerCustomer = async (req, res) => {
       password: hashedPassword,
       photo,
       gender,
-      role: "customer",  // Ensure it's a customer
+      role: "customer",
+      location  // Ensure it's a customer
     });
 
     // Save new customer

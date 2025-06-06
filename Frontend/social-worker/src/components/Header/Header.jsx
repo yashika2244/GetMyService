@@ -19,26 +19,18 @@ const role = user?.role;
 
 
   const handleProfileClick = () => {
-    // if (user.role === "service-provider") {
-      // navigate(`/Service-profile/${user?.id}`);
-      // navigate("/Service-profile/:id"); // Replace :id with actual ID if needed
-    // } else if (user.role === "customer") {
+  
     if (role === "service-provider") {
-      // navigate('/Service-profile/:id');
         navigate(`/servicer-account/${user?._id}`); // 👈 replace :id with actual user id
-      // navigate("/Service-profile/:id"); // Replace :id with actual ID if needed
     } else if (role === "customer") {
-      navigate("/user-profile");
+      navigate(`/user-profile/${user?._id}`);
     }
 
 
   }
 
 
-  // const logoutHandler = () => {
-  //   logout(); // Call logout from context to clear user data
-  //   navigate("/login"); // Redirect to login page after logout
-  // };
+
 
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 

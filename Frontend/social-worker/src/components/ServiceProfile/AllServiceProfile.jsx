@@ -18,24 +18,15 @@ import { toast } from "react-toastify";
 import uploadImageToCloudinary from '../../../utils/uploadCloudinary';
 
 
-
-
-
-
-
-
-
-
-
-
 function AllServiceProfile() {
+    const { accounts, loading, error } = useAccounts();
+  // console.log("acdffdfdf",accounts)
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
   const { dispatch } = useAuth();
   const [expanded, setExpanded] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
   const currentUserId = localStorage.getItem("userId"); // ya aap context/state se bhi le sakte ho
-
   const [profile, setProfile] = useState(null);
   const toggleSetting = () => {
     setSettingOpen(!settingOpen);
@@ -46,46 +37,29 @@ function AllServiceProfile() {
 
   console.log("user is in profile", user)
 
-
-  // const logoutHandler = async () => {
-  //   try {
-  //     const res = await fetch(`${BASE_URL}/api/auth/logout`, {
-  //       method: "POST",
-  //       credentials: "include",
-  //     });
-
-  //     if (res.ok) {
-  //       // Dispatch logout action
-  //       dispatch({ type: "LOGOUT" });
-
-  //       // Clear localStorage
-  //       localStorage.removeItem("user");
-  //       localStorage.removeItem("token");
-  //       localStorage.removeItem("role");
-  //       localStorage.removeItem("chatUser");
-
-  //       // Redirect to home page
-  //       navigate("/");
-  //     } else {
-  //       toast.error("Logout failed, please try again.");
-  //       // alert("Logout failed, please try again.");
-  //     }
-  //   } catch (error) {
-  //     toast.error("An error occurred while logging out.");
-  //   }
-  // };
+useEffect(() => {
+  if (Array.isArray(accounts) && accounts.length > 0 && id) {
+    const matchedProfile = accounts.find(profile => profile._id === id);
+    setProfile(matchedProfile);
+    console.log("profjfnkd", profile)
+  }
+}, [accounts, id]);
 
   // Get user profile data from the location state or context
-  const { name, photo, loc, about, accounts, rating, experience } =
-    location.state || user || {};
-  useEffect(() => {
-    console.log("Accounts from location state:", accounts);
-  }, [accounts]);
+  // const { name, photo, loc, about, accounts, rating, experience } =
+  //   location.state || user || {};
+    // console.log("sdsbdhsdsd", location.state)
+  // useEffect(() => {
+  //   console.log("Accounts from location state:", accounts);
+  // }, [accounts]);
 
   const text = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi rerum modi dicta voluptatem deleniti! 
     Molestias veniam quis deserunt vero vitae. Lorem ipsum dolor, sit amet consectetur adipisicing elit.`;
 
   const shortText = text.slice(0, 270);
+
+
+
 
   return (
     <div>
@@ -104,7 +78,7 @@ function AllServiceProfile() {
               <div className="md:absolute top-0    md:mt-14 ">
                 <img
                   src={
-                    photo ||
+                   profile?.photo ||
                     "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
                   }
                   className="md:w-36  md:h-36 w-28 h-28 mt-8 md:mt-0 rounded-full  shadow-lg object-cover"
@@ -122,14 +96,14 @@ function AllServiceProfile() {
             <div className="flex  md:justify-start md:mt-8 mt-3">
               <div className="flex flex-col justify-start ">
                 <div className="flex items-center md:gap-2 md:text-2xl text-xl font-semibold">
-                  <h1>{name}</h1>
+                  <h1>{profile?.name}</h1>
                   <MdOutlineVerified className="text-slate-700 mt-1" />
                 </div>
-                <h2 className="text-gray-7=800 font-normal text-md">{about}</h2>
+                <h2 className="text-gray-7=800 font-normal text-md">{profile?.about}</h2>
                 <div className="flex flex-wrap items-center gap-1 md:mt-0 mt-2 text-sm text-slate-500">
                   <FaLocationDot />
                   <h2 className="text-gray-7=800 font-normal text-md">
-                    {loc || "not location available"}
+                    {profile?.location || "not location available"}
                   </h2>
                   <span className="font-bold text-lg md:mb-1">·</span>
                   <Link
@@ -147,9 +121,9 @@ function AllServiceProfile() {
                 {/* Buttons */}
                 <div className="md:flex flex-wrap gap-3 mt-4 hidden ">
                   <button
-                    onClick={() =>
-                      navigate("/chat", { state: { name, photo, id } })
-                    }
+                    // onClick={() =>
+                    //   navigate("/msg", { state: { name, photo, id } })
+                    // }
                     className="px-6   py-1 rounded-full bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer "
                   >
                     Message
@@ -220,7 +194,7 @@ function AllServiceProfile() {
                   <FaStar
                     key={index}
                     className={`text-lg ${
-                      index < rating ? "text-yellow-500" : "text-gray-300"
+                      index < profile?.rating ? "text-yellow-500" : "text-gray-300"
                     }`}
                   />
                 ))}

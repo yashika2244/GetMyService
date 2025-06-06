@@ -81,7 +81,9 @@ function Login() {
        
     // Redirect based on role
     if (role === "customer") {
-      navigate("/user-profile");
+      // navigate("/user-profile");
+      navigate(`/user-profile/${user?._id}`);
+
     } else if (role === "service-provider") {
       navigate("/servicer-account/:id");
     }

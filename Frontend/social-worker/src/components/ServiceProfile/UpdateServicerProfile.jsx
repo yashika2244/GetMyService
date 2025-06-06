@@ -6,26 +6,18 @@ import { authContext } from "../../context/AppContext";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-
-
-
-
-
-
-
-
-
+import { FaArrowLeft } from "react-icons/fa6";
 
 function UpdateServicerProfile() {
   const { dispatch, token, user } = useContext(authContext);
-    const { id } = useParams(); // grabs :id from URL
+  const { id } = useParams(); // grabs :id from URL
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password: "",
+    // password: "",
     photo: null,
     gender: "",
-    role: "service-provider",
+    // role: "service-provider",
     age: "",
     TicketPrice: "",
     about: "",
@@ -42,10 +34,10 @@ function UpdateServicerProfile() {
       setFormData({
         name: user.name || "",
         email: user.email || "",
-        password: "",
+        // password: "",
         photo: user.photo || null,
         gender: user.gender || "",
-        role: user.role || "service-provider",
+        // role: user.role || "service-provider",
         age: user.age || "",
         TicketPrice: user.TicketPrice || "",
         about: user.about || "",
@@ -72,45 +64,49 @@ function UpdateServicerProfile() {
     }
   };
 
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    try {
+      const res = await fetch(`${BASE_URL}/api/services/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: "include",
+        body: JSON.stringify(formData),
+      });
 
+      const data = await res.json(); // get updated user data or message
 
-const submitHandler = async (event) => {
-  event.preventDefault();
-  try {
-    const res = await fetch(`${BASE_URL}/api/services/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      credentials: "include",
-      body: JSON.stringify(formData),
-    });
-
-    const data = await res.json(); // get updated user data or message
-
-if (res.ok) {
-  if (data.user) {
-    dispatch({ type: "UPDATE_USER", payload: data.user });
-    toast.success("Profile updated successfully!");
-    navigate(`/servicer-account/${data.user._id}`); // use updated id here
-    window.location.reload()
-  }
-}
-  } catch (error) {
-    toast.error("Error updating profile");
-    console.error("Error in updating profile:", error);
-  }
-};
-
-
-
-
-
-
+      if (res.ok) {
+        if (data.user) {
+          dispatch({ type: "UPDATE_USER", payload: data.user });
+          toast.success("Profile updated successfully!");
+          navigate(`/servicer-account/${data.user._id}`); // use updated id here
+          window.location.reload();
+        }
+      }
+    } catch (error) {
+      toast.error("Error updating profile");
+      console.error("Error in updating profile:", error);
+    }
+  };
 
   return (
-    <div className="max-w-4xl mx-auto md:mt-20  mt-17 p-10 bg-gradient-to-br from-white via-blue-50 to-blue-100 mb-5 rounded-3xl shadow-2xl">
+    <div className="max-w-4xl mx-auto md:mt-20  mt-12 md:p-10 p-4 bg-gradient-to-br from-white via-blue-50 to-blue-100 mb-5 rounded-3xl shadow-2xl">
+      <div className="flex  gap-5 md:gap-45 md:mb-3  ">
+        <FaArrowLeft
+          className="text-xl  md:ml-3 md:mb-0 mt-2 "
+          // onClick={() => navigate("/chat", { state: { name, photo, id } })}
+          onClick={() => navigate(-1)}
+        />
+
+        <h2 className="text-3xl font-bold text-center text-sky-700 mb-6">
+          Update Your Profile
+        </h2>
+      </div>
+
       <form onSubmit={submitHandler} className="space-y-8">
         {/* Name, Email, Password */}
         <div className="grid gap-6 md:grid-cols-3">
@@ -132,7 +128,7 @@ if (res.ok) {
             onChange={handleInputChange}
             className="w-full px-6 py-4 rounded-xl border border-gray-300 bg-white placeholder-gray-400 text-gray-800 text-lg font-medium transition-shadow focus:outline-none focus:ring-1 focus:ring-blue-400 shadow-sm focus:shadow-md"
           />
-          <input
+          {/* <input
             type="password"
             placeholder="Password"
             name="password"
@@ -140,7 +136,7 @@ if (res.ok) {
             required
             onChange={handleInputChange}
             className="w-full px-6 py-4 rounded-xl border border-gray-300 bg-white placeholder-gray-400 text-gray-800 text-lg font-medium transition-shadow focus:outline-none focus:ring-1 focus:ring-blue-300 shadow-sm focus:shadow-md"
-          />
+          /> */}
         </div>
 
         {/* Age, Specialization, Ticket Price */}
@@ -180,7 +176,7 @@ if (res.ok) {
         </h2>
 
         <div className="grid gap-6 md:grid-cols-4">
-          <input
+          {/* <input
             type="text"
             placeholder="Role"
             name="exprole"
@@ -188,7 +184,7 @@ if (res.ok) {
             required
             onChange={handleInputChange}
             className="px-5 py-4 rounded-xl border border-gray-300 bg-white placeholder-gray-400 text-gray-800 text-lg font-medium transition-shadow focus:outline-none focus:ring-1 focus:ring-blue-400 shadow-sm focus:shadow-md"
-          />
+          /> */}
           <input
             type="text"
             placeholder="Location"

@@ -65,9 +65,9 @@ import bcrypt from "bcryptjs";
 
 export const updateService = async (req, res) => {
   const { id } = req.params;
-  const { name, email, password, photo, gender, age, TicketPrice, bio, about,
+  const { name, email, photo, gender, age, TicketPrice, bio, about,
     specialization,
-    exprole, location, expDateStart, expDateEnd } = req.body;
+     location, expDateStart, expDateEnd } = req.body;
 
   try {
     const service = await ServiceProviderModel.findByIdAndUpdate(req.params.id, req.body, { new: true })
@@ -86,14 +86,14 @@ export const updateService = async (req, res) => {
     if (bio) service.bio = bio;
     if (about) service.about = about;
 
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      service.password = await bcrypt.hash(password, salt);
-    }
+    // if (password) {
+    //   const salt = await bcrypt.genSalt(10);
+    //   service.password = await bcrypt.hash(password, salt);
+    // }
 
-    if (exprole || location || expDateStart || expDateEnd) {
+    if ( location || expDateStart || expDateEnd) {
       service.experience.push({
-        role: exprole,
+        // role: exprole,
         location,
         startdate: expDateStart,
         enddate: expDateEnd
