@@ -10,14 +10,13 @@ import { MdArrowForwardIos } from "react-icons/md";
 import { IoIosSettings } from "react-icons/io";
 import { useAuth } from "../../context/AppContext";
 import { BASE_URL, token } from "../../config";
-import { useEffect } from "react";
 import { useAccounts } from "../../context/AppContext";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import uploadImageToCloudinary from "../../../utils/uploadCloudinary";
 
 import { FaUserEdit } from "react-icons/fa";
+import useConversation from "../../stateManage/useConversation.js";
 
 function ServicerAccount() {
   const { user, role, logout } = useAuth();
@@ -28,16 +27,14 @@ function ServicerAccount() {
   const { dispatch } = useAuth();
   const [expanded, setExpanded] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
-  const currentUserId = localStorage.getItem("userId"); // ya aap context/state se bhi le sakte ho
+  const currentUserId = localStorage.getItem("userId");
+const { selcetedConversation , setSelcetedConversation } = useConversation()
 
   const [profile, setProfile] = useState(null);
   const toggleSetting = () => {
     setSettingOpen(!settingOpen);
   };
-  const { id } = useParams(); // id = current profile id from URL
-  //   const user = JSON.parse(localStorage.getItem("user")); // logged-in user
-
-  console.log("user is in profile", user);
+  const { id } = useParams();
 
   const logoutHandler = async () => {
     try {
@@ -45,7 +42,6 @@ function ServicerAccount() {
         method: "POST",
         credentials: "include",
       });
-
       if (res.ok) {
         // Dispatch logout action
         dispatch({ type: "LOGOUT" });
@@ -55,7 +51,6 @@ function ServicerAccount() {
         localStorage.removeItem("token");
         localStorage.removeItem("role");
         localStorage.removeItem("chatUser");
-
         // Redirect to home page
         navigate("/");
       } else {
@@ -66,13 +61,6 @@ function ServicerAccount() {
       toast.error("An error occurred while logging out.");
     }
   };
-
-  // Get user profile data from the location state or context
-  //   const { name, photo, loc, about, accounts, rating, experience } =
-  //     location.state || user || {};
-  //   useEffect(() => {
-  //     console.log("Accounts from location state:", accounts);
-  //   }, [accounts]);
 
   const text = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi rerum modi dicta voluptatem deleniti! 
     Molestias veniam quis deserunt vero vitae. Lorem ipsum dolor, sit amet consectetur adipisicing elit.`;
@@ -87,7 +75,6 @@ function ServicerAccount() {
             {/* Top Section */}
             <FaArrowLeft
               className="text-xl md:mt-0 mt-4 ml-3"
-              // onClick={() => navigate("/chat", { state: { name, photo, id } })}
               onClick={() => navigate(-1)}
             />
 
@@ -140,42 +127,43 @@ function ServicerAccount() {
 
                 {/* Buttons */}
                 <div className="md:flex flex-wrap gap-3 mt-4 hidden ">
-                  <button
+                  {/* <button
                     onClick={() =>
-                      navigate("/chat", { state: { name, photo, id } })
+                        { setSelcetedConversation(user)
+
+                      navigate("/msg")}
                     }
                     className="px-6   py-1 rounded-full bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer "
                   >
                     Message
-                  </button>
-
+                  </button> */}
+ <div onClick={() => navigate(`/update_service/${user._id}`)}>
+                    <button className="px-10   py-1 rounded-full bg-gray-200 outline outline-gray-400  hover:outline text-gray-600 font-semibold hover:bg-gray-300 transition duration-300 cursor-pointer ">
+                      <FaUserEdit className="text-gray-700  inline" /> Edit
+                    </button>
+                  </div>
                   <button
                     className="px-4 py-[2px] rounded-4xl bg-sky-100 text-sky-700 border-1 border-sky-700  font-[600] hover:text-sky-900
         hover:outline hover:bg-sky-100  transition transform duration-300 cursor-pointer "
                   >
-                    More
-                  </button>
-                  <div onClick={()=> navigate(`/update_service/${user._id}`)}>
-                    <button className="px-3   py-1 rounded-full bg-gray-200 outline outline-gray-400  hover:outline text-gray-600 font-semibold hover:bg-gray-300 transition duration-300 cursor-pointer ">
-                      <FaUserEdit  className="text-gray-700  inline" /> Edit
-                    </button>
-                  </div>
+                    More 
+               </button>
+                 
                 </div>
               </div>
             </div>
             {/* mini screen btn */}
 
-            <div className="flex md:hidden mt-5 gap-2">
-              <button className="px-12   py-1 rounded-xl bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer ">
+            <div className="flex md:hidden mt-5 ">
+              {/* <button className="px-12   py-1 rounded-xl bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer ">
                 {" "}
                 message
-              </button>
+              </button> */}
 
-              <div onClick={()=> navigate(`/update_service/${user._id}`)}>
-              <button className="px-12 py-1   rounded-xl bg-gray-200 outline  hover:outline outline-gray-300  text-gray-600 font-semibold hover:bg-gray-300 transition duration-300 cursor-pointer ">
-                <FaUserEdit  className="text-gray-600 inline" /> Edit
-              </button>
-
+              <div onClick={() => navigate(`/update_service/${user._id}`)}>
+                <button className=" py-1 px-12   rounded-xl bg-gray-200 outline  hover:outline outline-gray-300  text-gray-600 font-semibold hover:bg-gray-300 transition duration-300 cursor-pointer ">
+                  <FaUserEdit className="text-gray-600 inline  " /> Edit
+                </button>
               </div>
             </div>
 
@@ -329,9 +317,10 @@ function ServicerAccount() {
                         </p>
                         <button
                           className="mr-2 py-1 w-[150px] mt-2 rounded-xl border border-sky-700 text-sky-700 bg-white font-semibold hover:text-sky-900 hover:outline cursor-pointer hover:bg-sky-50 transition duration-300"
-                          onClick={() =>
-                            navigate("/chat", { state: { name, photo, id } })
-                          }
+                          onClick={() => 
+                         {setSelcetedConversation(profile)
+
+                            navigate("/msg")}}
                         >
                           Message
                         </button>

@@ -4,9 +4,17 @@ import { BASE_URL, token } from '../config.js'
 
 function useGetMessage() {
   const [loading, setLoading] = useState(false)
-  const { messages, setMessages, selcetedConversation } = useConversation()
+  const { messages, setMessages, selcetedConversation  } = useConversation()
 
-  useEffect(() => {
+    useEffect(() => {
+    if (!selcetedConversation || !selcetedConversation._id) {
+        console.log("No conversation selected, clearing messages and stopping loading");
+      setMessages([])  // clear messages when no conversation selected
+      setLoading(false)
+      return
+    }
+
+  // useEffect(() => {
     const getMessages = async () => {
       setLoading(true)
       if (selcetedConversation && selcetedConversation._id) {
@@ -23,18 +31,25 @@ function useGetMessage() {
           }
           const data = await res.json();
         
-          setMessages(data.messages);
-          setLoading(false)
+          setMessages(data.messages );
+
+          // setLoading(false)
 
         } catch (error) {
           console.log("Error is useGetMessage:", error)
-        }
+               setMessages([]);
+        } finally {
+      setLoading(false);
+    }
+       
 
       }
     }
     getMessages()
 
   }, [selcetedConversation, setMessages])
+
+   
 
   return {
     messages, loading,

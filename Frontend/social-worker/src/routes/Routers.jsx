@@ -18,6 +18,7 @@ import UpdateServicerProfile from '../components/ServiceProfile/UpdateServicerPr
 import ServicerAccount from '../components/ServiceProfile/ServicerAccount'
 import UpdateUser from '../components/UserProfile/UpdateUser'
 import Chats from '../components/ChatBox/Chats'
+import AllUserProfiles from '../components/UserProfile/AllUserProfiles'
 // import ServicerAccount from '../components/ServiceProfile/ServicerAccount'
 
 
@@ -35,7 +36,9 @@ const Routers = () => {
     {/* <Route path='/msg' element={<Msg/>} /> */}
     <Route path='/find-Service' element={<FindService/>} />
     {/* <Route path='/chat' element={<Chat/>} />   */}
-    <Route path='/User-profile/:id' element={<UserProfile/>} />
+    <Route path='/user-profile/:id' element={<UserProfile/>} />
+    <Route path='/users-profile/:id' element={<AllUserProfiles/>} />
+
     <Route path="/Service-profile/:id" element={<AllServiceProfile/>} />
     <Route path='/update_service/:id' element={<UpdateServicerProfile/>} />
     <Route path="/Services-profile/:id" element={<GetProfileFromSearch/>} />

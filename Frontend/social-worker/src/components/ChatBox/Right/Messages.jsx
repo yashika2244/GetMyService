@@ -7,7 +7,10 @@ function Messages({ message }) {
   if (!message || !message.message) return null;
   const { user } = useAuth();
   // Check if the message is sent by the logged-in user
-  const itsMe = message.senderId === user._id;
+  // const itsMe = message.senderId === user._id;
+  const itsMe =
+    message.sender?.id === user._id &&
+    message.sender?.role === user.role;
   // Tailwind classes for alignment and colors
   const alignment = itsMe ? "justify-end" : "justify-start";
   const bubbleColor = itsMe ? " bg-blue-400 text-white  font-[500]" : "bg-gray-600 text-white  font-[500]";

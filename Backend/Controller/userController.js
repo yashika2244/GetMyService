@@ -1,5 +1,4 @@
 import UserModels from '../Models/UserModels.js'
-import BookingModel from '../Models/BookingModel.js'
 import ServiceProviderModel from '../Models/ServiceProviderModel.js'
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
@@ -24,12 +23,7 @@ const generateToken=user=>{
 
 
 try {
-     // Handle password change
-    //  if (password) {
-    //     const salt = await bcrypt.genSalt(10);
-    //     updates.password = await bcrypt.hash(password, salt);
-    //   }
-      // Perform the update using findByIdAndUpdate
+   
       const updatedUser = await UserModels.findByIdAndUpdate(id, { $set: updates }, { new: true });
       
     if (!updatedUser) {

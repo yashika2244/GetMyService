@@ -5,47 +5,55 @@ import http from "http"
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors: {
-        origin: [
-            'http://localhost:5173',
-            'http://localhost:5174',
-            'https://serivce.vercel.app',
-        ],
-        methods: ['GET', 'POST'],
+  cors: {
+    origin: [
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'https://serivce.vercel.app',
+    ],
+    methods: ['GET', 'POST'],
 
 
-    }
+  }
 })
 const users = {}
 
-// real time message 
+
 export const getReceiversocketId = (receiverId) => {
-    console.log("receiverId type:", typeof receiverId);
-    return users[receiverId.toString()]
-}
-
-
-
+  const user = users[receiverId?.toString()];
+  if (user) {
+    return user.socketId;
+  }
+  return null; 
+};
 
 
 io.on("connection", (socket) => {
-    console.log("New client connected", socket.id)
-    const userId = socket.handshake.query.userId
-     console.log("userId from handshake:", userId);
-    if (userId) {
-        users[userId] = socket.id;
-         console.log("Updated users map:", users);
-        console.log("Helloooo", users)
-    }
+  const userId = socket.handshake.query.userId;
+  const role = socket.handshake.query.role;
+
+  if (userId && role) {
+    users[userId.toString()] = socket.id;
+  }
+  if (userId && role) {
+    users[userId.toString()] = {
+      socketId: socket.id,
+      role: role,
+    };
+
+
+  }
+
+
+  io.emit("getOnline", Object.keys(users))
+
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected", socket.id)
+
+    delete users[userId]
     io.emit("getOnline", Object.keys(users))
-    console.log("users keys:", Object.keys(users));
-
-
-    socket.on("disconnect", () => {
-        console.log("Client disconnected", socket.id)
-        delete users[userId]
-        io.emit("getOnline", Object.keys(users))
-    })
+  })
 
 })
 

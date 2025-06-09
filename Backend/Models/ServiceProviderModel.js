@@ -20,14 +20,14 @@ const ServiceProviderSchema = new mongoose.Schema({
     },
       location: {
     type: String,
-    required: true, // if needed, you can remove this if not required
+    required: true, 
   },
       // Fields for services only
       experience: [   {
         startdate:{ type: String,},
         enddate:{ type: String,},
-        role: { type: String }, // Example: "10:00 AM"
-        locations: { type: String } // Example: "4:30 PM"
+        role: { type: String }, 
+        locations: { type: String } 
       } ],
       bio: { type: String, maxLength: 50 },
       about: { type: String ,
@@ -35,8 +35,8 @@ const ServiceProviderSchema = new mongoose.Schema({
       timeSlots: [   {
         date:{ type: String,},
         day: { type: String, enum: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] },
-        startTime: { type: String }, // Example: "10:00 AM"
-        endTime: { type: String } // Example: "4:30 PM"
+        startTime: { type: String }, 
+        endTime: { type: String } 
       } ],
       reviews: [{ type: mongoose.Types.ObjectId, ref: "Review" }],
       averageRating: {

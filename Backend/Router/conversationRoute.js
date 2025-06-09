@@ -1,11 +1,10 @@
 import express from "express";
-
-import { getConversations } from "../Controller/converstion.js";
 import { authenticate } from "../auth/VerifyToken.js";
+import { getChatPartners } from "../Controller/getConversation.js";
 
 const conversationRouter = express.Router();
 
 
-conversationRouter.get("/", authenticate, getConversations);
+conversationRouter.get ("/chat-users/:userId/:role",authenticate, getChatPartners);
 
 export default conversationRouter

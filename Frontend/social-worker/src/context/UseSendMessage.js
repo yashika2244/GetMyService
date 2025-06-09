@@ -74,10 +74,9 @@ function UseSendMessage() {
         }
 
         const data = await res.json();
-        console.log('Fetched messages:', data);
 
         // Correct way to update messages
-        setMessages([...messages, data.messages]);
+        setMessages([...messages, data.newMessage ]);
       } catch (error) {
         console.error('Error sending message:', error);
       } finally {

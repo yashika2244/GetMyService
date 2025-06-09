@@ -1,34 +1,50 @@
+
+
 import React from 'react';
 import { BsArrowRightCircle } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
-
-const services = [
-  { id: 1, title: 'Health Care', color: 'bg-pink-500' },
-  { id: 2, title: 'Food & Delivery', color: 'bg-slate-400' },
-  { id: 3, title: 'Home Care', color: 'bg-yellow-400' },
-  { id: 4, title: 'Pet Food Delivery', color: 'bg-green-500' },
-  { id: 5, title: 'Grocery Order', color: 'bg-red-500' },
-  { id: 6, title: 'Emergency Care', color: 'bg-purple-600' },
-];
+import { useAccounts } from '../../context/AppContext';
 
 const ServiceCard = () => {
-  return (
-    <section className="md:py-12 py-3 bg-gradient-to-b from-blue-50 to-white">
+  const { accounts, loading, error } = useAccounts();
 
+  console.log(accounts)
+
+  if (loading) return <div className="text-center py-10">Loading services...</div>;
+  if (error) return <div className="text-center text-red-500 py-10">Failed to load services.</div>;
+
+ const colors = ['bg-pink-500', 'bg-green-500', 'bg-yellow-400', 'bg-purple-600', 'bg-red-500', 'bg-blue-500'];
+  return (
+    <section className="   py-3 bg-gradient-to-b from-blue-50 to-white">
       <div className="container mx-auto px-2 md:px-6">
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-16">
-          {services.map((service) => (
-            <div key={service.id} className="relative bg-white shadow-lg rounded-xl p-2 md:p-6 border border-gray-200 transition-transform hover:scale-105">
-              <h2 className="text-xl font-bold text-gray-800">{service.title}</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-6">
+          {accounts.slice(0, 6).map((service, index) => (
+            <div
+              key={service.id || Math.random()}
+              className="relative bg-white shadow-lg rounded-xl p-2 md:p-6 border border-gray-200 transition-transform hover:scale-105"
+            >
+              <h2 className="text-xl font-bold text-gray-800">{service.name || 'No Title'}</h2>
               <p className="text-gray-600 text-[13px] mt-2">
-                World-class care for everyone. Our health system offers unmatched expert health care.
+                {service.description || 'World-class care for everyone. Our health system offers unmatched expert health care.'}
               </p>
               <div className="flex items-center justify-between mt-2 md:mt-5">
-                <Link to="/doctors" className="flex items-center text-gray-700 hover:text-blue-600 transition">
+                <Link
+                  to={`/Service-profile/${service._id}`}
+                  className="flex items-center text-gray-700 hover:text-blue-600 transition"
+                >
                   <BsArrowRightCircle className="md:text-4xl text-3xl" />
                 </Link>
-                <div className={`md:w-10  md:h-10 w-7 h-7 flex items-center justify-center rounded-full ${service.color} text-white font-bold text-lg`}>
-                  {service.id}
+                {/* <div
+                  className={`md:w-10 md:h-10 w-7 h-7 flex items-center justify-center rounded-full ${service.color || 'bg-gray-400'} text-white font-bold text-lg`}
+                >
+                  {service.id || '?'}
+                </div> */}
+
+                 <div
+                  // className={`md:w-10 md:h-10 w-7 h-7 flex items-center justify-center rounded-full ${service.color || 'bg-gray-400'} text-white font-bold text-lg`}
+                      className={`md:w-10 md:h-10 w-7 h-7 flex items-center justify-center rounded-full ${colors[index % colors.length]} text-white font-bold text-lg`}
+                >
+                  {index + 1} {/* Shows 1,2,3... */}
                 </div>
               </div>
             </div>

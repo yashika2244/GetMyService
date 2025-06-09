@@ -15,7 +15,6 @@ const { id } = useParams();
   // const user = JSON.parse(localStorage.getItem('user'));
 const user = JSON.parse(localStorage.getItem("user"));
 const role = user?.role;
-  console.log("user is:", role)
 
 
   const handleProfileClick = () => {

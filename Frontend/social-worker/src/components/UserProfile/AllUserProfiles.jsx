@@ -1,31 +1,42 @@
 
-// import React, { useState, useEffect } from "react";
-// import { IoIosSettings } from "react-icons/io";
-// import { MdEdit, MdOutlineLogout, MdKeyboardArrowDown } from "react-icons/md";
-// import doll from "../../assets/doll-1.jpeg";
-// import { BASE_URL } from "../../config.js";
-// import { toast } from "react-toastify";
-// import { useNavigate } from "react-router-dom";
-// import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { IoIosSettings } from "react-icons/io";
+import { MdEdit, MdOutlineLogout, MdKeyboardArrowDown } from "react-icons/md";
+import doll from "../../assets/doll-1.jpeg";
+import { BASE_URL } from "../../config.js";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import UserGetAtll from "../../context/UserGetAll.jsx";
+import { IoSettingsSharp } from "react-icons/io5";
 
-// const BookingCard = ({ img, title }) => (
-//   <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow hover:shadow-lg transition-shadow cursor-pointer">
-//     <img
-//       src={img}
-//       alt={title}
-//       className="w-16 h-16 rounded-full object-cover flex-shrink-0 border-2 border-indigo-500"
-//     />
-//     <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-//   </div>
-// );
+const BookingCard = ({ img, title }) => (
+  <div className="flex items-center gap-4 p-4 bg-white rounded-lg shadow hover:shadow-lg transition-shadow cursor-pointer">
+    <img
+      src={img}
+      alt={title}
+      className="w-16 h-16 rounded-full object-cover flex-shrink-0 border-2 border-indigo-500"
+    />
+    <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
+  </div>
+);
 
-// const UserProfile = () => {
+const AllUserProfiles = () => {
+
+  const [allUsers, loading] = UserGetAtll();
+console.log("allUsers", allUsers)
+
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
+
+  const { id } = useParams(); // id = current profile id from URL
+  const user = JSON.parse(localStorage.getItem("user")); // logged-in user
+
 //   const [user, setUser] = useState(null);
-//   const [settingsOpen, setSettingsOpen] = useState(false);
-//   const [bookings, setBookings] = useState([]);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [bookings, setBookings] = useState([]);
 
-//   const navigate = useNavigate()
-
+console.log("allUsers", allUsers)
 
 //   useEffect(() => {
 //     const storedUser = localStorage.getItem("user");
@@ -39,6 +50,15 @@
 //       ]);
 //     }
 //   }, []);
+
+
+  useEffect(() => {
+    if (Array.isArray(allUsers) && allUsers.length > 0 && id) {
+      const matchedProfile = allUsers.find(profile => profile._id === id);
+      setProfile(matchedProfile);
+      console.log("profile user", profile)
+    }
+  }, [allUsers, id]);
 
 //   const logoutHandler = async () => {
 //     try {
@@ -58,15 +78,15 @@
 //     }
 //   };
 
-//   if (!user) {
-//     return (
-//       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-//         <p className="text-gray-500 text-xl font-medium">Loading Profile...</p>
-//       </div>
-//     );
-//   }
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <p className="text-gray-500 text-xl font-medium">Loading Profile...</p>
+      </div>
+    );
+  }
 
-//   return (
+  return (
 //     <section className="min-h-screen bg-gray-50 px-5 py-10 max-w-5xl mx-auto">
 //       {/* Cover Image */}
 //       <div className="relative rounded-lg overflow-hidden h-48 sm:h-64 shadow-md">
@@ -83,25 +103,25 @@
 //         <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg flex-shrink-0">
 //           <img
 //             src={
-//               user.photo ||
+//              profile?.photo||
 //               "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
 //             }
-//             alt={`${user.name}'s profile`}
+//             alt={`${  profile?.name}'s profile`}
 //             className="w-full h-full object-cover"
 //           />
 //         </div>
 //         <div className="mt-4 sm:mt-0 sm:ml-8 text-center sm:text-left flex-grow">
-//           <h1 className="text-3xl font-bold text-gray-900">{user.name}</h1>
+//           <h1 className="text-3xl font-bold text-gray-900">{ profile?.name}</h1>
 //           <p className="text-gray-600 mt-1">
-//             {user.location || "Location not specified"}
+//             { profile?.location || "Location not specified"}
 //           </p>
-//           <button
-// onClick={()=>navigate(`/update_user/${user._id}`)}
+//           {/* <button
+// onClick={()=>navigate(`/update_user/${ profile?._id}`)}
 //             className="mt-6 inline-flex items-center gap-2 bg-indigo-600 text-white px-5 py-2 rounded-lg shadow hover:bg-indigo-700 transition"
 //           >
 //             <MdEdit size={20} />
 //             Edit Profile
-//           </button>
+//           </button> */}
 //         </div>
 //       </div>
 
@@ -158,144 +178,52 @@
 //             id="settings-menu"
 //             className="mt-4 flex flex-col gap-3 text-gray-700"
 //           >
-//             <button
+//             {/* <button
 //               onClick={() => alert("Delete Account feature coming soon")}
 //               className="text-left px-3 py-2 rounded hover:bg-red-100 text-red-600 font-semibold transition"
 //             >
 //               Delete Account
 //             </button>
 //             <button
-//               onClick={logoutHandler}
+//             //   onClick={logoutHandler}
 //               className="text-left px-3 py-2 rounded hover:bg-red-100 text-red-600 font-semibold transition flex items-center gap-2"
 //             >
 //               <MdOutlineLogout size={20} />
 //               Logout
-//             </button>
+//             </button> */}
 //           </div>
 //         )}
 //       </div>
 //     </section>
-
-//   );
-// };
-
-// export default UserProfile;
-
-
-
-
-
-
-
-
-import React, { useState, useEffect } from "react";
-import { IoSettingsSharp } from "react-icons/io5";
-import { MdEdit, MdOutlineLogout, MdOutlineDeleteOutline } from "react-icons/md";
-import doll from "../../assets/doll-1.jpeg";
-import { BASE_URL } from "../../config.js";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-
-const BookingCard = ({ img, title }) => (
-  <div className="flex items-center gap-4 p-4 bg-white rounded-md shadow-md hover:shadow-lg transition cursor-pointer">
-    <img
-      src={img}
-      alt={title}
-      className="w-14 h-14 rounded-full object-cover border-2 border-teal-500"
-    />
-    <h3 className="text-md font-semibold text-slate-800">{title}</h3>
-  </div>
-);
-
-const UserProfile = () => {
-  const [user, setUser] = useState(null);
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [bookings, setBookings] = useState([]);
-  const [bio, setBio] = useState("");
-  const [editingBio, setEditingBio] = useState(false);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      setBio(parsedUser.bio || "");
-      setBookings([
-        { id: 1, title: "Health Care", img: doll },
-        { id: 2, title: "Dental Care", img: doll },
-        { id: 3, title: "Physiotherapy", img: doll },
-      ]);
-    }
-  }, []);
-
-  const logoutHandler = async () => {
-    try {
-      const res = await fetch(`${BASE_URL}/api/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
-      if (res.ok) {
-        localStorage.removeItem("user");
-        setUser(null);
-        window.location.href = "/";
-      } else {
-        toast.error("Logout failed, please try again.");
-      }
-    } catch (err) {
-      toast.error("An error occurred during logout.");
-    }
-  };
-
-  const saveBio = () => {
-    setUser((prev) => ({ ...prev, bio }));
-    setEditingBio(false);
-    localStorage.setItem(
-      "user",
-      JSON.stringify({ ...user, bio })
-    );
-    toast.success("Bio updated");
-  };
-
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <p className="text-slate-400 text-lg font-medium">Loading Profile...</p>
-      </div>
-    );
-  }
-
-  return (
-    <section className="min-h-screen  mt-18 bg-slate-50 px-6 py-12 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
+   <section className="min-h-screen  mt-18 bg-slate-50 px-6 py-12 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
       {/* Left Panel */}
       <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center">
         <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-teal-400 shadow-md">
           <img
             src={
-              user.photo ||
+              profile?.photo ||
             "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
             }
-            alt={`${user.name} profile`}
+            alt={`${profile?.name} profile`}
             className="w-full h-full object-cover"
           />
         </div>
-        <h2 className="mt-6 text-2xl font-semibold text-slate-700"> Name :   {user.name}</h2>
-        <p className="text-teal-600 font-medium mt-1">Location : {user.location || "No location set"}</p>
-        <button
-          onClick={() => navigate(`/update_user/${user._id}`)}
+        <h2 className="mt-6 text-2xl font-semibold text-slate-700"> Name :   {profile?.name}</h2>
+        <p className="text-teal-600 font-medium mt-1">Location : {profile?.location || "No location set"}</p>
+        {/* <button
+          onClick={() => navigate(`/update_user/${profile?._id}`)}
           className="mt-5 w-full bg-teal-600 text-white py-2 rounded-md shadow hover:bg-teal-700 transition"
           aria-label="Edit Profile"
         >
           <MdEdit className="inline-block mr-2 text-lg" />
           Edit Profile
-        </button>
+        </button> */}
       </div>
 
       {/* Right Panel */}
       <div className="md:col-span-2 flex flex-col gap-8">
         {/* Intro Card */}
-        <div className="bg-white rounded-lg shadow-md p-6">
+        {/* <div className="bg-white rounded-lg shadow-md p-6">
           <h3 className="text-xl font-semibold text-slate-800 mb-4 flex justify-between items-center">
             Intro
             {!editingBio && (
@@ -335,7 +263,7 @@ const UserProfile = () => {
           ) : (
             <p className="text-slate-700">{bio || "No bio added yet."}</p>
           )}
-        </div>
+        </div> */}
 
         {/* Bookings Card */}
         <div className="bg-white rounded-lg shadow-md p-6 max-h-[300px] overflow-y-auto">
@@ -389,13 +317,13 @@ const UserProfile = () => {
                 <MdOutlineDeleteOutline size={20} />
                 Delete Account
               </button> */}
-              <button
+              {/* <button
                 onClick={logoutHandler}
                 className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-red-100 text-red-600 font-semibold transition"
               >
                 <MdOutlineLogout size={20} />
                 Logout
-              </button>
+              </button> */}
             </div>
           )}
         </div>
@@ -404,4 +332,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default AllUserProfiles;

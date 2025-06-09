@@ -1,17 +1,22 @@
-import mongoose from 'mongoose'
-import MessageModel from './MessageModel.js'
-import UserModels from '../Models/UserModels.js'
 
+import mongoose from 'mongoose';
+
+const participantSchema = new mongoose.Schema({
+  id: { type: mongoose.Schema.Types.ObjectId, required: true, refPath: 'participants.role' },
+  role: { 
+    type: String, 
+    required: true, 
+    enum: ['customer', 'service-provider']  
+  }
+}, { _id: false });
 
 const conversationSchema = new mongoose.Schema({
-    participants:[{type:mongoose.Schema.Types.ObjectId, ref:"User"}],
-    messages:[{type:mongoose.Schema.Types.ObjectId, ref:"Messages", default:[]}],
+  participants: [participantSchema],
 
-},
-{
-    timestamps:true,
-}
-)
+  messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message", default: [] }],
 
+}, {
+  timestamps: true,
+});
 
 export default mongoose.model("Conversation", conversationSchema);

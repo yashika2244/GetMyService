@@ -1,11 +1,8 @@
 import mongoose from "mongoose";
 
-// MongoDB  connect 
 mongoose.connect("mongodb://127.0.0.1:27017/serviceDatabase")
-// .then(() => console.log(" MongoDB connected"))
-// .catch((err) => console.error(" MongoDB connection error:", err));
 
-// User ka schema define kar rahe hain
+
 const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -24,10 +21,9 @@ const UserSchema = new mongoose.Schema({
   },
   location: {
     type: String,
-    required: true, // if needed, you can remove this if not required
+    required: true, 
   },
 });
 
-// Model create  export
 
 export default mongoose.model('User', UserSchema);

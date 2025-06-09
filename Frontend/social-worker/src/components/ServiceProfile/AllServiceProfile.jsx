@@ -14,16 +14,14 @@ import { useEffect } from "react";
 import { useAccounts } from "../../context/AppContext";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-
 import uploadImageToCloudinary from '../../../utils/uploadCloudinary';
-
+import useConversation from "../../stateManage/useConversation.js";
 
 function AllServiceProfile() {
+
+  
     const { accounts, loading, error } = useAccounts();
-  // console.log("acdffdfdf",accounts)
   const navigate = useNavigate();
-  // const location = useLocation();
-  const { dispatch } = useAuth();
   const [expanded, setExpanded] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
   const currentUserId = localStorage.getItem("userId"); // ya aap context/state se bhi le sakte ho
@@ -33,33 +31,16 @@ function AllServiceProfile() {
   };
   const { id } = useParams(); // id = current profile id from URL
   const user = JSON.parse(localStorage.getItem("user")); // logged-in user
-
-
-  console.log("user is in profile", user)
-
+const { selcetedConversation , setSelcetedConversation } = useConversation()
 useEffect(() => {
   if (Array.isArray(accounts) && accounts.length > 0 && id) {
     const matchedProfile = accounts.find(profile => profile._id === id);
     setProfile(matchedProfile);
-    console.log("profjfnkd", profile)
   }
 }, [accounts, id]);
-
-  // Get user profile data from the location state or context
-  // const { name, photo, loc, about, accounts, rating, experience } =
-  //   location.state || user || {};
-    // console.log("sdsbdhsdsd", location.state)
-  // useEffect(() => {
-  //   console.log("Accounts from location state:", accounts);
-  // }, [accounts]);
-
   const text = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi rerum modi dicta voluptatem deleniti! 
     Molestias veniam quis deserunt vero vitae. Lorem ipsum dolor, sit amet consectetur adipisicing elit.`;
-
   const shortText = text.slice(0, 270);
-
-
-
 
   return (
     <div>
@@ -121,9 +102,10 @@ useEffect(() => {
                 {/* Buttons */}
                 <div className="md:flex flex-wrap gap-3 mt-4 hidden ">
                   <button
-                    // onClick={() =>
-                    //   navigate("/msg", { state: { name, photo, id } })
-                    // }
+                    onClick={() =>{
+                         setSelcetedConversation(profile)
+                      navigate("/msg")}
+                    }
                     className="px-6   py-1 rounded-full bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer "
                   >
                     Message
@@ -299,8 +281,8 @@ useEffect(() => {
                         </p>
                         <button
                           className="mr-2 py-1 w-[150px] mt-2 rounded-xl border border-sky-700 text-sky-700 bg-white font-semibold hover:text-sky-900 hover:outline cursor-pointer hover:bg-sky-50 transition duration-300"
-                          onClick={() =>
-                            navigate("/chat", { state: { name, photo, id } })
+                          onClick={() => { setSelcetedConversation(profile)
+                            navigate("/msg")}
                           }
                         >
                           Message

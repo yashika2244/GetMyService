@@ -18,10 +18,14 @@ export const SocketProvider = ({ children }) => {
       const socket = io("http://localhost:5000", {
         query: {
           userId: user._id,
+              role: user.role,
 
         },
       });
       setSocket(socket);
+
+          socket.emit("addUser", user._id);
+
       socket.on("getOnline", (users) => {
         setOnlineusers(users);
 

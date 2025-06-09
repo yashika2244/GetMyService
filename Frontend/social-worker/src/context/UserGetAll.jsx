@@ -14,10 +14,14 @@ function UserGetAtll() {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.json();
-        setAllUsers(data);
-        setLoading(false);
+        setAllUsers(data.filterUser ?? []);
+
+
       } catch (error) {
         console.log("error is UserGetAtll" + error);
+        setAllUsers([]); // fallback
+      } finally {
+        setLoading(false);
       }
     };
     getUsers();

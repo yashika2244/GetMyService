@@ -28,7 +28,6 @@ function GetProfileFromSearch() {
   const { id } = useParams();
 
 
-  console.log("location-state", location.state)
   // Toggle setting section
   const toggleSetting = () => setSettingOpen(!settingOpen);
   const {name, locate, photo, rating, about}  = location.state

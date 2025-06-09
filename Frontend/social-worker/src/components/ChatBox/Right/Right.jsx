@@ -17,17 +17,17 @@ function Right() {
     return () => setSelcetedConversation(null); // only run on unmount
   }, []);
   return (
-    <div className=" w-full bg-slate-950 text-white">
+    <div className=" w-full  bg-slate-950 text-white   "
+    >
       <div>
         {!selcetedConversation ? (
           <Nochat />
         ) : (
           <>
             <ChatUser />
-            <div
-              className=" py-2 flex-userContainer  overflow-y-auto"
-              style={{ maxHeight: "calc(67.5vh)" }}
-            >
+              {/* // className=" py-2 flex-userContainer   overflow-y-auto" */}
+                       <div className="flex-1 overflow-y-auto"
+                     style={{ maxHeight: "calc(67.5vh)" }} >
               <Msg />
             </div>
             <Types />

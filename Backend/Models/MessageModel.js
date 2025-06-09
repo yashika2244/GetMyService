@@ -1,34 +1,46 @@
+
+
 import mongoose from 'mongoose'
 
-
 const messageSchema = mongoose.Schema({
-    senderId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
+  sender: {
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
     },
-    receiverId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-
-
+    role: {
+      type: String,
+      enum: ['customer', 'service-provider'],
+      required: true
+    }
+  },
+  receiver: {
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
     },
-    message: {
-        type: String,
-        required: true,
-        maxlength: 1000,
-        trim: true,
-        validate: [{
-            validator: (value) => value.length > 0,
-            message: "Message cannot be empty"
-        }]
-    },
-    // createat: { type: Date, default: Date.now },
+    role: {
+      type: String,
+      enum: ['customer', 'service-provider'],
+      required: true
+    }
+  },
 
-},{
-    timestamps:true,
+  message: {
+  type: String,
+  required: true,
+  maxlength: 1000,
+  trim: true,
+  validate: {
+    validator: function(value) {
+      return value && value.length > 0;
+    },
+    message: "Message cannot be empty"
+  }
 }
-)
+}, {
+  timestamps: true
+});
 
-export default mongoose.model("Messages", messageSchema);
+
+export default mongoose.model("Message", messageSchema);

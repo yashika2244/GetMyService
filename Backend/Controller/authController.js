@@ -134,15 +134,6 @@ export const login = async (req, res) => {
     }
 
 
-    // // Find user based on role
-    // if (role === "customer") {
-    //   user = await UserModels.findOne({ email });
-    // } else if (role === "service-provider") {
-    //   user = await ServiceProviderModel.findOne({ email });
-    // } else {
-    //   return res.status(400).json({ message: "Invalid role" });
-    // }
-
 
 
 
@@ -157,7 +148,7 @@ export const login = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id  }, process.env.JWT_SECRET, {
       // expiresIn: "d",
     });
 
