@@ -8,8 +8,11 @@ import { useSocketContext } from "../../../context/SocketContext.jsx";
 function Users({ user }) {
   if (!user) return null;
     const { accounts } = useAccounts(); 
-  // const { selcetedConversation, setSelcetedConversation ,  } = useConversation();
-  const { selcetedConversation, setSelcetedConversation, unreadCounts, setUnreadCounts } = useConversation();
+
+    const { selcetedConversation, setSelcetedConversation, unreadCounts, clearUnreadCount } = useConversation();
+
+
+ 
   const isSelected = selcetedConversation?._id === user._id;
 const  { onlineUsers } = useSocketContext()
 const isOnline = onlineUsers.includes(user._id.toString());

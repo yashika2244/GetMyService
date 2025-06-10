@@ -8,11 +8,11 @@ export const updateService = async (req, res) => {
   const { id } = req.params;
   const { name, email, photo, gender, age, TicketPrice, bio, about,
     specialization,
-     location, expDateStart, expDateEnd } = req.body;
+    location, expDateStart, expDateEnd } = req.body;
 
   try {
     const service = await ServiceProviderModel.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    res.status(200).json({ success: true, user: service });
+    // res.status(200).json({ success: true, user: service });
     if (!service) {
       return res.status(404).json({ success: false, message: "Service not found" });
     }
@@ -28,7 +28,7 @@ export const updateService = async (req, res) => {
     if (about) service.about = about;
 
 
-    if ( location || expDateStart || expDateEnd) {
+    if (location || expDateStart || expDateEnd) {
       service.experience.push({
         // role: exprole,
         location,
@@ -61,7 +61,7 @@ export const AllServices = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch services' });
   }
-  
+
 }
 
 

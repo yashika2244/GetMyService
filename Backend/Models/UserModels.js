@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-mongoose.connect("mongodb://127.0.0.1:27017/serviceDatabase")
+// mongoose.connect("mongodb://127.0.0.1:27017/serviceDatabase")
 
 
 const UserSchema = new mongoose.Schema({

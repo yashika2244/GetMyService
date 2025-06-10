@@ -112,8 +112,10 @@ const FindService = () => {
                 className="w-full  border border-slate-200 shadow-xl rounded-2xl relative  duration-300n transition-transform transform hover:scale-105 hover:shadow-2xl"
                 //                 >
                 // className="w-full md:w-[48%] lg:w-[31%] border border-slate-200 shadow-xl rounded-2xl relative cursor-pointer duration-300 transition-transform transform hover:scale-105 hover:shadow-2xl"
-                onClick={() => handleClick(account)}
+                // onClick={() => handleClick(account)}
                 role="button"
+                onClick={() => handleClick(account)}
+
                 tabIndex={0}
                 onKeyPress={(e) => {
                   if (e.key === "Enter") handleClick(account);
@@ -123,7 +125,7 @@ const FindService = () => {
                 <div className="flex absolute top-2 right-2 px-2 py-1 gap-1   items-center">
                   <FaStar className="text-yellow-400" />
                   <h3 className="text-yellow-400 text-sm font-semibold rounded">
-                    {account.rating}
+                    {account.rating  || 4.8}
                   </h3>
                 </div>
 
@@ -141,7 +143,10 @@ const FindService = () => {
                     />
                   </div>
                   <div className="flex flex-col gap-4 md:mt-5  md:ml-8 mt-3">
-                    <h1 className="md:text-lg text-md text-gray-800 font-bold">
+                    <h1 className="md:text-lg text-md text-gray-800 font-bold"
+
+                    
+                    >
                       {account.name || "No name available"}
                     </h1>
                     <h2 className="text-sm text-gray-600 line-clamp-1 md:line-clamp-none md:mt-0 mt-[-8px]">

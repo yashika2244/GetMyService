@@ -49,7 +49,7 @@ io.on("connection", (socket) => {
 
 
   socket.on("disconnect", () => {
-    console.log("Client disconnected", socket.id)
+    // console.log("Client disconnected", socket.id)
 
     delete users[userId]
     io.emit("getOnline", Object.keys(users))

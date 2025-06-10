@@ -10,6 +10,7 @@ function Msg() {
   const { loading, messages } = useGetMessage();
   // const { selcetedConversation, messages, loading} = useConversation();
   // useGetMessage(selcetedConversation?._id);
+    const containerRef = useRef();
   
   useGetSocketMessage();
 
@@ -18,7 +19,6 @@ function Msg() {
 
 
   // const lastMessageRef = useRef();
-    const containerRef = useRef();
   useEffect(() => {
     
     setTimeout(() => {

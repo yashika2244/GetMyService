@@ -31,11 +31,7 @@ const Routers = () => {
     <Route path='/services' element={<Services/>} />
     <Route path='/contact' element={<Contact/>} />
     <Route path='/about' element={<About/>} />
-    {/* <Route path='/user-signup' element={<Login/>} /> */}
-    {/* <Route path='/register' element={<SignUp/>} /> */}
-    {/* <Route path='/msg' element={<Msg/>} /> */}
     <Route path='/find-Service' element={<FindService/>} />
-    {/* <Route path='/chat' element={<Chat/>} />   */}
     <Route path='/user-profile/:id' element={<UserProfile/>} />
     <Route path='/users-profile/:id' element={<AllUserProfiles/>} />
 

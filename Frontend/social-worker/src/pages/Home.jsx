@@ -25,10 +25,10 @@ function Home() {
         <div className="lg:max-w-[500px] mx-2  md:mx-3 lg:pt-[50px] md:pt-[5px]  mt-12 ">
           <div className="flex flex-col lg:gap-3">
             {/* <h1 className="font-[700] text-[23px] md:mt-7   mt-2 md:text-[40px] leading-7 md:leading-14"> */}
-             <h1 className="font-[700] text-[18px] text-slate-700 mt-2 md:text-[40px] leading-6 md:leading-9 md:mt-12 ">
+             <h1 className="font-[700] text-[18px] text-slate-700 mt-2 md:text-[35px] leading-6 md:leading-8 md:mt-12 ">
               Let's Make It Easy To Get
             </h1>
-            <h1 className="font-[700] text-[18px] text-slate-800  md:text-[30px] leading-6 md:leading-9">
+            <h1 className="font-[700] text-[18px] text-slate-600  md:text-[30px] leading-6 md:leading-9">
               {" "}
               Any Services !
             </h1>
@@ -113,7 +113,7 @@ function Home() {
                 World-class care for everyone. Our service system offers
                 unmatched expert service care.
               </p>
-              <Link to="/services" className="flex justify-center mt-1 md:mt-3">
+              <Link to="/find-Service" className="flex justify-center mt-1 md:mt-3">
                 <BsArrowRightCircle className="text-[20px] md:text-[40px] text-blue-500 hover:text-blue-700  cursor-pointer transition-colors duration-300" />
               </Link>
             </div>
@@ -134,7 +134,7 @@ function Home() {
                 unmatched expert service care.
               </p>
               <Link
-                to="/locations"
+                to="/find-Service"
                 className="flex justify-center mt-1 md:mt-3"
               >
                 <BsArrowRightCircle className="text-[20px] md:text-[40px] text-blue-500 hover:text-blue-700 transition-colors duration-300" />
@@ -157,7 +157,7 @@ function Home() {
                 unmatched expert health care. Book Now!
               </p>
               <Link
-                to="/appointments"
+                to="/msg"
                 className="flex justify-center mt-1 md:mt-3"
               >
                 <BsArrowRightCircle className="text-[20px] md:text-[40px] text-blue-500 hover:text-blue-700 transition-colors duration-300" />
@@ -245,5 +245,4 @@ function Home() {
 }
 
 export default Home;
-
 

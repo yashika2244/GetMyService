@@ -11,9 +11,13 @@ import reviewRouter from './Router/review.js';
 import { app, server  } from './SocketIO/server.js';
 import routeMessageRouter from './Router/routeMessage.js'
 import conversationRouter from './Router/conversationRoute.js';
+import connectDB from './config/mongodb.js';
 dotenv.config();
 
 
+// Start server listening on defined port
+const port = process.env.PORT || 5000;
+connectDB()
 
 // Express middleware setup
 app.use(express.json());
@@ -44,8 +48,7 @@ app.use('/api/chat', conversationRouter)
 
 
 
-// Start server listening on defined port
-const port = process.env.PORT || 5000;
+
 
 server.listen(port, () => {
   console.log(`Server started on http://localhost:${port}`);

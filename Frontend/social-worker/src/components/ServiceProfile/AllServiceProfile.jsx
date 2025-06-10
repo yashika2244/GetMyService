@@ -14,13 +14,11 @@ import { useEffect } from "react";
 import { useAccounts } from "../../context/AppContext";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import uploadImageToCloudinary from '../../../utils/uploadCloudinary';
+import uploadImageToCloudinary from "../../../utils/uploadCloudinary";
 import useConversation from "../../stateManage/useConversation.js";
 
 function AllServiceProfile() {
-
-  
-    const { accounts, loading, error } = useAccounts();
+  const { accounts, loading, error } = useAccounts();
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
@@ -31,13 +29,13 @@ function AllServiceProfile() {
   };
   const { id } = useParams(); // id = current profile id from URL
   const user = JSON.parse(localStorage.getItem("user")); // logged-in user
-const { selcetedConversation , setSelcetedConversation } = useConversation()
-useEffect(() => {
-  if (Array.isArray(accounts) && accounts.length > 0 && id) {
-    const matchedProfile = accounts.find(profile => profile._id === id);
-    setProfile(matchedProfile);
-  }
-}, [accounts, id]);
+  const { selcetedConversation, setSelcetedConversation } = useConversation();
+  useEffect(() => {
+    if (Array.isArray(accounts) && accounts.length > 0 && id) {
+      const matchedProfile = accounts.find((profile) => profile._id === id);
+      setProfile(matchedProfile);
+    }
+  }, [accounts, id]);
   const text = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi rerum modi dicta voluptatem deleniti! 
     Molestias veniam quis deserunt vero vitae. Lorem ipsum dolor, sit amet consectetur adipisicing elit.`;
   const shortText = text.slice(0, 270);
@@ -59,7 +57,7 @@ useEffect(() => {
               <div className="md:absolute top-0    md:mt-14 ">
                 <img
                   src={
-                   profile?.photo ||
+                    profile?.photo ||
                     "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
                   }
                   className="md:w-36  md:h-36 w-28 h-28 mt-8 md:mt-0 rounded-full  shadow-lg object-cover"
@@ -80,7 +78,9 @@ useEffect(() => {
                   <h1>{profile?.name}</h1>
                   <MdOutlineVerified className="text-slate-700 mt-1" />
                 </div>
-                <h2 className="text-gray-7=800 font-normal text-md">{profile?.about}</h2>
+                <h2 className="text-gray-7=800 font-normal text-md">
+                  {profile?.about}
+                </h2>
                 <div className="flex flex-wrap items-center gap-1 md:mt-0 mt-2 text-sm text-slate-500">
                   <FaLocationDot />
                   <h2 className="text-gray-7=800 font-normal text-md">
@@ -102,10 +102,10 @@ useEffect(() => {
                 {/* Buttons */}
                 <div className="md:flex flex-wrap gap-3 mt-4 hidden ">
                   <button
-                    onClick={() =>{
-                         setSelcetedConversation(profile)
-                      navigate("/msg")}
-                    }
+                    onClick={() => {
+                      setSelcetedConversation(profile);
+                      navigate("/msg");
+                    }}
                     className="px-6   py-1 rounded-full bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer "
                   >
                     Message
@@ -176,7 +176,9 @@ useEffect(() => {
                   <FaStar
                     key={index}
                     className={`text-lg ${
-                      index < profile?.rating ? "text-yellow-500" : "text-gray-300"
+                      index < profile?.rating
+                        ? "text-yellow-500"
+                        : "text-gray-300"
                     }`}
                   />
                 ))}
@@ -188,7 +190,7 @@ useEffect(() => {
             {/* <div className="bg-[#e3e8f0c5]  border-t-2 border-gray-200 py-6"> */}
             <div className="flex flex-col items-center justify-center max-w-[1000px] w-full mx-auto ">
               <div className="w-full bg-white   rounded-lg">
-                <div>
+                {/* <div>
                   <div
                     className="flex items-center gap-2 md:py-4 text-slate-700 "
                     onClick={toggleSetting}
@@ -205,24 +207,21 @@ useEffect(() => {
                     />
                   </div>
 
-                  {settingOpen && (
+                  {/* {settingOpen && (
                     <div className="overflow-y-auto transition-all duration-500 pl-5 p-3 text-slate-600 flex flex-col max-h-[300px]">
                       <h1 className="text-[15px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md">
                         Book Now
                       </h1>
 
-                          {/* <h1
+                      {/* <h1
                         className="text-[15px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md"
                         onClick={logoutHandler}
                       >
                         Logout
                       </h1> */}
-
-
-                    
-                    </div>
-                  )}
-                </div>
+                    {/* </div>
+                  )} */} 
+                {/* </div> */} 
               </div>
             </div>
           </div>
@@ -252,7 +251,7 @@ useEffect(() => {
                   <div key={index} className="pt-4 pl-4">
                     <div className="flex">
                       <img
-                        src={profile.photo || "default-profile.png"} // Default image if photo is missing
+                        src={profile.photo ||  "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"} // Default image if photo is missing
                         className="w-12 h-12 rounded-full border border-gray-200 object-cover"
                       />
                       <div className="flex flex-col justify-center ml-2">
@@ -281,9 +280,10 @@ useEffect(() => {
                         </p>
                         <button
                           className="mr-2 py-1 w-[150px] mt-2 rounded-xl border border-sky-700 text-sky-700 bg-white font-semibold hover:text-sky-900 hover:outline cursor-pointer hover:bg-sky-50 transition duration-300"
-                          onClick={() => { setSelcetedConversation(profile)
-                            navigate("/msg")}
-                          }
+                          onClick={() => {
+                            setSelcetedConversation(profile);
+                            navigate("/msg");
+                          }}
                         >
                           Message
                         </button>

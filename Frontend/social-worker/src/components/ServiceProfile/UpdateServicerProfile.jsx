@@ -243,7 +243,7 @@ function UpdateServicerProfile() {
                 name="photo"
                 id="customfile"
                 onChange={handleFileInputChange}
-                accept=".jpg, .png. .jpeg, .avif"
+                accept=".jpg, .png. .jpeg, .avif ,.webp"
                 className="absolute top-0 left-0 w-full h-full  opacity-0 cursor-pointer"
               />
               <label

@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { MdOutlineVerified } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
@@ -11,13 +9,14 @@ import { IoIosSettings } from "react-icons/io";
 import { BASE_URL, token } from "../../config";
 import { toast } from "react-toastify";
 import { useAccounts } from "../../context/AppContext";
-
+import useConversation from "../../stateManage/useConversation.js";
 
 function GetProfileFromSearch() {
   const [expanded, setExpanded] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
   const [searchService, setService] = useState(null);
   const [getService, setGetService] = useState(null);
+  const { selcetedConversation, setSelcetedConversation } = useConversation();
 
   const [allProfiles, setAllProfiles] = useState([]);
 
@@ -27,11 +26,9 @@ function GetProfileFromSearch() {
   const location = useLocation();
   const { id } = useParams();
 
-
   // Toggle setting section
   const toggleSetting = () => setSettingOpen(!settingOpen);
-  const {name, locate, photo, rating, about}  = location.state
-
+  const { name, locate, photo, rating, about } = location.state;
 
   // Fetch single profile by id if not passed from state
   useEffect(() => {
@@ -83,8 +80,11 @@ function GetProfileFromSearch() {
               <div className="md:absolute top-0 md:mt-14 ">
                 <img
                   // src={accounts.photo}
-                  src={photo || "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"}
-                  alt={accounts.name}
+                  src={
+                    photo ||
+                    "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
+                  }
+                  alt={name}
                   className="md:w-36 md:h-36 w-28 h-28 mt-8 md:mt-0 rounded-full shadow-lg object-cover"
                 />
               </div>
@@ -103,9 +103,7 @@ function GetProfileFromSearch() {
                   <h1>{name}</h1>
                   <MdOutlineVerified className="text-slate-700 mt-1" />
                 </div>
-                <h2 className="text-gray-700 font-normal text-md">
-                  {about}
-                </h2>
+                <h2 className="text-gray-700 font-normal text-md">{about}</h2>
                 <div className="flex flex-wrap items-center gap-1 md:mt-0 mt-2 text-sm text-slate-500">
                   <FaLocationDot />
                   <h2 className="text-gray-800 font-normal text-md">
@@ -129,7 +127,13 @@ function GetProfileFromSearch() {
                   <button className="px-6 py-1 rounded-full bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer ">
                     Connect
                   </button>
-                  <button className="px-4 py-[2px] rounded-4xl text-sky-700 border border-sky-700 font-[600] hover:text-sky-900 hover:outline hover:bg-sky-100 transition transform duration-300 cursor-pointer ">
+                  <button
+                    onClick={() => {
+                      setSelcetedConversation(getService)
+                      navigate("/msg");
+                    }}
+                    className="px-4 py-[2px] rounded-4xl text-sky-700 border border-sky-700 font-[600] hover:text-sky-900 hover:outline hover:bg-sky-100 transition transform duration-300 cursor-pointer "
+                  >
                     Message
                   </button>
                   <button className="px-4 rounded-4xl bg-white text-slate-700 border border-slate-700 font-[600] hover:outline hover:text-slate-900 hover:bg-slate-100 transition-all transform duration-300 cursor-pointer ">
@@ -194,9 +198,7 @@ function GetProfileFromSearch() {
                   <FaStar
                     key={index}
                     className={`text-lg ${
-                      index < rating
-                        ? "text-yellow-500"
-                        : "text-gray-300"
+                      index < rating ? "text-yellow-500" : "text-gray-300"
                     }`}
                   />
                 ))}
@@ -208,7 +210,7 @@ function GetProfileFromSearch() {
           <div className="max-w-[800px] ml:5 md:ml-20 bg-white border border-gray-300 shadow-lg rounded-xl p-2 mb-2">
             <div className="flex flex-col items-center justify-center max-w-[1000px] w-full mx-auto ">
               <div className="w-full bg-white rounded-lg">
-                <div
+                {/* <div
                   className="flex items-center gap-2 md:py-4 text-slate-700 cursor-pointer"
                   onClick={toggleSetting}
                 >
@@ -222,8 +224,8 @@ function GetProfileFromSearch() {
                       settingOpen ? "rotate-90" : ""
                     }`}
                   />
-                </div>
-                {settingOpen && (
+                </div> */}
+                {/* {settingOpen && (
                   <div
                     className={`overflow-y-auto transition-all duration-500 pl-5 p-3 text-slate-600 flex flex-col ${
                       settingOpen ? "max-h-[300px]" : "max-h-0"
@@ -233,7 +235,7 @@ function GetProfileFromSearch() {
                       Book Now
                     </h1>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>
@@ -260,33 +262,43 @@ function GetProfileFromSearch() {
                   <div
                     key={profile._id}
                     className="flex cursor-pointer  px-5 py-2 gap-4 "
-                    onClick={() =>
-                      navigate(`/Services-profile/${profile._id}`, { state: profile,  })
-                    }
                   >
                     <img
-                      src={profile.photo && profile.photo.trim() !== "" ? profile.photo : "/default-placeholder.png"}
+                      src={
+                        profile.photo && profile.photo.trim() !== ""
+                          ? profile.photo
+                          :  "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
+                      }
                       alt={profile.name}
                       className="w-10 h-10 rounded-full object-cover"
                     />
                     <div className="flex flex-col">
-                      <h3 className="text-slate-900 font-semibold">
+                      <h3
+                        className="text-slate-900 font-semibold"
+                        onClick={() =>
+                          navigate(`/Services-profile/${profile._id}`, {
+                            state: profile,
+                          })
+                        }
+                      >
                         {profile.name}
                       </h3>
                       <span className="text-sm font-normal text-slate-700">
                         {profile.about}
                       </span>
-                       <button
-                          className="mr-2 py-1 w-[150px] mt-2 rounded-xl border border-sky-700 text-sky-700 bg-white font-semibold hover:text-sky-900 hover:outline cursor-pointer hover:bg-sky-50 transition duration-300"
-                          onClick={() => navigate("/msg")}
-                        >
-                          Message
-                        </button>
-                         {index !== allProfiles.length - 1 && (
-                      <div className="border-b border-gray-300 mt-5  mb-4" />
-                    )}
+                      <button
+                        className="mr-2 py-1 w-[150px] mt-2 rounded-xl border border-sky-700 text-sky-700 bg-white font-semibold hover:text-sky-900 hover:outline cursor-pointer hover:bg-sky-50 transition duration-300"
+                        onClick={() => {
+                          setSelcetedConversation(profile);
+                          navigate("/msg");
+                        }}
+                      >
+                        Message
+                      </button>
+                      {index !== allProfiles.length - 1 && (
+                        <div className="border-b border-gray-300 mt-5  mb-4" />
+                      )}
                     </div>
-                   
                   </div>
                 ))
             ) : (

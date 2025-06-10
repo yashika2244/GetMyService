@@ -288,7 +288,7 @@ const { selcetedConversation , setSelcetedConversation } = useConversation()
                   <div key={index} className="pt-4 pl-4">
                     <div className="flex">
                       <img
-                        src={profile.photo || "default-profile.png"} // Default image if photo is missing
+                        src={profile.photo ||  "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"} // Default image if photo is missing
                         className="w-12 h-12 rounded-full border border-gray-200 object-cover"
                       />
                       <div className="flex flex-col justify-center ml-2">

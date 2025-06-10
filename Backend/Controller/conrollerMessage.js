@@ -89,8 +89,12 @@ if (!mongoose.Types.ObjectId.isValid(receiverId)) {
     
     const receiverSocketId = getReceiversocketId(receiverId.toString());
     if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", newMessage.toObject());
-    }
+      io.to(receiverSocketId).emit("newMessage", newMessage, {
+    ...newMessage.toObject(),
+    senderId: newMessage.sender.id,
+    receiverId: newMessage.receiver.id
+     });
+}   
 
     return res.status(200).json({ message: "Message sent successfully", newMessage });
 
