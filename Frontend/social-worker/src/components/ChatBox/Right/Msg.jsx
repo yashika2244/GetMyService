@@ -2,25 +2,13 @@ import React, { useEffect, useState } from "react";
 import Loading from "../../Loading.jsx";
 import Messages from "./Messages.jsx";
 import { useRef } from "react";
-import useConversation from "../../../stateManage/useConversation.js";
 import useGetMessage from "../../../context/useGetMessage.js";
-import useGetSocketMessage from "../../../context/useGetSocketMessage.js";
 
 function Msg() {
   const { loading, messages } = useGetMessage();
-  // const { selcetedConversation, messages, loading} = useConversation();
-  // useGetMessage(selcetedConversation?._id);
     const containerRef = useRef();
-  
-  useGetSocketMessage();
-
   const safeMessages = Array.isArray(messages) ? messages : [];
-
-
-
-  // const lastMessageRef = useRef();
   useEffect(() => {
-    
     setTimeout(() => {
 
      if (containerRef.current) {
@@ -34,7 +22,7 @@ function Msg() {
 
 
        <div    ref={containerRef}
-        className="flex-1 overflow-y-auto" style={{ minHeight: "calc(69vh)", maxHeight: "calc(69vh)" }}>
+        className="flex-1  chat-scroll  overflow-y-auto " style={{ minHeight: "calc(69vh)", maxHeight: "calc(69vh)" }}>
       {loading ? (
         <Loading />
       ) : safeMessages.length === 0 ? (
@@ -46,14 +34,6 @@ function Msg() {
           </div>
 )    
 
-      // safeMessages.map((message, index) => {
-      //     const isLast = index === safeMessages.length - 1;
-      //     return (
-      //       <div key={message?._id || index} ref={isLast ? lastMessageRef : null}>
-      //         <Messages message={message} />
-      //       </div>
-      //     );
-        // })
       )}
     </div>
     </>

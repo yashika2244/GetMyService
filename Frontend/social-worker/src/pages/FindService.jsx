@@ -109,7 +109,7 @@ const FindService = () => {
             {filteredAccounts.map((account) => (
               <div
                 key={account._id}
-                className="w-full  border border-slate-200 shadow-xl rounded-2xl relative  duration-300n transition-transform transform hover:scale-105 hover:shadow-2xl"
+                className="w-full  border border-slate-200 shadow-xl rounded-2xl relative  duration-300 transition-transform transform hover:scale-105 hover:shadow-2xl"
                 //                 >
                 // className="w-full md:w-[48%] lg:w-[31%] border border-slate-200 shadow-xl rounded-2xl relative cursor-pointer duration-300 transition-transform transform hover:scale-105 hover:shadow-2xl"
                 // onClick={() => handleClick(account)}

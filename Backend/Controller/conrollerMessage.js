@@ -84,12 +84,11 @@ if (!mongoose.Types.ObjectId.isValid(receiverId)) {
     await Promise.all([newMessage.save(), conversation.save()]);
 
 
-
     // Emit socket message to receiver if online
     
     const receiverSocketId = getReceiversocketId(receiverId.toString());
     if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", newMessage, {
+      io.to(receiverSocketId).emit("newMessage", {
     ...newMessage.toObject(),
     senderId: newMessage.sender.id,
     receiverId: newMessage.receiver.id
@@ -111,8 +110,7 @@ export const getMessage = async (req, res) => {
   try {
     const chatUserId = req.params.id;
     const senderId = req.userId;
-    // const senderRole = req.role; // from auth middleware
-  // Detect sender role dynamically
+
     let senderRole = null;
     const senderUser = await UserModels.findById(senderId);
     if (senderUser) senderRole = 'customer';

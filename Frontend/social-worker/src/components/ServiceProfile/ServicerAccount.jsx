@@ -14,7 +14,6 @@ import { useAccounts } from "../../context/AppContext";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-
 import { FaUserEdit } from "react-icons/fa";
 import useConversation from "../../stateManage/useConversation.js";
 
@@ -28,7 +27,7 @@ function ServicerAccount() {
   const [expanded, setExpanded] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
   const currentUserId = localStorage.getItem("userId");
-const { selcetedConversation , setSelcetedConversation } = useConversation()
+  const { selcetedConversation, setSelcetedConversation } = useConversation();
 
   const [profile, setProfile] = useState(null);
   const toggleSetting = () => {
@@ -127,17 +126,7 @@ const { selcetedConversation , setSelcetedConversation } = useConversation()
 
                 {/* Buttons */}
                 <div className="md:flex flex-wrap gap-3 mt-4 hidden ">
-                  {/* <button
-                    onClick={() =>
-                        { setSelcetedConversation(user)
-
-                      navigate("/msg")}
-                    }
-                    className="px-6   py-1 rounded-full bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer "
-                  >
-                    Message
-                  </button> */}
- <div onClick={() => navigate(`/update_service/${user._id}`)}>
+                  <div onClick={() => navigate(`/update_service/${user._id}`)}>
                     <button className="px-10   py-1 rounded-full bg-gray-200 outline outline-gray-400  hover:outline text-gray-600 font-semibold hover:bg-gray-300 transition duration-300 cursor-pointer ">
                       <FaUserEdit className="text-gray-700  inline" /> Edit
                     </button>
@@ -146,20 +135,14 @@ const { selcetedConversation , setSelcetedConversation } = useConversation()
                     className="px-4 py-[2px] rounded-4xl bg-sky-100 text-sky-700 border-1 border-sky-700  font-[600] hover:text-sky-900
         hover:outline hover:bg-sky-100  transition transform duration-300 cursor-pointer "
                   >
-                    More 
-               </button>
-                 
+                    More
+                  </button>
                 </div>
               </div>
             </div>
             {/* mini screen btn */}
 
             <div className="flex md:hidden mt-5 ">
-              {/* <button className="px-12   py-1 rounded-xl bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer ">
-                {" "}
-                message
-              </button> */}
-
               <div onClick={() => navigate(`/update_service/${user._id}`)}>
                 <button className=" py-1 px-12   rounded-xl bg-gray-200 outline  hover:outline outline-gray-300  text-gray-600 font-semibold hover:bg-gray-300 transition duration-300 cursor-pointer ">
                   <FaUserEdit className="text-gray-600 inline  " /> Edit
@@ -273,7 +256,7 @@ const { selcetedConversation , setSelcetedConversation } = useConversation()
               className="h-full rounded-xl  "
             />
           </div>
-          <div className=" mt-2  h-[calc(100vh-5px)] border border-gray-300 rounded-xl bg-white   w-[300px]   overflow-y-auto">
+          <div className=" mt-2  h-[calc(100vh-5px)] border border-gray-300 rounded-xl bg-white   w-[300px]  custom-scroll  overflow-y-auto">
             <div className="pt-6 pl-6">
               <h2 className="font-semibold text-gray-900">
                 {" "}
@@ -288,7 +271,10 @@ const { selcetedConversation , setSelcetedConversation } = useConversation()
                   <div key={index} className="pt-4 pl-4">
                     <div className="flex">
                       <img
-                        src={profile.photo ||  "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"} // Default image if photo is missing
+                        src={
+                          profile.photo ||
+                          "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
+                        } // Default image if photo is missing
                         className="w-12 h-12 rounded-full border border-gray-200 object-cover"
                       />
                       <div className="flex flex-col justify-center ml-2">
@@ -317,10 +303,11 @@ const { selcetedConversation , setSelcetedConversation } = useConversation()
                         </p>
                         <button
                           className="mr-2 py-1 w-[150px] mt-2 rounded-xl border border-sky-700 text-sky-700 bg-white font-semibold hover:text-sky-900 hover:outline cursor-pointer hover:bg-sky-50 transition duration-300"
-                          onClick={() => 
-                         {setSelcetedConversation(profile)
+                          onClick={() => {
+                            setSelcetedConversation(profile);
 
-                            navigate("/msg")}}
+                            navigate("/msg");
+                          }}
                         >
                           Message
                         </button>

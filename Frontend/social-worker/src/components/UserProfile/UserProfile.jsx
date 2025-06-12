@@ -338,7 +338,7 @@ const UserProfile = () => {
         </div>
 
         {/* Bookings Card */}
-        <div className="bg-white rounded-lg shadow-md p-6 max-h-[300px] overflow-y-auto">
+        <div className="bg-white rounded-lg shadow-md p-6 max-h-[300px] custom-scroll overflow-y-auto">
           <h3 className="text-xl font-semibold text-slate-800 mb-4">My Booking Services</h3>
           {bookings.length ? (
             <div className="flex flex-col gap-4">

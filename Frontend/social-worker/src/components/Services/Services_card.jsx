@@ -8,7 +8,6 @@ import { useAccounts } from '../../context/AppContext';
 const ServiceCard = () => {
   const { accounts, loading, error } = useAccounts();
 
-  console.log(accounts)
 
   if (loading) return <div className="text-center py-10">Loading services...</div>;
   if (error) return <div className="text-center text-red-500 py-10">Failed to load services.</div>;

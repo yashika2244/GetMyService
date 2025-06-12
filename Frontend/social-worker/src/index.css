@@ -20,14 +20,34 @@
     display: none;
 }
 
-/* .chat-bubble.relative::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 12px;
-  height: 12px;
-  background: #60a5fa; /* Tailwind blue-400, same as chat-bubble-info bg */
-  /* clip-path: polygon(100% 0, 0% 100%, 100% 100%); */
-/* } */ 
+/* Only Chat List div scrollbar */
+.chat-scroll::-webkit-scrollbar {
+  width: 3px;
+}
+
+.chat-scroll::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb {
+  background-color: #64748b;
+  border-radius: 4px;
+}
+
+
+/* Only Chat List div scrollbar */
+.custom-scroll::-webkit-scrollbar {
+  width: 3px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+ background: #c1c6ce;
+  /* background: #0f172a; */
+
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color:  #868e99;
+  border-radius: 10px;
+}
 

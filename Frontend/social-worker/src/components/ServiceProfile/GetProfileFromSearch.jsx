@@ -123,11 +123,16 @@ function GetProfileFromSearch() {
                 </div>
 
                 {/* Buttons */}
-                <div className="md:flex flex-wrap gap-3 mt-4 hidden ">
-                  <button className="px-6 py-1 rounded-full bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer ">
-                    Connect
+                <div className="md:flex flex-wrap gap-3 mt-4 hidden "  >
+                  <button 
+                   onClick={() => {
+                      setSelcetedConversation(getService)
+                      navigate("/msg");
+                    }}
+                  className="px-6 py-1 rounded-full bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer ">
+                   Message
                   </button>
-                  <button
+                  {/* <button
                     onClick={() => {
                       setSelcetedConversation(getService)
                       navigate("/msg");
@@ -135,7 +140,7 @@ function GetProfileFromSearch() {
                     className="px-4 py-[2px] rounded-4xl text-sky-700 border border-sky-700 font-[600] hover:text-sky-900 hover:outline hover:bg-sky-100 transition transform duration-300 cursor-pointer "
                   >
                     Message
-                  </button>
+                  </button> */}
                   <button className="px-4 rounded-4xl bg-white text-slate-700 border border-slate-700 font-[600] hover:outline hover:text-slate-900 hover:bg-slate-100 transition-all transform duration-300 cursor-pointer ">
                     More
                   </button>
@@ -210,32 +215,7 @@ function GetProfileFromSearch() {
           <div className="max-w-[800px] ml:5 md:ml-20 bg-white border border-gray-300 shadow-lg rounded-xl p-2 mb-2">
             <div className="flex flex-col items-center justify-center max-w-[1000px] w-full mx-auto ">
               <div className="w-full bg-white rounded-lg">
-                {/* <div
-                  className="flex items-center gap-2 md:py-4 text-slate-700 cursor-pointer"
-                  onClick={toggleSetting}
-                >
-                  <IoIosSettings className="md:text-3xl text-2xl" />
-                  <h1 className="font-semibold text-xl text-gray-900">
-                    {" "}
-                    Setting
-                  </h1>
-                  <MdArrowForwardIos
-                    className={`ml-5 mt-2 text-xl cursor-pointer transition-transform ${
-                      settingOpen ? "rotate-90" : ""
-                    }`}
-                  />
-                </div> */}
-                {/* {settingOpen && (
-                  <div
-                    className={`overflow-y-auto transition-all duration-500 pl-5 p-3 text-slate-600 flex flex-col ${
-                      settingOpen ? "max-h-[300px]" : "max-h-0"
-                    }`}
-                  >
-                    <h1 className="text-[15px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md">
-                      Book Now
-                    </h1>
-                  </div>
-                )} */}
+               
               </div>
             </div>
           </div>
@@ -250,7 +230,7 @@ function GetProfileFromSearch() {
               className="h-full rounded-xl"
             />
           </div>
-          <div className="mt-2 h-[calc(100vh-5px)] border border-gray-300 rounded-xl bg-white w-[300px] overflow-y-auto">
+          <div className="mt-2 h-[calc(100vh-5px)] border border-gray-300 rounded-xl bg-white w-[300px] custom-scroll overflow-y-auto">
             <div className="pt-6 pl-6 pb-2 font-bold text-slate-800">
               More profiles for you
             </div>

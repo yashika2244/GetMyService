@@ -81,7 +81,7 @@ function User() {
   return (
     <div
       style={{ maxHeight: "calc(72vh)" }}
-      className="flex-userContainer overflow-y-auto"
+      className="flex-userContainer chat-scroll overflow-y-auto"
     >
       {filteredUsers.length > 0 ? (
         filteredUsers.map((user, index) => (

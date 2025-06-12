@@ -26,7 +26,7 @@ function Right() {
           <>
             <ChatUser />
               {/* // className=" py-2 flex-userContainer   overflow-y-auto" */}
-                       <div className="flex-1 overflow-y-auto"
+                       <div className="flex-1  "
                      style={{ maxHeight: "calc(67.5vh)" }} >
               <Msg />
             </div>

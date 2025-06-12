@@ -16,6 +16,8 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import uploadImageToCloudinary from "../../../utils/uploadCloudinary";
 import useConversation from "../../stateManage/useConversation.js";
+// import ReviewForm from "../Riview/CustomerRiview.jsx";
+// import GetAllReview from "../../context/GetAllReview.jsx";
 
 function AllServiceProfile() {
   const { accounts, loading, error } = useAccounts();
@@ -100,7 +102,7 @@ function AllServiceProfile() {
                 </div>
 
                 {/* Buttons */}
-                <div className="md:flex flex-wrap gap-3 mt-4 hidden ">
+                <div className="flex flex-wrap gap-3 mt-4  ">
                   <button
                     onClick={() => {
                       setSelcetedConversation(profile);
@@ -119,15 +121,8 @@ function AllServiceProfile() {
                 </div>
               </div>
             </div>
-            {/* mini screen btn */}
 
-            <div className="flex md:hidden justify-center items-center mt-7">
-              <button className="bg-blue-400 w-full py-2 rounded-4xl text-white font-semibold cursor-pointer hover:bg-sky-600 duration-300 ">
-                {" "}
-                Open to
-              </button>
-            </div>
-
+          
             {/* Open to Work Section */}
             <div className="mt-6 bg-indigo-100 p-4 rounded-xl text-sm max-w-xl ">
               <h3 className="text-gray-900 font-semibold">Open to work</h3>
@@ -169,7 +164,7 @@ function AllServiceProfile() {
           {/* Rating */}
           <div className="max-w-[800px] ml:5 md:ml-20 bg-white border mb-2 border-gray-300 shadow-lg rounded-xl p-2 md:p-5 ">
             <h1 className="font-semibold text-xl text-gray-900">Rate</h1>
-            <span className="flex items-center  gap-2 pt-3">
+            {/* <span className="flex items-center  gap-2 pt-3">
               <h1 className="text-xl   "> 4.8</h1>
               <div className="flex gap-1">
                 {[...Array(5)].map((_, index) => (
@@ -183,46 +178,16 @@ function AllServiceProfile() {
                   />
                 ))}
               </div>
-            </span>
+            </span> */}
+            {/* <ReviewForm serviceId={service._id} />
+            <GetAllReview serviceId={service._id} /> */}
+            {/* <ReviewForm serviceId={profile?._id} />
+            <GetAllReview serviceId={profile?._id} /> */}
           </div>
           {/* setting */}
           <div className="max-w-[800px] ml:5 md:ml-20 bg-white border border-gray-300 shadow-lg rounded-xl p-2 mb-2">
-            {/* <div className="bg-[#e3e8f0c5]  border-t-2 border-gray-200 py-6"> */}
             <div className="flex flex-col items-center justify-center max-w-[1000px] w-full mx-auto ">
-              <div className="w-full bg-white   rounded-lg">
-                {/* <div>
-                  <div
-                    className="flex items-center gap-2 md:py-4 text-slate-700 "
-                    onClick={toggleSetting}
-                  >
-                    <IoIosSettings className="md:text-3xl text-2xl" />
-                    <h1 className=" font-semibold text-xl text-gray-900">
-                      {" "}
-                      Setting
-                    </h1>
-                    <MdArrowForwardIos
-                      className={`ml-5 mt-2 text-xl cursor-pointer transition-transform ${
-                        settingOpen ? "rotate-90" : ""
-                      }`}
-                    />
-                  </div>
-
-                  {/* {settingOpen && (
-                    <div className="overflow-y-auto transition-all duration-500 pl-5 p-3 text-slate-600 flex flex-col max-h-[300px]">
-                      <h1 className="text-[15px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md">
-                        Book Now
-                      </h1>
-
-                      {/* <h1
-                        className="text-[15px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md"
-                        onClick={logoutHandler}
-                      >
-                        Logout
-                      </h1> */}
-                    {/* </div>
-                  )} */} 
-                {/* </div> */} 
-              </div>
+              <div className="w-full bg-white   rounded-lg"></div>
             </div>
           </div>
         </div>
@@ -236,7 +201,7 @@ function AllServiceProfile() {
               className="h-full rounded-xl  "
             />
           </div>
-          <div className=" mt-2  h-[calc(100vh-5px)] border border-gray-300 rounded-xl bg-white   w-[300px]   overflow-y-auto">
+          <div className=" mt-2  h-[calc(100vh-5px)] border border-gray-300 rounded-xl bg-white   w-[300px] custom-scroll   overflow-y-auto">
             <div className="pt-6 pl-6">
               <h2 className="font-semibold text-gray-900">
                 {" "}
@@ -251,7 +216,10 @@ function AllServiceProfile() {
                   <div key={index} className="pt-4 pl-4">
                     <div className="flex">
                       <img
-                        src={profile.photo ||  "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"} // Default image if photo is missing
+                        src={
+                          profile.photo ||
+                          "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
+                        } // Default image if photo is missing
                         className="w-12 h-12 rounded-full border border-gray-200 object-cover"
                       />
                       <div className="flex flex-col justify-center ml-2">

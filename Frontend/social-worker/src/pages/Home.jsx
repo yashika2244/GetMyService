@@ -6,7 +6,6 @@ import About from "../components/About/About";
 import Best_s_list from "../components/Best-services/Best_s_list";
 import Add_own_service from "../components/add_own_service/Add_own_service";
 import Faqlist from "../components/faq/Faqlist";
-import CustomerRiview from "../components/Riview/CustomerRiview";
 
 function Home() {
   let navigate = useNavigate();
