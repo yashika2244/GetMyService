@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import {BASE_URL, token} from '../../config.js'
+import { FaStar } from 'react-icons/fa'; // FontAwesome Star icon
 
 const ReviewForm = ({ serviceProviderId, onReviewSubmitted }) => {
     console.log("serviceProviderId in review:", serviceProviderId);
   const [rating, setRating] = useState(5);
+  const [hover, setHover] = useState(null);
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +21,8 @@ const ReviewForm = ({ serviceProviderId, onReviewSubmitted }) => {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          reviewee: serviceProviderId,
+        //   reviewee: serviceProviderId,
+           revieweeId: serviceProviderId,
           rating,
           comment
         })
@@ -44,7 +47,7 @@ const ReviewForm = ({ serviceProviderId, onReviewSubmitted }) => {
     <form onSubmit={submitReview} className="flex flex-col space-y-2 p-4 bg-white rounded shadow">
       <label className="flex items-center">
         <span className="mr-2">Rating:</span>
-        <select
+        {/* <select
           value={rating}
           onChange={(e) => setRating(parseInt(e.target.value, 10))}
           className="border rounded p-1"
@@ -52,7 +55,17 @@ const ReviewForm = ({ serviceProviderId, onReviewSubmitted }) => {
           {[1,2,3,4,5].map((n) => (
             <option key={n} value={n}>{n} Star{n > 1 ? 's' : ''}</option>
           ))}
-        </select>
+        </select> */}
+         {[1, 2, 3, 4, 5].map((star) => (
+          <FaStar
+            key={star}
+            size={24}
+            className={`cursor-pointer transition-colors mx-1 duration-200 ${star <= (hover || rating) ? 'text-yellow-400' : 'text-gray-300'}`}
+            onClick={() => setRating(star)}
+            onMouseEnter={() => setHover(star)}
+            onMouseLeave={() => setHover(null)}
+          />
+        ))}
       </label>
 
       <textarea
