@@ -22,11 +22,11 @@ const beset_s_card = ({ service }) => {
 
   return (
     <div className=" p-2 bg-gradient-to-b  from-white to-gray-100 shadow-xl rounded-2xl transition-transform   transform hover:scale-105 hover:shadow-2xl duration-300 border border-gray-200">
-      <div className="overflow-hidden rounded-lg">
+      <div className="overflow-hidden md:h-[250px] rounded-lg">
         <img
           src={photo ||  "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"}
           alt={name}
-          className="w-full md:h-[220px] object-cover rounded-lg hover:scale-110 transition-transform duration-300"
+          className="w-full md:h-full  object-cover rounded-lg hover:scale-110 transition-transform duration-300"
         />
       </div>
 

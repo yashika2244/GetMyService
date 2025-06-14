@@ -246,7 +246,7 @@ function UpdateServicerProfile() {
                 name="photo"
                 id="customfile"
                 onChange={handleFileInputChange}
-                accept=".jpg, .png. .jpeg, .avif ,.webp , .html"
+                accept=".jpg, .png.,.jpeg, .avif ,.webp , .html"
                 className="absolute top-0 left-0 w-full h-full  opacity-0 cursor-pointer"
               />
               <label
