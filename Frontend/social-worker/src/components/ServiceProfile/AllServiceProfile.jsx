@@ -16,11 +16,13 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import uploadImageToCloudinary from "../../../utils/uploadCloudinary";
 import useConversation from "../../stateManage/useConversation.js";
-// import ReviewForm from "../Riview/CustomerRiview.jsx";
-// import GetAllReview from "../../context/GetAllReview.jsx";
+
+import { ShowReviews } from "../Review/ShowReview.jsx";
+import ReviewForm from "../Review/Review.jsx";
 
 function AllServiceProfile() {
   const { accounts, loading, error } = useAccounts();
+  const [refreshKey, setRefreshKey] = useState(0);
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
@@ -41,7 +43,13 @@ function AllServiceProfile() {
   const text = `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi rerum modi dicta voluptatem deleniti! 
     Molestias veniam quis deserunt vero vitae. Lorem ipsum dolor, sit amet consectetur adipisicing elit.`;
   const shortText = text.slice(0, 270);
+ const handleRefresh = () => {
+    setRefreshKey(oldKey => oldKey + 1);
+  };
 
+  useEffect(() => {
+    // Code that runs when refreshKey changes
+  }, [refreshKey]);
   return (
     <div>
       <section className="min-h-screen bg-purple-100 md:mt-13 pt-6  md:px-7 flex">
@@ -179,10 +187,18 @@ function AllServiceProfile() {
                 ))}
               </div>
             </span> */}
-            {/* <ReviewForm serviceId={service._id} />
-            <GetAllReview serviceId={service._id} /> */}
-            {/* <ReviewForm serviceId={profile?._id} />
-            <GetAllReview serviceId={profile?._id} /> */}
+            <div>
+             <ShowReviews 
+        key={refreshKey}
+        serviceProviderId={profile?._id} 
+        token={token} 
+      />
+      <ReviewForm 
+        serviceProviderId={profile?._id} 
+        token={token} 
+        onReviewSubmitted={() => setRefreshKey((k) => k + 1)} 
+      />
+    </div>
           </div>
           {/* setting */}
           <div className="max-w-[800px] ml:5 md:ml-20 bg-white border border-gray-300 shadow-lg rounded-xl p-2 mb-2">

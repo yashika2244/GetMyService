@@ -51,3 +51,6 @@
   border-radius: 10px;
 }
 
+html, body {
+  scroll-behavior: auto;
+}

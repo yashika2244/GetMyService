@@ -99,36 +99,6 @@ export const AuthContextProvider = ({ children }) => {
     }
   }, [chatUser]);
 
-  // Fetch accounts when token is available
-//   useEffect(() => {
-//     const fetchAccounts = async () => {
-//       try {
-//         if (!authState.token) return;
-//         const res = await fetch(`${BASE_URL}/api/services`, {
-//           headers: {
-//             Authorization: `Bearer ${authState.token}`,
-//           },
-//         });
-
-//         if (!res.ok) throw new Error("Failed to fetch accounts");
-//         const data = await res.json();
-//         setAccounts(data);
-//         setAccountsLoading(false);
-//       } catch (err) {
-//         setAccountsError(err.message);
-//         setAccountsLoading(false);
-//       }
-//     };
-
-
-//   fetchAccounts();
-// }, [authState.token]);
-
-
-
-//   fetchAccounts();
-// }, [authState.token]);
-
 
 useEffect(() => {
 
@@ -154,55 +124,6 @@ useEffect(() => {
 
   fetchAccounts();
 }, [authState.token]);
-
-
-
-
-
-  // Setup socket connection when user logs in or token changes
-  // useEffect(() => {
-  //   if (!authState.user) {
-  //     if (socket) {
-  //       socket.disconnect();
-  //       setSocket(null);
-  //       setOnlineUsers([]);
-  //     }
-  //     return;
-  //   }
-
-  //   const newSocket = io(BASE_URL, {
-  //     query: { userId: authState.user._id },
-  //     // you can add auth headers or token here if your socket server requires
-  //     // auth: { token: authState.token }
-  //   });
-
-  //   setSocket(newSocket);
-
-  //   newSocket.on("getOnlineUsers", (users) => {
-  //     setOnlineUsers(users);
-  //   });
-
-  //   newSocket.on("connect_error", (err) => {
-  //     console.error("Socket connection error:", err.message);
-  //   });
-
-  //   return () => {
-  //     newSocket.disconnect();
-  //     setSocket(null);
-  //     setOnlineUsers([]);
-  //   };
-  // }, [authState.user]);
-
-
-
-
-
-
-
-
-
-
-
 
 
   return (

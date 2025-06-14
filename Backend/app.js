@@ -11,6 +11,7 @@ import { app, server  } from './SocketIO/server.js';
 import routeMessageRouter from './Router/routeMessage.js'
 import conversationRouter from './Router/conversationRoute.js';
 import connectDB from './config/mongodb.js';
+import reviewRouter from './Router/review.js';
 dotenv.config();
 
 
@@ -43,7 +44,7 @@ app.use('/api/users', userRouter);
 app.use('/api/message', routeMessageRouter)
 app.use('/api/chat', conversationRouter)
 
-
+app.use('/api/reviews',reviewRouter );
 
 
 
