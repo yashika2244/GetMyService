@@ -87,11 +87,12 @@ if (!mongoose.Types.ObjectId.isValid(receiverId)) {
     // Emit socket message to receiver if online
     
     const receiverSocketId = getReceiversocketId(receiverId.toString());
+    console.log("Socket Emit to Receiver:", receiverSocketId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", {
     ...newMessage.toObject(),
-    senderId: newMessage.sender.id,
-    receiverId: newMessage.receiver.id
+    senderId: newMessage.sender.id.toString(),
+    receiverId: newMessage.receiver.id.toString()
      });
 }   
 

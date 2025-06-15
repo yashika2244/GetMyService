@@ -14,7 +14,6 @@ const useGetSocketMessage = () => {
     if (!socket) return;
 
     const handler = (newMessage) => {
-      console.log("🔥 Received:", newMessage);
       if (newMessage) {
         setMessages(prev => [...prev, newMessage]);
         

@@ -19,7 +19,7 @@ import UpdateUser from "../components/UserProfile/UpdateUser";
 import Chats from "../components/ChatBox/Chats";
 import AllUserProfiles from "../components/UserProfile/AllUserProfiles";
 import ScrollToTop from "../components/ScrollToTop";
-import ProtectedRoute from '../routes/ProtectedRoute'
+import ProtectedRoute from "../routes/ProtectedRoute";
 
 const Routers = () => {
   return (
@@ -33,18 +33,22 @@ const Routers = () => {
         <Route path="/find-Service" element={<FindService />} />
         <Route path="/user-profile/:id" element={<UserProfile />} />
         <Route path="/users-profile/:id" element={<AllUserProfiles />} />
-        <Route path="/Service-profile/:id"
-        
-        element={
-          <ProtectedRoute >
-        <AllServiceProfile />
-
-          </ProtectedRoute>}
+        <Route
+          path="/Service-profile/:id"
+          element={
+            <ProtectedRoute>
+              <AllServiceProfile />
+            </ProtectedRoute>
+          }
         />
         <Route path="/update_service/:id" element={<UpdateServicerProfile />} />
         <Route
           path="/Services-profile/:id"
-          element={<GetProfileFromSearch />}
+          element={
+            <ProtectedRoute>
+              <GetProfileFromSearch />
+            </ProtectedRoute>
+          }
         />
         <Route path="/select-role" element={<RollSelection />} />
         <Route path="/login" element={<Login />} />

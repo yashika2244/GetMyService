@@ -15,7 +15,7 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (user && user._id) {
-      const socket = io("http://localhost:5000", {
+      const socket = io("https://serivce-2.onrender.com", {
         query: {
           userId: user._id,
               role: user.role,
