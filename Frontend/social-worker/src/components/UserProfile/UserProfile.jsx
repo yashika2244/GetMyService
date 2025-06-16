@@ -7,7 +7,8 @@ import {
   MdOutlineLogout,
 } from "react-icons/md";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import goodjob from "../../assets/goodjob.jpg";
+import goodjob from '../../assets/goodjob.jpg'
+
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { BASE_URL, token } from "../../config";
@@ -110,13 +111,13 @@ function UserProfile() {
                     <h2 className="text-gray-700 font-normal text-md">
                       {user.location || "Location not available"}
                     </h2>
-                    <span className="font-bold text-lg">·</span>
-                    <Link
+                    {/* <span className="font-bold text-lg">·</span> */}
+                    {/* <Link
                       to="/contact"
                       className="hidden md:inline hover:underline text-blue-600 font-semibold"
                     >
                       Contact info
-                    </Link>
+                    </Link> */}
                   </div>
 
                   {/* Buttons */}
