@@ -7,7 +7,7 @@ import { BASE_URL, token } from "../../config";
 import { toast } from "react-toastify";
 import { useAccounts } from "../../context/AppContext";
 import useConversation from "../../stateManage/useConversation.js";
-import goodjob from "../../assets/goodjob.jpg";
+import goodJob from "../../assets/goodjob.jpg";
 
 function GetProfileFromSearch() {
   const [expanded, setExpanded] = useState(false);
@@ -179,7 +179,7 @@ function GetProfileFromSearch() {
           {/* Sidebar with More Profiles */}
           <div className="hidden md:flex flex-col ml-6 w-[300px]  shrink-0">
             <div className="w-full h-[250px] border border-gray-300 overflow-hidden rounded-xl">
-              <img src={goodjob} alt="Quotes" className="h-full rounded-xl" />
+              <img src={goodJob} alt="Quotes" className="h-full rounded-xl" />
             </div>
             <div className="mt-2 h-[calc(100vh-5px)]  border border-gray-300 rounded-xl bg-white w-[300px] custom-scroll overflow-y-auto">
               <div className="pt-6 pl-6 pb-2 font-bold text-slate-800">

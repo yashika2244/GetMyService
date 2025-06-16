@@ -13,7 +13,7 @@ import { BASE_URL, token } from "../../config";
 import { useAccounts } from "../../context/AppContext";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import goodjob from "../../assets/goodjob.jpg";
+import goodJob from "../../assets/goodJob.jpg";
 
 import { FaUserEdit } from "react-icons/fa";
 import useConversation from "../../stateManage/useConversation.js";
@@ -224,7 +224,7 @@ function ServicerAccount() {
 
           <div className="hidden  md:flex flex-col ml-6 shrink-0   ">
             <div className=" w-[300px] h-[250px] border border-gray-300 overflow-hidden rounded-xl">
-              <img src={goodjob} alt="" className="h-full rounded-xl  " />
+              <img src={goodJob} alt="" className="h-full rounded-xl  " />
             </div>
             <div className=" mt-2  h-[calc(100vh-5px)] border border-gray-300 rounded-xl bg-white   w-[300px]  custom-scroll  overflow-y-auto">
               <div className="pt-6 pl-6">

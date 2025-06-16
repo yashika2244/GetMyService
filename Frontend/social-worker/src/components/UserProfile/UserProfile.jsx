@@ -7,7 +7,7 @@ import {
   MdOutlineLogout,
 } from "react-icons/md";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import goodjob from '../../assets/goodjob.jpg'
+import goodJob from '../../assets/goodjob.jpg'
 
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -220,7 +220,7 @@ function UserProfile() {
           <div className="hidden md:flex flex-col w-[300px] shrink-0">
             <div className="w-full h-[250px] border border-gray-300 overflow-hidden rounded-xl">
               <img
-                src={goodjob || ""}
+                src={goodJob || ""}
                 alt=""
                 className="h-full w-full object-cover rounded-xl"
               />

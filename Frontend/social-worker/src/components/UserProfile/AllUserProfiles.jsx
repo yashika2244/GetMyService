@@ -10,7 +10,8 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { FaLocationDot, FaArrowLeft, FaStar } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { FaUserEdit } from "react-icons/fa";
-import goodjob from "../../assets/goodjob.jpg";
+
+import goodJob from '../../assets/goodJob.jpg'
 import { useAccounts } from "../../context/AppContext.jsx";
 import {
   MdOutlineVerified,
@@ -252,7 +253,7 @@ const AllUserProfiles = () => {
           <div className="hidden md:flex flex-col w-[300px] shrink-0">
             <div className="w-full h-[250px] border border-gray-300 overflow-hidden rounded-xl">
               <img
-                src={goodjob || ""}
+                src={goodJob || ""}
                 alt=""
                 className="h-full w-full object-cover rounded-xl"
               />
