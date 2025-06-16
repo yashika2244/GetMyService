@@ -4,7 +4,7 @@ import star from "./../../assets/Star.png";
 import { useNavigate } from "react-router-dom";
 import { BsArrowRightCircle } from "react-icons/bs";
 
-const beset_s_card = ({ service }) => {
+const Beset_s_card = ({ service }) => {
 
 
   const navigate = useNavigate();
@@ -18,6 +18,7 @@ const beset_s_card = ({ service }) => {
     totalservice,
     location,
   } = service;
+  console.log("service", service)
 
 
   return (
@@ -37,7 +38,7 @@ const beset_s_card = ({ service }) => {
 
       <div className="flex items-center justify-between mt-1">
         <span className="bg-blue-500 text-white py-0 md:py-1 px-1 md:px-4 md:text-sm text-[10px] rounded-md md:rounded-full font-semibold shadow-md">
-          {specialization}
+          {specialization  || "servicer"}
         </span>
         <div className="flex items-center gap-1 md:gap-2 text-yellow-500">
           <img src={star} alt="rating" className="md:w-5 md:h-5 h-[10px] " />
@@ -68,4 +69,4 @@ const beset_s_card = ({ service }) => {
     </div>
   );
 };
-export default beset_s_card;
+export default Beset_s_card;

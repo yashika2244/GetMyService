@@ -42,13 +42,17 @@ function ServiceProviderSignUp() {
 
   const submitHandler = async (event) => {
     event.preventDefault();
+    const specializationArray = formData.specialization
+    .split(",")        // split by comma
+    .map(item => item.trim()) // remove extra spaces
+    .filter(item => item);    // remove empty strings
     try {
       const res = await fetch(
         `${BASE_URL}/api/auth/register-service-provider`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...formData, role: "service-provider" }),
+          body: JSON.stringify({ ...formData,    specialization: specializationArray,role: "service-provider" }),
         }
       );
 

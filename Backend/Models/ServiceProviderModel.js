@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// mongoose.connect("mongodb://127.0.0.1:27017/serviceDatabase")
 
 const ServiceProviderSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -22,6 +21,10 @@ const ServiceProviderSchema = new mongoose.Schema({
     type: String,
     required: true, 
   },
+     specialization: {
+      type: [String], // Array to hold multiple specializations
+      default: [],
+    },
       // Fields for services only
       experience: [   {
         startdate:{ type: String,},

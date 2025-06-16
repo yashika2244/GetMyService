@@ -168,32 +168,6 @@ export const login = async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // logout
 export const logout = async (req, res) => {
   try {
