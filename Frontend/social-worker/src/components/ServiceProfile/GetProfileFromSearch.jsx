@@ -7,7 +7,7 @@ import { BASE_URL, token } from "../../config";
 import { toast } from "react-toastify";
 import { useAccounts } from "../../context/AppContext";
 import useConversation from "../../stateManage/useConversation.js";
-import goodJob from "../../assets/goodjob.jpg";
+import goodJob from "../../assets/goodJob.jpg";
 
 function GetProfileFromSearch() {
   const [expanded, setExpanded] = useState(false);
