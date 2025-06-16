@@ -7,7 +7,7 @@ import {
   MdOutlineLogout,
 } from "react-icons/md";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import goodJob from '../../assets/goodjob.jpg'
+import goodJob from '../../assets/goodJob.jpg'
 
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
