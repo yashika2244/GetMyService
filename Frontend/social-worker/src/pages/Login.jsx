@@ -39,15 +39,7 @@ function Login() {
   setLoading(true);
 
   try {
-    // Prevent invalid role submission
-    // if (formData.role === "select" || !formData.role) {
-     
-    //   setLoading(false);
-    //   return;
-    // }
 
-    // Normalize role value
-    // formData.role = formData.role.trim().toLowerCase();
 
     const res = await fetch(`${BASE_URL}/api/auth/login`, {
       method: "POST",
@@ -73,11 +65,9 @@ function Login() {
       },
     });
 
-    // Store the role, user data, and token in localStorage
     localStorage.setItem("user", JSON.stringify(result.data));
     localStorage.setItem("token", result.token); 
-    // localStorage.setItem("role", result.role); // Store the role
-
+ toast.success("Login Successful!"); 
        
     // Redirect based on role
     if (role === "customer") {
@@ -92,6 +82,9 @@ function Login() {
   } catch (error) {
       toast.error(error.message || "Registration failed. Try again.");
     setLoading(false);
+  }
+  finally {
+    setLoading(false); 
   }
   }
 

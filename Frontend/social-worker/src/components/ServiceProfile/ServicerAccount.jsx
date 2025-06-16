@@ -14,7 +14,6 @@ import { useAccounts } from "../../context/AppContext";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import goodjob from "../../assets/goodjob.jpg";
-import JobPreferenceModal from "./ServicePRefence.jsx";
 
 import { FaUserEdit } from "react-icons/fa";
 import useConversation from "../../stateManage/useConversation.js";
@@ -24,7 +23,6 @@ function ServicerAccount() {
   const { accounts, loading, error } = useAccounts();
 
   const closeModal = () => setShowModal(false);
-  console.log("User object", user);
   const navigate = useNavigate();
   const location = useLocation();
   const { dispatch } = useAuth();
@@ -33,12 +31,7 @@ function ServicerAccount() {
   const currentUserId = localStorage.getItem("userId");
   const { selcetedConversation, setSelcetedConversation } = useConversation();
   const [selectedSerPreference, setSelectedSerPreference] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const openModal = () => {
-    setSelectedSerPreference(user); // jobPreference teri profile ke andar hona chahiye
-    setShowModal(true);
-  };
-  const [profile, setProfile] = useState(null);
+
   const toggleSetting = () => {
     setSettingOpen(!settingOpen);
   };
@@ -60,6 +53,8 @@ function ServicerAccount() {
         localStorage.removeItem("role");
         localStorage.removeItem("chatUser");
         // Redirect to home page
+        toast.success("Logout Successfully");
+
         navigate("/");
       } else {
         toast.error("Logout failed, please try again.");
@@ -132,12 +127,7 @@ function ServicerAccount() {
                         <FaUserEdit className="text-gray-700  inline" /> Edit
                       </button>
                     </div>
-                    <button
-                      className="px-4 py-[2px] rounded-4xl bg-sky-100 text-sky-700 border-1 border-sky-700  font-[600] hover:text-sky-900
-        hover:outline hover:bg-sky-100  transition transform duration-300 cursor-pointer "
-                    >
-                      More
-                    </button>
+                  
                   </div>
                 </div>
               </div>
@@ -152,35 +142,31 @@ function ServicerAccount() {
               </div>
 
               {/* Open to Work Section */}
-              <div className="mt-6 bg-indigo-100 p-4 rounded-xl text-sm max-w-xl ">
-                <h3 className="text-gray-900 font-semibold">Open to work</h3>
-                <p className="text-gray-800">
-                  Lorem ipsum dolor sit amet Lorem ipsum dolor sit Lorem ipsum
-                  dolor amet...
-                </p>
-                <p onClick={openModal}> show details </p>
-              </div>
+           
             </div>
             {/* about section */}
             <div className="max-w-[800px] ml:5 md:ml-20 bg-white border border-gray-300 shadow-lg rounded-xl p-2 md:p-5 mb-2">
               <h1 className="font-semibold text-xl text-gray-900"> About</h1>
 
               <p className="text-[14px] font-[400] mt-3 text-slate-800">
-                {expanded ? text : `${shortText}...`}
+                {expanded ? text : `${shortText}`}
               </p>
-              <span className="flex justify-end">
-                <button
-                  onClick={() => setExpanded(!expanded)}
-                  className="mt-1 text-slate-600 font-semibold hover:underline"
-                >
-                  {expanded ? "" : "...see more"}
-                </button>
-              </span>
+             {text.length > 270 && (
+                <span className="flex justify-end">
+                  <button
+                    onClick={() => setExpanded(!expanded)}
+                    className="mt-1 text-slate-600 font-semibold hover:underline"
+                  >
+                    {expanded ? "see less" : "...see more"}
+                  </button>
+                </span>
+              )}
             </div>
 
             {/* experience */}
             <div className="max-w-[800px] ml:5 md:ml-20 bg-white border border-gray-300 shadow-lg rounded-xl p-2 md:p-5 mb-2">
-              <p className="text-lg text-gray-800 mt-2">
+              <h1 className="text-slate-800 font-[600] text-xl"> Experience</h1>
+              <p className="text-md text-gray-800 mt-2">
                 {Array.isArray(user.experience) && user.experience.length > 0
                   ? `${user.experience
                       .reduce((total, exp) => {
@@ -219,16 +205,10 @@ function ServicerAccount() {
                     </div>
 
                     {settingOpen && (
-                      <div className="overflow-y-auto transition-all duration-500 pl-5 p-3 text-slate-600 flex flex-col max-h-[300px]">
+                      <div className="overflow-y-auto transition-all duration-500 pl-5  text-slate-600 flex flex-col max-h-[300px]">
+                      
                         <h1
-                          onClick={() => navigate("/msg")}
-                          className="text-[15px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md"
-                        >
-                          Book Now
-                        </h1>
-
-                        <h1
-                          className="text-[15px] font-[500] cursor-pointer transition hover:bg-gray-200 md:p-1 mx-3 rounded-md"
+                          className="text-[15px] font-[500] cursor-pointer transition hover:bg-gray-200 p-1   mx-3 rounded-md"
                           onClick={logoutHandler}
                         >
                           Logout
@@ -315,12 +295,7 @@ function ServicerAccount() {
               )}
             </div>
           </div>
-          {showModal && (
-            <JobPreferenceModal
-              data={selectedSerPreference}
-              onClose={closeModal}
-            />
-          )}
+        
         </div>
       </section>
     </div>

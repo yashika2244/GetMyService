@@ -1,23 +1,22 @@
-
-
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import signup from '../../assets/signup.gif';
+import signup from "../../assets/signup.gif";
 import uploadImageToClodinary from "../../../utils/uploadCloudinary";
 import { BASE_URL } from "../../config";
+import { toast } from "react-toastify";
 
 function CustomerSignUp() {
   const [selectedfile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-    const [uploading, setUploading] = useState(false);
-  
+  const [uploading, setUploading] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     photo: "",
     gender: "male",
-    location :""
+    location: "",
   });
   const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
@@ -28,7 +27,7 @@ function CustomerSignUp() {
 
   const handleFileInputChange = async (event) => {
     const file = event.target.files[0];
-      setUploading(true);
+    setUploading(true);
 
     try {
       const data = await uploadImageToClodinary(file);
@@ -38,8 +37,8 @@ function CustomerSignUp() {
     } catch (error) {
       setErrorMessage("Error uploading image, please try again.");
     } finally {
-    setUploading(false); // finish uploading
-  }
+      setUploading(false); // finish uploading
+    }
   };
 
   const submitHandler = async (event) => {
@@ -56,11 +55,12 @@ function CustomerSignUp() {
       if (!res.ok) {
         throw new Error(message);
       }
+        toast.success("Registration Successful! Please login.");
 
       navigate("/login"); // Redirect to login
     } catch (error) {
       setErrorMessage(error.message);
-      console.error("Error in registration:", error);
+          toast.error(error.message || "Login failed. Try again.");
     }
   };
 
@@ -76,7 +76,7 @@ function CustomerSignUp() {
 
           <div className="rounded-md border border-gray-200 p-2 lg:pl-16 md:py-8 ">
             <h3 className="text-slate-900 text-[22px] md:text-[30px] leading-9 font-bold md:mb-6 mb-2 ">
-              Create a <span className="text-sky-600">  Customer   account</span>
+              Create a <span className="text-sky-600"> Customer account</span>
             </h3>
 
             <form onSubmit={submitHandler}>
@@ -115,7 +115,7 @@ function CustomerSignUp() {
                   required
                 />
               </div>
-               <div className="mb-5">
+              <div className="mb-5">
                 <input
                   type="text"
                   placeholder="Location"
@@ -140,52 +140,56 @@ function CustomerSignUp() {
                     <option value="female">Female</option>
                   </select>
                 </label>
-                 <div className="mb-5 flex items-center gap-3">
-                {previewUrl && (
-                  <figure className="md:w-[50px] md:h-[50px] w-[35px] h-[35px rounded-full border-2 border-sky-600 overflow-hidden">
-                    <img
-                      src={previewUrl}
-                      alt="Preview"
-                      className="w-full h-full object-cover"
-                    />
-                  </figure>
-                )}
+                <div className="mb-5 flex items-center gap-3">
+                  {previewUrl && (
+                    <figure className="md:w-[50px] md:h-[50px] w-[35px] h-[35px rounded-full border-2 border-sky-600 overflow-hidden">
+                      <img
+                        src={previewUrl}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    </figure>
+                  )}
 
-                <div className="relative w-[120px] h-[40px]">
-                  <input
-                    type="file"
-                    name="photo"
-                    id="customfile"
-                    onChange={handleFileInputChange}
-                    accept=".jpg, .png, .gif, .jpeg,.avif"
-                    className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-                  />
-                  <label
-                    htmlFor="customfile"
-                    className="absolute top-0 left-0 w-full h-full flex items-center md:text-[15px] text-[14px]  justify-center   ${uploading ? bg-blue-600 text-white font-bold rounded-lg  cursor-pointer hover:bg-blue-700 transition"
+                  <div className="relative w-[120px] h-[40px]">
+                    <input
+                      type="file"
+                      name="photo"
+                      id="customfile"
+                      onChange={handleFileInputChange}
+                      accept=".jpg, .png, .gif, .jpeg,.avif"
+                      className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <label
+                      htmlFor="customfile"
+                      className="absolute top-0 left-0 w-full h-full flex items-center md:text-[15px] text-[14px]  justify-center   ${uploading ? bg-blue-600 text-white font-bold rounded-lg  cursor-pointer hover:bg-blue-700 transition"
                       disabled={uploading}
-                  >
-                        {uploading ? "Uploading..." : "Upload Picture"}
-                  </label>
+                    >
+                      {uploading ? "Uploading..." : "Upload Picture"}
+                    </label>
+                  </div>
                 </div>
               </div>
 
-              </div>
-
-             
-              <div className="flex justify-center md:mt-4">
-                <button className="bg-red-600 hover:bg-red-700 text-white text-[20px] py-1 px-20 rounded-[10px] font-semibold transition-transform hover:scale-[0.95]">
-                  Sign up
+              <div className="flex justify-center ">
+                <button
+                  className="bg-red-600 hover:bg-red-700 text-white text-[20px] py-1 px-20 rounded-[10px] font-semibold transition-transform hover:scale-[0.95] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={uploading}
+                >
+                  {uploading ? "Sign Up" : "Sign up"}
                 </button>
               </div>
-
+{/* 
               {errorMessage && (
                 <p className="mt-3 text-red-600 text-center">{errorMessage}</p>
-              )}
+              )} */}
 
               <p className="mt-3 text-gray-500 text-center text-[14px]">
                 Already have an account?{" "}
-                <Link to="/login" className="text-sky-600 font-medium border-b ml-1 text-[15px]">
+                <Link
+                  to="/login"
+                  className="text-sky-600 font-medium border-b ml-1 text-[15px]"
+                >
                   Login
                 </Link>
               </p>
@@ -198,5 +202,3 @@ function CustomerSignUp() {
 }
 
 export default CustomerSignUp;
-
-

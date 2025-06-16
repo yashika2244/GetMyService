@@ -10,8 +10,8 @@ import { FaArrowLeft } from "react-icons/fa6";
 
 function UpdateServicerProfile() {
   const { dispatch, token, user } = useContext(authContext);
-    const [uploading, setUploading] = useState(false);
-  
+  const [uploading, setUploading] = useState(false);
+
   const { id } = useParams(); // grabs :id from URL
   const [formData, setFormData] = useState({
     name: "",
@@ -59,29 +59,29 @@ function UpdateServicerProfile() {
 
   const handleFileInputChange = async (event) => {
     const file = event.target.files[0];
-      setUploading(true);
+    setUploading(true);
 
-  //   if (file) {
-  //     const data = await uploadImageToClodinary(file);
-  //     setFormData({ ...formData, photo: data.url });
-  //     setPreviewSrc(data.url);
-  //   }
-  // };
- if (file) {
-    try {
-      const data = await uploadImageToClodinary(file);
-      setFormData({ ...formData, photo: data.url });
-      setPreviewSrc(data.url);
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      toast.error("Image upload failed!");
-    } finally {
-      setUploading(false); // Uploading complete
+    //   if (file) {
+    //     const data = await uploadImageToClodinary(file);
+    //     setFormData({ ...formData, photo: data.url });
+    //     setPreviewSrc(data.url);
+    //   }
+    // };
+    if (file) {
+      try {
+        const data = await uploadImageToClodinary(file);
+        setFormData({ ...formData, photo: data.url });
+        setPreviewSrc(data.url);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        toast.error("Image upload failed!");
+      } finally {
+        setUploading(false); // Uploading complete
+      }
+    } else {
+      setUploading(false); // No file selected, stop uploading
     }
-  } else {
-    setUploading(false); // No file selected, stop uploading
-  }
-};
+  };
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -147,7 +147,6 @@ function UpdateServicerProfile() {
             onChange={handleInputChange}
             className="w-full px-6 py-4 rounded-xl border border-gray-300 bg-white placeholder-gray-400 text-gray-800 text-lg font-medium transition-shadow focus:outline-none focus:ring-1 focus:ring-blue-400 shadow-sm focus:shadow-md"
           />
-       
         </div>
 
         {/* Age, Specialization, Ticket Price */}
@@ -187,7 +186,6 @@ function UpdateServicerProfile() {
         </h2>
 
         <div className="grid gap-6 md:grid-cols-4">
-        
           <input
             type="text"
             placeholder="Location"
@@ -257,7 +255,6 @@ function UpdateServicerProfile() {
 
                 {/* Update Picture */}
               </label>
-          
             </div>
           </div>
 
@@ -278,11 +275,15 @@ function UpdateServicerProfile() {
 
         {/* Submit Button */}
         <div className="flex justify-center mt-6">
+        
           <button
             type="submit"
-            className="bg-gradient-to-b from-green-500 to-green-700 hover:from-green-600 hover:to-green-700 text-white font-bold text-lg px-20 py-2 rounded-xl shadow-xl transition-transform transform hover:scale-105"
+            disabled={uploading} 
+            className={`bg-gradient-to-b from-green-500 to-green-700 hover:from-green-600 hover:to-green-700 text-white font-bold text-lg px-20 py-2 rounded-xl shadow-xl transition-transform transform hover:scale-105 ${
+              uploading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
-            Update
+            {uploading ? "Uploading" : "Update"}
           </button>
         </div>
       </form>

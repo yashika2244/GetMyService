@@ -45,6 +45,8 @@ function UserProfile() {
               localStorage.removeItem("token");
         setUser(null);
         window.location.href = "/";
+        toast.success("Logout Successfully.");
+
       } else {
         toast.error("Logout failed, please try again.");
       }
@@ -111,13 +113,7 @@ function UserProfile() {
                     <h2 className="text-gray-700 font-normal text-md">
                       {user.location || "Location not available"}
                     </h2>
-                    {/* <span className="font-bold text-lg">·</span> */}
-                    {/* <Link
-                      to="/contact"
-                      className="hidden md:inline hover:underline text-blue-600 font-semibold"
-                    >
-                      Contact info
-                    </Link> */}
+                  
                   </div>
 
                   {/* Buttons */}
@@ -125,7 +121,7 @@ function UserProfile() {
                    
                     <button
                       onClick={() => navigate(`/update_user/${user._id}`)}
-                      className="mt-5 w-full bg-slate-400 text-white py-1 rounded-4xl shadow hover:bg-slate-500 transition"
+                      className="mt-5 px-12 py-[5px] bg-slate-400 text-white   rounded-4xl shadow hover:bg-slate-500 transition"
                       aria-label="Edit Profile"
                     >
                       <FaUserEdit className="text-white  inline" /> Edit

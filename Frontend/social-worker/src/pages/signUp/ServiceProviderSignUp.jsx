@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import signup from "../../assets/signup.gif";
 import uploadImageToClodinary from "../../../utils/uploadCloudinary";
 import { BASE_URL } from "../../config";
-import {toast} from 'react-toastify'
+import { toast } from "react-toastify";
 
 function ServiceProviderSignUp() {
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -17,8 +17,8 @@ function ServiceProviderSignUp() {
     specialization: "",
     experience: "",
     consultationFee: "",
-    location: "", 
-    about:""
+    location: "",
+    about: "",
   });
   const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ function ServiceProviderSignUp() {
 
   const handleFileInputChange = async (event) => {
     const file = event.target.files[0];
-      setUploading(true);
+    setUploading(true);
     try {
       const data = await uploadImageToClodinary(file);
       setPreviewUrl(data.url);
@@ -36,27 +36,30 @@ function ServiceProviderSignUp() {
     } catch {
       setErrorMessage("Error uploading image. Please try again.");
     } finally {
-    setUploading(false); // finish uploading
-  }
+      setUploading(false); // finish uploading
+    }
   };
 
   const submitHandler = async (event) => {
     event.preventDefault();
     try {
-      const res = await fetch(`${BASE_URL}/api/auth/register-service-provider`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, role: "service-provider" }),
-      });
+      const res = await fetch(
+        `${BASE_URL}/api/auth/register-service-provider`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...formData, role: "service-provider" }),
+        }
+      );
 
       const { message } = await res.json();
       if (!res.ok) throw new Error(message);
-      toast.success('Registration Successful! Please login.');  // Success toast
 
+      toast.success("Registration Successful! Please login."); // Success toast
       navigate("/login");
     } catch (error) {
       // setErrorMessage(error.message);
-       toast.error(error.message); 
+      toast.error(error.message);
     }
   };
 
@@ -78,11 +81,26 @@ function ServiceProviderSignUp() {
               {[
                 { name: "name", placeholder: "Full Name" },
                 { name: "email", placeholder: "Email", type: "email" },
-                { name: "password", placeholder: "Password", type: "password"  },
-                { name: "specialization", placeholder: "Specialization (e.g., Dentist)" },
-                { name: "experience", placeholder: "Experience (e.g., 5 years)" ,type:"number" },
-                { name: "consultationFee", placeholder: "Consultation Fee", type: "number" },
-                { name: "about", placeholder: "About your service", type: "text" },
+                { name: "password", placeholder: "Password", type: "password" },
+                {
+                  name: "specialization",
+                  placeholder: "Specialization (e.g., Dentist)",
+                },
+                {
+                  name: "experience",
+                  placeholder: "Experience (e.g., 5 years)",
+                  type: "number",
+                },
+                {
+                  name: "consultationFee",
+                  placeholder: "Consultation Fee",
+                  type: "number",
+                },
+                {
+                  name: "about",
+                  placeholder: "About your service",
+                  type: "text",
+                },
                 { name: "location", placeholder: "Location (e.g., Delhi)" }, // ✅
               ].map((field) => (
                 <div key={field.name} className="mb-4">
@@ -112,50 +130,58 @@ function ServiceProviderSignUp() {
                     <option value="female">Female</option>
                   </select>
                 </label>
-                   {/* Upload Photo */}
-              <div className="mb-5 flex items-center gap-3">
-                {previewUrl && (
-                  <figure className="md:w-[50px] md:h-[50px] w-[35px] h-[35px] rounded-full border-2 border-sky-600     overflow-hidden">
-                    <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
-                  </figure>
-                )}
-                <div className="relative md:w-[140px] md:h-[40px] w-[100px] h-[35px]  ">
-                  <input
-                    type="file"
-                    id="customfile"
-                    onChange={handleFileInputChange}
-                    accept=".jpg, .png, .gif, .jpeg, .avif"
-                    className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-                  />
-                  <label
-                    htmlFor="customfile"
-                    className="absolute top-0 left-0 w-full h-full flex items-center justify-center
+                {/* Upload Photo */}
+                <div className="mb-5 flex items-center gap-3">
+                  {previewUrl && (
+                    <figure className="md:w-[50px] md:h-[50px] w-[35px] h-[35px] rounded-full border-2 border-sky-600     overflow-hidden">
+                      <img
+                        src={previewUrl}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    </figure>
+                  )}
+                  <div className="relative md:w-[140px] md:h-[40px] w-[100px] h-[35px]  ">
+                    <input
+                      type="file"
+                      id="customfile"
+                      onChange={handleFileInputChange}
+                      accept=".jpg, .png, .gif, .jpeg, .avif"
+                      className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <label
+                      htmlFor="customfile"
+                      className="absolute top-0 left-0 w-full h-full flex items-center justify-center
                        ${uploading ?  bg-blue-600 text-white font-bold rounded-lg md:text-[15px] text-[13px] cursor-pointer hover:bg-blue-700 transition"
-                  >
-                {uploading ? "Uploading..." : "Upload Picture"}
-                  </label>
+                    >
+                      {uploading ? "Uploading..." : "Upload Picture"}
+                    </label>
+                  </div>
                 </div>
               </div>
-              </div>
-
-           
 
               {/* Submit Button */}
               <div className="flex justify-center ">
-                <button className="bg-red-600 hover:bg-red-700 text-white text-[20px] py-1 px-20 rounded-[10px] font-semibold transition-transform hover:scale-[0.95]  cursor-pointer">
-                  Sign up
+                <button
+                  className="bg-red-600 hover:bg-red-700 text-white text-[20px] py-1 px-20 rounded-[10px] font-semibold transition-transform hover:scale-[0.95] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={uploading}
+                >
+                  {uploading ? "Sign up" : "Sign up"}
                 </button>
               </div>
 
               {/* Error Message */}
-              {errorMessage && (
+              {/* {errorMessage && (
                 <p className="mt-3 text-red-600 text-center">{errorMessage}</p>
-              )}
+              )} */}
 
               {/* Login Link */}
               <p className="mt-2 text-gray-500 text-center text-[14px] ">
                 Already registered?{" "}
-                <Link to="/login" className="text-sky-600 text-[15px] font-medium border-b ml-1">
+                <Link
+                  to="/login"
+                  className="text-sky-600 text-[15px] font-medium border-b ml-1"
+                >
                   Login
                 </Link>
               </p>

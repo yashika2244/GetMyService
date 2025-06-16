@@ -6,7 +6,6 @@ import { useAccounts } from "../../context/AppContext";
 import { useAuth } from "../../context/AppContext";
 import useConversation from "../../stateManage/useConversation.js";
 import goodjob from '../../assets/goodjob.jpg'
-import JobPreferenceModal from "./ServicePRefence.jsx";
 
 
 function AllServiceProfile() {
@@ -28,13 +27,7 @@ const [selectedSerPreference, setSelectedSerPreference] = useState(null);
   const text = profile?.about || "";
   const shortText = text.slice(0, 270);
 
-const [showModal, setShowModal] = useState(false);
-const openModal = () => {
-  setSelectedSerPreference(profile); // jobPreference teri profile ke andar hona chahiye
-  setShowModal(true);
-};
 
-  const closeModal = () => setShowModal(false);
   return (
     <div>
       <section className="min-h-screen bg-purple-100 md:mt-13 pt-6 md:px-7 md:pr-25 flex ">
@@ -81,13 +74,7 @@ const openModal = () => {
                     <h2 className="text-gray-700 font-normal text-md">
                       {profile?.location || "Location not available"}
                     </h2>
-                    <span className="font-bold text-lg">·</span>
-                    <Link
-                      to="/contact"
-                      className="hidden md:inline hover:underline text-blue-600 font-semibold"
-                    >
-                      Contact info
-                    </Link>
+                   
                   </div>
 
                   {/* Buttons */}
@@ -101,38 +88,30 @@ const openModal = () => {
                     >
                       Message
                     </button>
-                    <button className="px-4 py-[2px] rounded-4xl text-sky-700 border border-sky-700 font-semibold hover:text-sky-900 hover:outline hover:bg-sky-100 transition duration-300">
-                      More
-                    </button>
+                   
                   </div>
                 </div>
               </div>
 
-              {/* Open to Work */}
-              <div className="mt-6 bg-indigo-100 p-4 rounded-xl text-sm max-w-xl min-h-[80px]">
-                <h3 className="text-gray-900 font-semibold">Open to work</h3>
-                <p className="text-gray-800">
-                  Looking for full-time frontend opportunities in React.js
-                </p>
-                     
-             <p  onClick={openModal}> show details </p>
-              </div>
+         
             </div>
 
             {/* About Section */}
             <div className="max-w-[800px] w-full min-h-[150px] ml:5 md:ml-20 bg-white border border-gray-300 shadow-lg rounded-xl p-2 md:p-5 mb-2">
               <h1 className="font-semibold text-xl text-gray-900">About</h1>
               <p className="text-[14px] font-[400] mt-3 text-slate-800 min-h-[40px]">
-                {expanded ? text : `${shortText}...`}
+                {expanded ? text : `${shortText}`}
               </p>
-              <span className="flex justify-end">
-                <button
-                  onClick={() => setExpanded(!expanded)}
-                  className="mt-1 text-slate-600 font-semibold hover:underline"
-                >
-                  {expanded ? "See less" : "...see more"}
-                </button>
-              </span>
+            {text.length > 270 && (
+                <span className="flex justify-end">
+                  <button
+                    onClick={() => setExpanded(!expanded)}
+                    className="mt-1 text-slate-600 font-semibold hover:underline"
+                  >
+                    {expanded ? "see less" : "...see more"}
+                  </button>
+                </span>
+              )}
             </div>
 
             {/* Experience Section */}
@@ -227,8 +206,6 @@ const openModal = () => {
               )}
             </div>
           </div>
-              {/* Job Preference Modal */}
-                 {showModal && <JobPreferenceModal data={selectedSerPreference} onClose={closeModal} />}
         </div>
       
       </section>

@@ -8,19 +8,16 @@ import { toast } from "react-toastify";
 import { useAccounts } from "../../context/AppContext";
 import useConversation from "../../stateManage/useConversation.js";
 import goodjob from "../../assets/goodjob.jpg";
-import JobPreferenceModal from "./ServicePRefence.jsx";
 
 function GetProfileFromSearch() {
   const [expanded, setExpanded] = useState(false);
   const [settingOpen, setSettingOpen] = useState(false);
   const [getService, setGetService] = useState(null);
   const { selcetedConversation, setSelcetedConversation } = useConversation();
-  // const { selcetedConversation, setSelcetedConversation } = useConversation();
 
   const [allProfiles, setAllProfiles] = useState([]);
 
   const { accounts, loading, error } = useAccounts();
-  console.log("accounts", accounts);
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
@@ -62,17 +59,7 @@ function GetProfileFromSearch() {
   const text = about || "";
 
   const shortText = text.slice(0, 270);
-  const [showModal, setShowModal] = useState(false);
-  const openModal = () => {
-    setSelectedSerPreference({
-      ...profileData,
-      location: profileData.locate, // new key added
-    }); // jobPreference teri profile ke andar hona chahiye
-    setShowModal(true);
-  };
-  const closeModal = () => setShowModal(false);
 
-  console.log("all profile6", allProfiles);
   return (
     <div>
       <section className="min-h-screen bg-purple-100 md:mt-13 pt-6 md:pr-25 md:px-7 flex">
@@ -119,50 +106,22 @@ function GetProfileFromSearch() {
                     <h2 className="text-gray-800 font-normal text-md">
                       {locate || "not location available"}
                     </h2>
-                    <span className="font-bold text-lg md:mb-1">·</span>
-                    <Link
-                      to="/contact"
-                      className="hidden md:inline hover:underline text-blue-600 font-semibold"
-                    >
-                      Contact info
-                    </Link>
+                 
                   </div>
 
                   {/* Buttons */}
                   <div className="flex flex-wrap gap-3 mt-4  ">
                     <button
                       onClick={() => {
-                        selcetedConversation()
+                        selcetedConversation();
                         navigate("/msg");
                       }}
                       className="px-6 py-1 rounded-full bg-sky-700 text-white font-semibold hover:bg-sky-900 transition duration-300 cursor-pointer "
                     >
                       Message
                     </button>
-                    {/* <button
-                    onClick={() => {
-                      setSelcetedConversation(getService)
-                      navigate("/msg");
-                    }}
-                    className="px-4 py-[2px] rounded-4xl text-sky-700 border border-sky-700 font-[600] hover:text-sky-900 hover:outline hover:bg-sky-100 transition transform duration-300 cursor-pointer "
-                  >
-                    Message
-                  </button> */}
-                    <button className="px-4 rounded-4xl bg-white text-slate-700 border border-slate-700 font-[600] hover:outline hover:text-slate-900 hover:bg-slate-100 transition-all transform duration-300 cursor-pointer ">
-                      More
-                    </button>
                   </div>
                 </div>
-              </div>
-
-              {/* Open to Work Section */}
-              <div className="mt-6 bg-indigo-100 p-4 rounded-xl text-sm max-w-xl ">
-                <h3 className="text-gray-900 font-semibold">Open to work</h3>
-                <p className="text-gray-800">
-                  Lorem ipsum dolor sit amet Lorem ipsum dolor sit Lorem ipsum
-                  dolor amet...
-                </p>
-                <p onClick={openModal}> show details </p>
               </div>
             </div>
 
@@ -171,16 +130,19 @@ function GetProfileFromSearch() {
               <h1 className="font-semibold text-xl text-gray-900"> About</h1>
 
               <p className="text-[14px] font-[400] mt-3 text-slate-800">
-                {expanded ? text : `${shortText}...`}
+                {expanded ? text : `${shortText}`}
               </p>
-              <span className="flex justify-end">
-                <button
-                  onClick={() => setExpanded(!expanded)}
-                  className="mt-1 text-slate-600 font-semibold hover:underline"
-                >
-                  {expanded ? "see less" : "...see more"}
-                </button>
-              </span>
+              
+              {text.length > 270 && (
+                <span className="flex justify-end">
+                  <button
+                    onClick={() => setExpanded(!expanded)}
+                    className="mt-1 text-slate-600 font-semibold hover:underline"
+                  >
+                    {expanded ? "see less" : "...see more"}
+                  </button>
+                </span>
+              )}
             </div>
 
             {/* Experience Section */}
@@ -215,11 +177,11 @@ function GetProfileFromSearch() {
           </div>
 
           {/* Sidebar with More Profiles */}
-          <div className="hidden md:flex flex-col ml-6 w-[300px] shrink-0">
+          <div className="hidden md:flex flex-col ml-6 w-[300px]  shrink-0">
             <div className="w-full h-[250px] border border-gray-300 overflow-hidden rounded-xl">
               <img src={goodjob} alt="Quotes" className="h-full rounded-xl" />
             </div>
-            <div className="mt-2 h-[calc(100vh-5px)] border border-gray-300 rounded-xl bg-white w-[300px] custom-scroll overflow-y-auto">
+            <div className="mt-2 h-[calc(100vh-5px)]  border border-gray-300 rounded-xl bg-white w-[300px] custom-scroll overflow-y-auto">
               <div className="pt-6 pl-6 pb-2 font-bold text-slate-800">
                 More profiles for you
               </div>
@@ -280,12 +242,6 @@ function GetProfileFromSearch() {
               )}
             </div>
           </div>
-          {showModal && (
-            <JobPreferenceModal
-              data={selectedSerPreference}
-              onClose={closeModal}
-            />
-          )}
         </div>
       </section>
     </div>

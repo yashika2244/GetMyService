@@ -38,7 +38,6 @@ const FindService = () => {
 
   const handleClick = (account) => {
     if (!token) {
-    // alert("Please login to continue");
       toast.info("Please login to view this profile");
     navigate("/login");
     return;
