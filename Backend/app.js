@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://serivce.vercel.app',
+    'https://service.vercel.app',
   ],
   credentials: true,
 }));
