@@ -6,18 +6,19 @@ function Types() {
   const { loading, sendMessages } = UseSendMessage();
   const [message, setMessage] = useState("");
 
-const handleSubmit = async (e)=>{
-  e.preventDefault()
-  await sendMessages(message);
-  setMessage("")
 
+const handleSubmit = (e) => {
+  e.preventDefault();
+  if (!message.trim()) return; // empty guard
+  sendMessages(message); 
+  setMessage("");        
 }
 
   return (
     <form
      onSubmit={handleSubmit}
     >
-      <div className="flex md:space-x-4 h-[8vh] text-center bg-slate-700 w-full ">
+      <div className="flex md:space-x-4 h-[8vh] text-center bg-slate-700 w-full mt-3 ">
         <div className="md:w-[90%] md:pl-0 pl-2  w-full">
           <input
             type="text"

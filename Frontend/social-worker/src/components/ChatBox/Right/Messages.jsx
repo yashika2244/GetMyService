@@ -6,12 +6,12 @@ import { useAuth } from '../../../context/AppContext';
 function Messages({ message }) {
   if (!message || !message.message) return null;
   const { user } = useAuth();
-  // Check if the message is sent by the logged-in user
-  // const itsMe = message.senderId === user._id;
-  const itsMe =
-    message.sender?.id === user._id &&
-    message.sender?.role === user.role;
-  // Tailwind classes for alignment and colors
+
+
+   const itsMe =
+    (message.senderId === user._id) || // temp message ke liye
+    (message.sender?.id === user._id && message.sender?.role === user.role); // real message ke liye
+
   const alignment = itsMe ? "justify-end" : "justify-start";
   const bubbleColor = itsMe ? " bg-blue-400 text-white  font-[500]" : "bg-gray-600 text-white  font-[500]";
   const borderRadius = itsMe ? "rounded-br-none" : "rounded-bl-none";
@@ -22,8 +22,8 @@ function Messages({ message }) {
   })
 
   return (
-    <div className={`flex ${alignment} p-3`}>
-      <div className={`relative ${bubbleColor} px-4 pr-15 py-2 rounded-xl ${borderRadius} max-w-xs shadow-md`}>
+    <div className={`flex ${alignment}  md:p-2 p-1 `}>
+      <div className={`relative ${bubbleColor} px-4 pr-15 py-1  rounded-xl ${borderRadius} max-w-xs shadow-md`}>
         {message.message}
   <div className={`text-[10px] absolute bottom-0  right-2  text-black ${itsMe ? "text-right" : "text-left"}`}>
         {formateTime}

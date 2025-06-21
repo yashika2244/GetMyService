@@ -18,7 +18,6 @@ const Beset_s_card = ({ service }) => {
     totalservice,
     location,
   } = service;
-  console.log("service", service)
 
 
   return (

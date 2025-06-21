@@ -6,7 +6,7 @@ import useConversation from "../../stateManage/useConversation.js";
 function Chats() {
   const { selcetedConversation } = useConversation();
   return (
-    <div className="h-[89vh md:mt-18 mt-11 flex overflow-hidden ">
+    <div className="md:h-[90.8vh] h-[93.3vh] md:mt-15  mt-11 flex overflow-hidden ">
       <div
         className={` text-white  ${
           selcetedConversation ? "hidden" : "block"
