@@ -56,7 +56,8 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/yourusername/GetMyService.git
-cd medicare
+cd Frontend
+cd social-worker
 ```
 
 Start the frontend server:
