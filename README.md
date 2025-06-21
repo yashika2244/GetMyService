@@ -55,7 +55,7 @@ It enables users to find and book appointments with **Service Providers**, while
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/medicare.git
+git clone https://github.com/yourusername/GetMyService.git
 cd medicare
 ```
 
