@@ -1,4 +1,5 @@
-🏥 GetMyService - One Platform for All Your  Service Needs
+**🏥 GetMyService - One Platform for All Your  Service Needs
+------
 GetMyService is a full-stack web application built using the MERN Stack (MongoDB, Express, React, Node.js) and Tailwind CSS. It enables users to find and get appointments with Service Providers, while Servicer can manage and analyze their bookings through a professional dashboard.
 
 🌟 Features
