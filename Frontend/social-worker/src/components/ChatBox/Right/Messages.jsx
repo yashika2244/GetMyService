@@ -1,5 +1,4 @@
 
-
 import React from "react";
 import { useAuth } from '../../../context/AppContext';
 
@@ -22,7 +21,7 @@ function Messages({ message }) {
   })
 
   return (
-    <div className={`flex ${alignment}  md:p-2 p-1 `}>
+    <div className={`flex ${alignment}   p-1 `}>
       <div className={`relative ${bubbleColor} px-4 pr-15 py-1  rounded-xl ${borderRadius} max-w-xs shadow-md`}>
         {message.message}
   <div className={`text-[10px] absolute bottom-0  right-2  text-black ${itsMe ? "text-right" : "text-left"}`}>
@@ -39,9 +38,6 @@ function Messages({ message }) {
             }`}
         ></div>
       </div>
-      {/* <div className="">
-        {formateTime}
-      </div> */}
       
     </div>
   );

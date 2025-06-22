@@ -10,31 +10,27 @@ import Loading from "../../Loading.jsx";
 function Right() {
   const { selcetedConversation, setSelcetedConversation } = useConversation();
 
-  // useEffect(() => {
-  //    return () => setSelcetedConversation(null);
-  // }, [selcetedConversation]);
+
   useEffect(() => {
     return () => setSelcetedConversation(null); // only run on unmount
   }, []);
   return (
-    <div className=" w-full  bg-slate-950 text-white   "
-    >
-      <div>
-        {!selcetedConversation ? (
-          <Nochat />
-        ) : (
-          <>
-            <ChatUser />
-              {/* // className=" py-2 flex-userContainer   overflow-y-auto" */}
-                       <div className="flex-1  "
-                     style={{ maxHeight: "calc(67.5vh)" }} >
-              <Msg />
-            </div>
-            <Types />
-          </>
-        )}
+
+  <div className="w-full h-full flex flex-col bg-slate-950 text-white">
+  {!selcetedConversation ? (
+    <Nochat />
+  ) : (
+    <>
+      <ChatUser />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 chat-scroll overflow-y-auto">
+          <Msg />
+        </div>
+        <Types />
       </div>
-    </div>
+    </>
+  )}
+</div>
   );
 }
 
