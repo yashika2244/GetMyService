@@ -9,27 +9,20 @@ import { useEffect } from "react";
 import { useAuth } from "../../context/AppContext";
 
 function Header() {
-const { id } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
 
   // const user = JSON.parse(localStorage.getItem('user'));
-const user = JSON.parse(localStorage.getItem("user"));
-const role = user?.role;
-
+  const user = JSON.parse(localStorage.getItem("user"));
+  const role = user?.role;
 
   const handleProfileClick = () => {
-  
     if (role === "service-provider") {
-        navigate(`/servicer-account/${user?._id}`); // 👈 replace :id with actual user id
+      navigate(`/servicer-account/${user?._id}`); 
     } else if (role === "customer") {
       navigate(`/user-profile/${user?._id}`);
     }
-
-
-  }
-
-
-
+  };
 
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
@@ -38,123 +31,126 @@ const role = user?.role;
   };
 
   return (
-    <nav className="bg-[#0d1f3b] fixed top-0 lg:py-2 left-0 max-md:h-[45px] w-full flex items-center justify-between h-[55px] ] px-8 text-white z-20">
-      {/* Logo */}
-      <div className="flex items-center">
-        <img
+    <nav className="fixed top-0 left-0 w-full bg-white shadow-sm z-50">
+      <div className="max-w-7xl mx-auto px-6 h-[60px] flex items-center justify-between">
+        {/* LOGO */}
+        <div
           onClick={() => navigate("/")}
-          src="/images/w-2.jpeg"
-          alt="Logo"
-          className="w-9 object-cover rounded-4xl mx-auto sm:mx-0 hover:scale-110 transition-transform cursor-pointer"
-        />
-      </div>
-
-      {/* Desktop Navigation */}
-      <ul className="hidden md:flex gap-16 cursor-pointer items-center ml-40 ">
-        {[
-          { name: "Home", path: "/" },
-          { name: "Find a service", path: "/find-Service" },
-          { name: "Contact Us", path: "/contact" },
-          { name: "Services +", path: "/services" },
-        ].map(({ name, path }) => (
-          <li key={name}>
-            <NavLink
-              to={path}
-              className={({ isActive }) =>
-                isActive
-                  ? "text-white font-semibold scale-110 transition-transform border-b-2 border-b-yellow-400 pb-1"
-                  : "text-white font-semibold hover:text-yellow-400 hover:scale-110 transition-transform inline-block"
-              }
-            >
-              {name}
-            </NavLink>
-          </li>
-        ))}
-      </ul>
-
-          {/* Login/Logout Button */}
-            {!user ? (
-        // Show login button if not logged in
-        <button
-          onClick={() => navigate("/login")}
-          className="mr-3 bg-yellow-400 text-gray-900 px-4 py-1 md:px-6 md:py-2 rounded-full font-semibold hover:bg-yellow-500 transition-all shadow-md hover:scale-[0.9] duration-300 cursor-pointer"
+          className="flex items-center gap-2 cursor-pointer"
         >
-          Login
-        </button>
-      ) : (
-        // Show profile and chat buttons if user is logged in
-        <div className="flex flex-row justify-center items-center gap-2 mr-4">
-            <IoChatbubbleEllipsesOutline
-            className="lg:text-3xl text-xl cursor-pointer transition-all transform hover:scale-[0.9] duration-300"
-            onClick={() => navigate("/msg")}
+          <img
+            src="/images/mainlogo.png"
+            alt="Logo"
+            className="w-40 h-40 object-contain"
           />
-          
-          <div
-            className=" md:w-[40px] md:h-[40px] w-[30px] h-[30px] rounded-full md:mr-0 overflow-hidden  relative"
-            onClick={handleProfileClick}
-          >
-            <img
-              src={user?.photo ||  "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"}
-              alt="Profile"
-              className="object-cover w-full h-full  rounded-full absolute inset-0 cursor-pointer"
-            />
-             
-          </div>
-       
-          {/* Logout Button (we will remove it) */}
         </div>
-      )}
- 
-      {/* ✅ Now this is outside of the ternary */}
-      <button
-        className="md:hidden text-white text-2xl cursor-pointer absolute top-1 right-3"
-        onClick={toggleSidebar}
-      >
-        <FaBars className="w-6 h-10 text-white hover:scale-110 transition-transform duration-300" />
-      </button>
 
-      {/* Sidebar */}
-      <div
-        className={`fixed top-0 right-0 h-full bg-blue-800 shadow-2xl w-80 p-6 transform ${
-          isSidebarOpen
-            ? "translate-x-0 opacity-100"
-            : "translate-x-full opacity-0"
-        } transition-all duration-500 ease-in-out z-50 overflow-y-auto`}
-      >
-        <button onClick={toggleSidebar} className="absolute top-4 right-4 ">
-          <BiX className=" w-10 h-10 cursor-pointer text-gray-300 hover:text-red-600 transition-transform hover:rotate-90 duration-300" />
-        </button>
-
-        {/* Sidebar Links */}
-        <ul className="mt-16 flex flex-col gap-8 text-lg ">
+        {/* DESKTOP NAV */}
+        <ul className="hidden md:flex gap-10 items-center text-gray-700 font-medium">
           {[
             { name: "Home", path: "/" },
+            { name: "Services", path: "/services" },
             { name: "Find a service", path: "/find-Service" },
-
             { name: "Contact Us", path: "/contact" },
-            { name: "Services +", path: "/services" },
           ].map(({ name, path }) => (
             <li key={name}>
               <NavLink
                 to={path}
-                className=" text-gray-300 font-semibold transition hover:text-yellow-400 hover:translate-x-2 inline-block duration-300"
-                onClick={toggleSidebar} // Close sidebar on link click
+                className={({ isActive }) =>
+                  isActive
+                    ? "text-blue-600 font-semibold border-b-2 border-blue-600 pb-1"
+                    : "hover:text-blue-600 transition"
+                }
               >
                 {name}
               </NavLink>
             </li>
           ))}
         </ul>
+
+        {/* RIGHT ACTIONS */}
+        {!user ? (
+          <button
+            onClick={() => navigate("/login")}
+            className="hidden md:block bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition"
+          >
+            Book Now
+          </button>
+        ) : (
+          <div className="hidden md:flex items-center gap-4">
+            <IoChatbubbleEllipsesOutline
+              className="text-2xl text-gray-600 hover:text-blue-600 cursor-pointer"
+              onClick={() => navigate("/msg")}
+            />
+
+            <div
+              onClick={handleProfileClick}
+              className="w-9 h-9 rounded-full overflow-hidden border cursor-pointer"
+            >
+              <img
+                src={
+                  user?.photo ||
+                  "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
+                }
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* MOBILE MENU ICON */}
+        <button
+          className="md:hidden text-2xl text-gray-700"
+          onClick={toggleSidebar}
+        >
+          <FaBars />
+        </button>
       </div>
 
-      {/* Click Outside to Close Sidebar */}
-      {isSidebarOpen && (
-        <div className=" opacity-50 z-10" onClick={toggleSidebar}></div>
-      )}
+      {/* MOBILE SIDEBAR */}
+      <div
+        className={`fixed top-0 right-0 h-full w-72 bg-white shadow-xl p-6 transform ${
+          isSidebarOpen ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 z-50`}
+      >
+        <button onClick={toggleSidebar} className="absolute top-4 right-4">
+          <BiX className="w-8 h-8 text-gray-500 hover:text-red-500" />
+        </button>
+
+        <ul className="mt-16 flex flex-col gap-6 text-gray-700 font-medium">
+          {[
+            { name: "Home", path: "/" },
+            { name: "Services", path: "/services" },
+            { name: "Find a service", path: "/find-Service" },
+            { name: "Contact Us", path: "/contact" },
+          ].map(({ name, path }) => (
+            <li key={name}>
+              <NavLink
+                to={path}
+                onClick={toggleSidebar}
+                className="hover:text-blue-600 transition"
+              >
+                {name}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+
+        {!user && (
+          <button
+            onClick={() => {
+              toggleSidebar();
+              navigate("/login");
+            }}
+            className="mt-10 w-full bg-blue-600 text-white py-2 rounded-full font-semibold"
+          >
+            Book Now
+          </button>
+        )}
+      </div>
     </nav>
   );
 }
 
 export default Header;
-
-

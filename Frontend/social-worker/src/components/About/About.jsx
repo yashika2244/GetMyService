@@ -1,112 +1,70 @@
-// import React from 'react'
- 
-// const About = () => {
-//   return (
-//     <>
-//       <div className='about_container  sm:mt-10 flex flex-col sm:flex-row   mx-1 md:justify-center gap-4 sm:gap-6 lg:gap-20   '>
-
-
-// <div className='lg:max-w-[900px] mx-1 lg:pt-[50px] md:pt-[5px] md:mt-0 mt-2'>
-//   <div className='relative  hidden z-10 sm:block   justify-center '>
-//     <img src="/images/worker-1.jpg" alt="" className=' min-w-[300px] w-[600px]' />
-    
-//   </div>
- 
-
-// </div>
-
-// <div className='lg:max-w-[500px]   lg:pt-[50px] md:pt-[5px] md:mt-0 mt-2'>
-//   <div><h1 className='font-[700] text-[20px] md:text-[30px] leading-none'>Proud To Be One Of The Nations Best</h1></div>
-//   <div className='relative sm:hidden mt-3  flex w-full max-w-[500px] '>
-//     <img src="/images/worker-1.jpg" alt="" className='w-[400px]' />
-    
-//   </div>
-//   <div><p className='mt-4 md:text-[15px]'>For 30 years in a row , Us News & World Report has recognized as one of 
-//     the best public hospitals in the nation and #1 in Texas ,so you hve to need to try this
-//     amet consectetur adipisicing</p>
-//     <p className='md:mt-4 md:text-[15px] hidden sm:block md:leading-7'>Our best is something we strive for each day caring for our pationts 
-//       not looking back at what we acomandation but <p className='hidden md:block'>towars what we cen do tommarow
-//       providing the best lorem impsum doctor sit ma this is so happy afiao aeihjaih 
-//       jh'fi9ugogv  w8gu eifhiu eh Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet quasi incidunt, 
-//       nisi ipsam et voluptate, porro labore debitis totam 
-//       asperiores possimus est veniam minus optio ipsum perspiciatis ullam nam alias.</p>
-//     </p>
-//     </div>
-//     <div className='flex justify-center md:mt-5 mt-3  '> <button className='bg-sky-700 hover:bg-sky-800  cursor-pointer transition-transform hover:scale-[0.9] duration-300  text-white font-[600] md:text-[15px] rounded-full lg:w-4/6 w-full  py-2 mt-2 '>Learn More</button>
-//     </div>
-// </div>
-
-
-
-// </div>
-
-
-
-
-//     </>
-
-//   )
-// }
-
-// export default About
-import React, { useState } from 'react';
+import React from "react";
+import { motion } from "framer-motion";
+import { Check } from "lucide-react";
 
 const About = () => {
-  const [showMore, setShowMore] = useState(false);
-
   return (
-    <>
-      <div className='about_container sm:mt-10 flex flex-col sm:flex-row mx-1 md:justify-center gap-4 sm:gap-6 lg:gap-20'>
-        {/* Image Section */}
-        <div className='lg:max-w-[900px] mx-1 lg:pt-[50px] md:pt-[5px] md:mt-0 mt-2'>
-          <div className='relative hidden z-10 sm:block justify-center'>
-            <img src="/images/worker-1.jpg" alt="Healthcare worker" className='min-w-[300px] w-[600px]' />
-          </div>
+    <section className="flex  py-12 px-4 bg-white">
+      <div className="w-full max-w-[1300px] grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+        {/* LEFT – IMAGE */}
+        <div className="flex justify-center lg:justify-end">
+          <img
+            src="/images/aboutimage.png"
+            alt="About Us"
+            className="w-full max-w-md rounded-lg  object-cover"
+          />
         </div>
 
-        {/* Text Content */}
-        <div className='lg:max-w-[500px] lg:pt-[50px] md:pt-[5px] md:mt-22 mt-2'>
-          <h1 className='font-[700] text-[20px] md:text-[30px] leading-none'>Proud To Be One Of The Nation's Best</h1>
-
-          {/* Mobile image */}
-          <div className='relative sm:hidden mt-3 flex w-full max-w-[500px]'>
-            <img src="/images/worker-1.jpg" alt="Healthcare worker" className='w-[400px]' />
-          </div>
-
-          {/* Description */}
-          <p className='mt-4 md:text-[15px]'>
-            For 30 years in a row, U.S. News & World Report has recognized us as one of 
-            the best public hospitals in the nation and #1 in Texas.
+        {/* RIGHT – CONTENT */}
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <p className="uppercase text-sm tracking-widest text-blue-600 font-semibold">
+            About Us
           </p>
 
-          <p className='md:mt-4 md:text-[15px] hidden sm:block md:leading-7'>
-            We strive for excellence every day by caring for our patients—not resting on past achievements,
-            but focusing on what we can do tomorrow.
+          <h2 className="mt-2 text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+            4 Years of Expertise <br />
+            <span className="text-blue-600">in Professional Services</span>
+          </h2>
+
+          <p className="mt-5 text-gray-600 leading-relaxed">
+            We connect you with trusted professionals delivering quality
+            services with reliability, transparency, and care.
           </p>
 
-          {/* Expandable Content */}
-          {showMore && (
-            <p className='mt-4 text-[15px] leading-6 text-gray-700'>
-              Our goal is to continue setting the benchmark in healthcare. We innovate constantly, 
-              invest in technology, and prioritize compassionate care. Whether you're visiting for 
-              routine checkups or complex treatments, we're here to serve you with dedication and expertise.
-            </p>
-          )}
+          {/* Points */}
+          <ul className="mt-6 space-y-3">
+            {[
+              "Verified & Trusted Professionals",
+              "Award-Winning Service Experience",
+              "Dedicated Support for Every Customer",
+            ].map((item, i) => (
+              <li key={i} className="flex items-center gap-3 text-gray-700">
+                <span className="bg-blue-100 text-blue-600 p-1 rounded-full flex items-center justify-center">
+                  <Check size={16} />
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
 
           {/* Button */}
-          <div className='flex justify-center md:mt-5 mt-3'>
-            <button
-              onClick={() => setShowMore(!showMore)}
-              className='bg-sky-700 hover:bg-sky-800 transition-transform hover:scale-[0.95] text-white font-[600] md:text-[15px] rounded-full lg:w-4/6 w-full py-2 mt-2'
-            >
-              {showMore ? "Show Less" : "Learn More"}
-            </button>
-          </div>
-        </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="mt-8 bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold shadow-md"
+          >
+            Learn More
+          </motion.button>
+        </motion.div>
       </div>
-    </>
+    </section>
   );
 };
 
 export default About;
-

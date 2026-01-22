@@ -1,17 +1,11 @@
-import React from 'react'
+import React from "react";
 
-function Loading() {
+const Loading = () => {
   return (
-
-  <div className='flex h-screen items-center justify-center bg-slate-800 pb-20'>
-      <div className="flex w-52 flex-col gap-4">
-        <div className="animate-pulse bg-gradient-to-r from-gray-600 via-gray-600 to-gray-700 rounded-md h-32 w-full"></div>
-        <div className="animate-pulse bg-gradient-to-r from-gray-600 via-gray-600 to-gray-700 rounded-md h-4 w-28"></div>
-        <div className="animate-pulse bg-gradient-to-r from-gray-600 via-gray-600 to-gray-700 rounded-md h-4 w-full"></div>
-        <div className="animate-pulse bg-gradient-to-r from-gray-600 via-gray-600 to-gray-700 rounded-md h-4 w-full"></div>
-      </div>
+    <div className="w-full flex items-center justify-center py-10">
+      <div className="h-12 w-12 rounded-full border-4 border-slate-300 border-t-blue-600 animate-spin"></div>
     </div>
-  )
-}
+  );
+};
 
-export default Loading
+export default Loading;

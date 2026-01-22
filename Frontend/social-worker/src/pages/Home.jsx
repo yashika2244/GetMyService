@@ -6,6 +6,8 @@ import About from "../components/About/About";
 import Best_s_list from "../components/Best-services/Best_s_list";
 import Add_own_service from "../components/add_own_service/Add_own_service";
 import Faqlist from "../components/faq/Faqlist";
+import { motion } from "framer-motion";
+import WhyChooseUs from "../components/whyChooseUs/WhyChooseUs";
 
 function Home() {
   let navigate = useNavigate();
@@ -13,228 +15,329 @@ function Home() {
     navigate("/find-service");
   };
 
-  
-
-
-
+  const servicesProcess = [
+    {
+      title: "Find a Services",
+      desc: "World-class care for everyone. Our service system offers unmatched expert service care.",
+      img: "/images/package-delivery.png",
+      link: "/find-Service",
+    },
+    {
+      title: "Find a Location",
+      desc: "World-class care for everyone. Our service system offers unmatched expert service care.",
+      img: "/images/icon02.png",
+      link: "/find-Service",
+    },
+    {
+      title: "Book Appointment",
+      desc: "World-class care for everyone. Our services system offers unmatched expert health care. Book Now!",
+      img: "/images/icon03.png",
+      link: "/msg",
+    },
+  ];
 
   return (
     <div>
-      <div className="hero_container lg:pb-24 pb-4   flex flex-col md:flex-row  lg:justify-center gap-4 lg:gap-16 ">
-        <div className="lg:max-w-[500px] mx-2  md:mx-3 lg:pt-[50px] md:pt-[5px]  mt-12 ">
-          <div className="flex flex-col lg:gap-3">
-            {/* <h1 className="font-[700] text-[23px] md:mt-7   mt-2 md:text-[40px] leading-7 md:leading-14"> */}
-             <h1 className="font-[700] text-[18px] text-slate-700 mt-2 md:text-[35px] leading-6 md:leading-8 md:mt-12 ">
-              Let's Make It Easy To Get
-            </h1>
-            <h1 className="font-[700] text-[18px] text-slate-600  md:text-[30px] leading-6 md:leading-9">
-              {" "}
-              Any Services !
-            </h1>
-            <p className="md:text-[17px] md:mt-3 text-slate-600  "> 
-              {" "}
-              Lorem ipsum dolor sit amet consectetur, adipisi cing elit . Animi
-              quibusdam voluptate reiciendis temp ore exercita tionem dolor ali
-              quam, quod rem asp eriores amet corrupti omnis possimus quidem
-              consequatur neque sit?
-              <span className="hidden">
-                {" "}
-                <span className="hidden md:block">
-                  {" "}
-                  Et natus eaque dolo remque sapi ente unde, itaque quo
-                  architecto earum quam voluptates animi rem veniam simi lique
-                  sint, tempore aspernatur pariatur optio dignissimos eligendi
-                  molestiae. Minus, rerum optio. Repudiandae eligendi pariatur
-                  at minus consequatur, esse rerum? Nostrum, laudantium{" "}
-                </span>
-              </span>
-              ipsam, suscipit necessitatibus illum facilis asperiores soluta
-              iusto dolore harum sunt. Quibusdam sed exercitationem lab
-            </p>
-            <span className="ml-0 flex justify-center  sm:block">
-              <button
-                onClick={getDetail}
-                className="mt-5 bg-red-600 text-white text-xl font-semibold px-10 py-1 rounded-lg hover:bg-red-700  cursor-pointer transition-transform hover:scale-[0.9] duration-300  md:py-2"
-              >
-                Get Details →
-              </button>
-            </span>
-          </div>
-        </div>
+      <div className="bg-[#f9fbff] overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8 pt-20 pb-28 flex flex-col lg:flex-row items-center gap-16">
+          {/* LEFT CONTENT */}
+          <motion.div
+            className="max-w-xl"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-600 px-4 py-2 rounded-full text-sm font-semibold mb-6">
+              🌐 Top-Notch Services, Just For You
+            </div>
 
-        <div className="md:flex gap-4 hidden mx-1 min-w-[450px] lg:max-w-[520px] lg:pt-[50px] md:mt-16 w-11/12   md:pt-[5px] justify-center">
-          <img
-            src="images/worker-4.jpg"
-            alt="img"
-            className="w-1/2 h-4/6 rounded-xl"
-          />
-          <div className="mt-10 flex flex-col gap-4">
-            <img src="images/worker-2.jpeg" alt="img" className="rounded-xl" />
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+              Your <span className="text-blue-600"> Best Service</span>{" "}
+              Experience
+              <br /> Awaits
+            </h1>
+
+            <p className="mt-6 text-gray-600 text-lg leading-relaxed">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi
+              placeat, aspernatur earum natus mollitia est molestias itaque
+              minima neque.
+            </p>
+
+            {/* CTA */}
+            <div className="mt-8 flex items-center gap-5">
+              <motion.button
+                onClick={getDetail}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 shadow-md hover:scale-105"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Explore Our Services
+              </motion.button>
+            </div>
+          </motion.div>
+
+          {/* RIGHT IMAGE */}
+          <motion.div
+            className="relative w-full max-w-md h-[450px] md:flex justify-center items-end mt-10 hidden "
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
             <img
-              src="images/resto-2.jpeg"
-              alt="img"
-              className="h-[300px] object-cover rounded-xl"
+              src="/images/heroimage.png"
+              alt="Professional"
+              className="relative z-10 w-[200px] md:w-[350px] object-cover rounded-full"
             />
-          </div>
+          </motion.div>
         </div>
       </div>
       {/* process container */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#E0F7FA] via-white to-[#F0F9FF] py-16">
+        {/* Decorative blobs */}
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-blue-200/40 rounded-full blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-teal-200/40 rounded-full blur-3xl" />
 
-      <div className="flex  justify-center bg-gradient-to-b from-blue-50 to-white md:py-8">
-        <div className="process_container w-full max-w-[1100px] flex flex-col mt-1 md:mt-6 px-4 text-center">
-          <div className="w-full">
-            <div className="flex justify-center">
-              <h1 className="font-semibold text-[23px] md:font-bold md:text-[35px] leading-8 md:leading-[60px] text-gray-800">
-                Providing The Best Services
-              </h1>
-            </div>
-            <div className="flex justify-center mt-2">
-              <p className="text-[15px] md:text-[15px] lg:w-1/3 text-gray-600">
-                World-class care for everyone. Our service system offers
-                unmatched expert service care.
-              </p>
-            </div>
-          </div>
+        <div className="relative mx-auto max-w-[1100px] px-6 text-center">
+          {/* Heading */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="mb-14"
+          >
+            <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl text-gray-900">
+              Providing The{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">
+                Best Services
+              </span>
+            </h1>
+            <p className="mt-4 text-sm md:text-base max-w-2xl mx-auto text-gray-600">
+              World-class care for everyone. Our service system offers unmatched
+              expert service care with a modern touch.
+            </p>
+          </motion.div>
 
-          <div className=" grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3  md:flex-row w-full justify-center mt-5 md:mt-10 gap-3 md:gap-8 lg:gap-12">
-            <div className="process_box bg-white shadow-lg rounded-lg p-1 md:p-6 transform hover:scale-105 transition-transform duration-300">
-              <div className="flex justify-center md:mb-4">
-                <img
-                  src="/images/package-delivery.png"
-                  alt="Find a Doctor"
-                  className="w-16 h-16"
-                />
-              </div>
-              <h1 className="font-bold text-[15px] md:text-[20px] leading-4 md:leading-8 text-center text-gray-800">
-                Find a Services
-              </h1>
-              <p className="text-[9px] md:text-[16px] md:leading-7 text-center text-gray-600">
-                World-class care for everyone. Our service system offers
-                unmatched expert service care.
-              </p>
-              <Link to="/find-Service" className="flex justify-center mt-1 md:mt-3">
-                <BsArrowRightCircle className="text-[20px] md:text-[40px] text-blue-500 hover:text-blue-700  cursor-pointer transition-colors duration-300" />
-              </Link>
-            </div>
-
-            <div className=" bg-white shadow-lg rounded-lg  p-1 md:p-6 transform hover:scale-105 transition-transform duration-300">
-              <div className="flex justify-center md:mb-4">
-                <img
-                  src="/images/icon02.png"
-                  alt="Find a Location"
-                  className="w-16 h-16"
-                />
-              </div>
-              <h1 className="font-bold text-[15px] md:text-[20px] md:leading-8 text-center text-gray-800">
-                Find a Location
-              </h1>
-              <p className="text-[9px] md:text-[16px] md:leading-7 text-center text-gray-600">
-                World-class care for everyone. Our service system offers
-                unmatched expert service care.
-              </p>
-              <Link
-                to="/find-Service"
-                className="flex justify-center mt-1 md:mt-3"
+          {/* Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            {servicesProcess.map((service, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.15 }}
+                viewport={{ once: true }}
+                className="group bg-white/80 backdrop-blur rounded-3xl p-6 md:p-8 
+                     shadow-lg hover:shadow-2xl transition-all duration-300 
+                     hover:-translate-y-2 flex flex-col items-center text-center"
               >
-                <BsArrowRightCircle className="text-[20px] md:text-[40px] text-blue-500 hover:text-blue-700 transition-colors duration-300" />
-              </Link>
-            </div>
+                {/* Icon */}
+                <div
+                  className="w-20 h-20 rounded-2xl flex items-center justify-center 
+                       bg-gradient-to-br from-blue-500 to-teal-400 
+                       shadow-lg mb-6 group-hover:scale-110 transition-transform"
+                >
+                  <img
+                    src={service.img}
+                    alt={service.title}
+                    className="w-10 h-10"
+                  />
+                </div>
 
-            <div className="process_box bg-white shadow-lg rounded-lg p-1 md:p-6 transform hover:scale-105 transition-transform duration-300">
-              <div className="flex justify-center md:mb-4">
-                <img
-                  src="/images/icon03.png"
-                  alt="Book Appointment"
-                  className="w-16 h-16"
-                />
-              </div>
-              <h1 className="font-bold text-[15px] md:text-[20px]  md:leading-8 text-center text-gray-800">
-                Book Appointment
-              </h1>
-              <p className="text-[9px] md:text-[16px] md:leading-7 text-center text-gray-600">
-                World-class care for everyone. Our serices system offers
-                unmatched expert health care. Book Now!
-              </p>
-              <Link
-                to="/msg"
-                className="flex justify-center mt-1 md:mt-3"
-              >
-                <BsArrowRightCircle className="text-[20px] md:text-[40px] text-blue-500 hover:text-blue-700 transition-colors duration-300" />
-              </Link>
-            </div>
+                <h3 className="font-semibold text-lg md:text-xl text-gray-900 mb-2">
+                  {service.title}
+                </h3>
+
+                <p className="text-sm md:text-[15px] text-gray-600 mb-6">
+                  {service.desc}
+                </p>
+
+                {/* Arrow CTA */}
+                <Link
+                  to={service.link}
+                  className="mt-auto inline-flex items-center gap-2 
+                       text-blue-600 font-semibold text-sm 
+                       group-hover:text-blue-700 transition"
+                >
+                  Learn More
+                  <BsArrowRightCircle className="text-2xl transition-transform group-hover:translate-x-1" />
+                </Link>
+              </motion.div>
+            ))}
           </div>
         </div>
       </div>
       {/* about serices */}
       <About />
-      {/* out services section */}
-      <section className="doctor_section flex justify-center mx-3 ">
-        <div className="max-w-[1800px] ">
-          <div className="mt-8 md:mt-12 ">
-            <h1 className="font-[700] leading-8 text-[30px] text-center">
-              {" "}
-              Our Best Services
-            </h1>
+      {/* out services section */};
+      <section className="flex justify-center md:px-20 px-4 py-14 bg-[#ffffff]">
+        <div className="w-full max-w-[1300px]">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="flex flex-col md:flex-row md:items-center md:justify-between gap-6"
+          >
+            <div>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="uppercase text-sm tracking-widest text-blue-600 font-semibold"
+              >
+                Our Services
+              </motion.p>
 
-            <div className="flex justify-center mt-2  ">
-              <p className="   lg:w-1/3 text-center">
-                World class care for everyone. Our Service system offers
-                unmatched, expert work.
-              </p>{" "}
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-3xl md:text-3xl font-semibold text-blue-600  mt-2"
+              >
+                All the Services You Need <br />
+                <span className="text-gray-900">In One Trusted Platform</span>
+              </motion.h1>
             </div>
-          </div>
 
-          <div className=" ">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3 }}
+              onClick={() => navigate("/find-Service")}
+              className="self-start md:self-center bg-blue-600 text-white px-6 py-3 rounded-full text-sm font-semibold hover:bg-blue-700 transition"
+            >
+              Explore All Services
+            </motion.button>
+          </motion.div>
+
+          {/* Cards */}
+          <div className="mt-12">
             <Best_s_list />
           </div>
         </div>
       </section>
-      {/* other part */}
+      {/* Why choose us */}
+      <WhyChooseUs />
+      {/* Our Some Services Section */}
+      <section className="relative py-16 md:py-10 bg-gradient-to-b from-blue-50 via-white to-white overflow-hidden">
+        {/* Decorative blur shapes */}
+        <div className="absolute top-10 left-10 w-40 h-40 bg-blue-200/40 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-10 w-52 h-52 bg-indigo-200/40 rounded-full blur-3xl" />
 
-      <div className=" service_container md:mt-18  ">
-        <div className="mt-8 md:mt-15">
-          <h1 className="font-[700] leading-8 text-[30px] text-center">
-            {" "}
-            Our Some services
-          </h1>
+        <div className="relative max-w-[1200px] mx-auto px-4">
+          {/* Heading */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <p className="uppercase tracking-[0.25em] text-xs text-blue-600 font-semibold">
+              Our Services
+            </p>
 
-          <div className="flex justify-center mt-2">
-            <p className="md:text-[px]   lg:w-1/3 text-center">
-              World class care for everyone. Our Service system offers
-              unmatched, expert services care.
-            </p>{" "}
-          </div>
-        </div>
-        {/* service list start */}
-        <section className=" flex w-full justify-center">
-          <div className="md:mt-12 mt-3 flex  max-w-[1000px] ">
-            <Serviceslist />
-          </div>
-        </section>
-      </div>
+            <h1 className="mt-3 font-extrabold text-[28px] md:text-[40px] text-gray-900 leading-tight">
+              Some of Our <span className="text-blue-600">Best Services</span>
+            </h1>
 
-      {/* other section */}
-
-      <Add_own_service />
-
-      {/*  faq section */}
-      <section className="bg-gray-50  py-12 px-4 rounded-lg shadow-md">
-        <div className="flex justify-center">
-          <div className="flex flex-col md:flex-row gap-12 lg:gap-48 max-w-[1100px] w-full">
-            {/* Left Side Image - Hidden on Small Screens */}
-            <div className="hidden mt-1   md:block flex-shrink-0">
-              <img
-                src="/images/question.jpg"
-                alt=""
-                className="max-w-sm h-[450px] rounded-lg shadow-lg object-cover"
-              />
+            {/* underline */}
+            <div className="relative flex justify-center mt-4">
+              <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full" />
+              <div className="absolute w-24 h-1 bg-blue-400 blur-md opacity-60" />
             </div>
-            {/* Right Side - FAQ Section */}
-            <div className="w-full">
-              <h2 className="font-bold px-2 text-xl md:text-3xl text-gray-900 leading-tight mb-1">
-                Frequently Asked Questions About Our Services
-              </h2>
+
+            <p className="mt-6 text-gray-600 text-sm md:text-base max-w-[560px] mx-auto leading-relaxed">
+              World class care for everyone. Our service system offers
+              unmatched, expert services with trust, reliability, and
+              compassion.
+            </p>
+          </motion.div>
+
+          {/* Services list */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="mt-2 flex justify-center"
+          >
+            <div
+              className="w-full  bg-white/60 backdrop-blur-xl 
+                      rounded-3xl p-3 md:p-6 shadow-lg border border-white"
+            >
+              <Serviceslist />
+            </div>
+          </motion.div>
+        </div>
+      </section>
+      {/* other section */}
+      <Add_own_service />
+      {/*  faq section */}
+      <section className="relative bg-gradient-to-br from-[#0B1E3A] via-[#0E2A52] to-[#08162B] py-16 px-4 ">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-14">
+            <p className="text-xs tracking-widest text-blue-300 uppercase mb-2">
+              FAQs
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-blue-600">
+              Frequently Asked Questions <br className="hidden md:block " />{" "}
+              <span className="text-white">About Our Services</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            {/* FAQ LIST */}
+            <div className="lg:col-span-2 space-y-4">
               <Faqlist />
+            </div>
+
+            {/* Right Side Card */}
+            <div
+              className="relative overflow-hidden rounded-3xl p-8 text-white shadow-2xl 
+                bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-700 
+                flex flex-col justify-between"
+            >
+              {/* Decorative Glow */}
+              <div className="absolute -top-16 -right-16 w-40 h-40 bg-white/20 rounded-full blur-3xl" />
+              <div className="absolute -bottom-16 -left-16 w-40 h-40 bg-indigo-300/20 rounded-full blur-3xl" />
+
+              <div className="relative">
+                {/* Icon */}
+                <div
+                  className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur 
+                    flex items-center justify-center mb-5 text-2xl"
+                >
+                  💬
+                </div>
+
+                <h3 className="text-2xl font-bold mb-3 leading-snug">
+                  You have different questions?
+                </h3>
+
+                <p className="text-sm text-blue-100 leading-6">
+                  Our team will answer all your questions. We ensure a quick
+                  response.
+                </p>
+              </div>
+
+              {/* Button */}
+              <button
+                onClick={() => navigate("/contact")}
+                className="relative mt-8 inline-flex items-center gap-2 
+               bg-white text-blue-700 px-7 py-3 rounded-xl 
+               font-semibold text-sm shadow-lg 
+               transition-all duration-300 
+               hover:scale-[1.05] hover:bg-blue-50"
+              >
+                Contact Us
+                <span className="text-lg">→</span>
+              </button>
             </div>
           </div>
         </div>
@@ -244,4 +347,3 @@ function Home() {
 }
 
 export default Home;
-

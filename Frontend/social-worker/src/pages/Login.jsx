@@ -117,20 +117,7 @@ function Login() {
               required
             />
           </div>
-          {/* <div className="mb-5">
-           
-            <select
-              name="role"
-              className="text-gray-600 font-semibold text-[15px] leading-7 px-4 py-3 focus:outline-none   "
-              required
-              onChange={handleInputChange}
-            >
-              <option value="select">select</option>
-              <option value="customer">Customer</option> 
-            <option value="service-provider">Service Provider</option>{" "} 
-            </select> 
-          </div> */}
-
+        
           <div className="flex justify-center md:mt-8">
             <button
               disabled={loading}

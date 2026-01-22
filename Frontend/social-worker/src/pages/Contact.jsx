@@ -1,81 +1,108 @@
 import React from "react";
-import contact from "../assets/contact-us.gif";
-function Contact() {
+import { Mail, MessageSquare, Send } from "lucide-react";
+import { motion } from "framer-motion";
+
+export default function Contact() {
   return (
-    // <section className="min-h-screen md:mt-6 flex items-start justify-start bg-gradient-to-b from-blue-50 to-white py-12 px-3  md:px-6">
-    <section className="md:px-5 px-2 xl:px-0 mt-16 mb-28 md:mt-25 md:mb-32 ">
-      <div className="max-w-[1100px] md:mt-8 mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="w-full max-w-2xl bg-white shadow-lg rounded-lg p-3  md:p-4 animate-fade-in backdrop-blur-lg">
-            {/* Title Section */}
-            <h2 className="text-3xl font-bold text-gray-800 text-center">
+    <section className="relative mt-20 mb-24 px-3 md:px-6">
+      {/* Decorative background */}
+      <div className="absolute -top-32 -left-32 w-80 h-80 bg-blue-200/40 rounded-full blur-3xl" />
+      <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-indigo-200/40 rounded-full blur-3xl" />
+
+      <div className="relative max-w-6xl mx-auto ">
+          
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center ">
+          {/* Form Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="bg-white/80 backdrop-blur-xl shadow-lg rounded-2xl p-5 md:p-6"
+          >
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center">
               Contact Us
             </h2>
-            <p className="text-gray-600 text-center mt-2">
-              Got a technical issue? Want to send feedback about a beta feature?
+            <p className="text-gray-600 text-center mt-2 max-w-sm mx-auto text-sm">
+              Have a question or feedback? Fill the form and we’ll reach out soon.
             </p>
-            {/* Form */}
-            <form action="" className="space-y-6 mt-6">
-              {/* Email Field */}
+
+            <form className="space-y-5 mt-6">
+              {/* Email */}
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-gray-700 font-semibold"
-                >
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
                   Your Email
                 </label>
-                <input
-                  type="text"
-                  placeholder="example@gmail.com"
-                  className="w-full mt-1 px-4 py-2 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-300 transition-all "
-                />
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                  <input
+                    type="email"
+                    placeholder="you@example.com"
+                    className="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
+                  />
+                </div>
               </div>
-              {/* Subject Field */}
+
+              {/* Subject */}
               <div>
-                <label
-                  htmlFor="subject"
-                  className="block text-gray-700 font-semibold"
-                >
-                  Your Subject
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  Subject
                 </label>
                 <input
                   type="text"
-                  placeholder="Let us know how we can help you"
-                  className="w-full mt-1 px-4 py-2 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-300 transition-all"
+                  placeholder="How can we help you?"
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition"
                 />
               </div>
-              {/* Message Field */}
+
+              {/* Message */}
               <div>
-                <label
-                  htmlFor="message"
-                  className="block text-gray-700 font-semibold"
-                >
-                  Your Message
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  Message
                 </label>
-                <textarea
-                  placeholder="Leave a comment..."
-                  className="w-full mt-1 px-4 py-3 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-300 transition-all"
-                  id=""
-                ></textarea>
+                <div className="relative">
+                  <MessageSquare className="absolute left-3 top-3 text-gray-400" size={16} />
+                  <textarea
+                    rows={4}
+                    placeholder="Write your message here..."
+                    className="w-full pl-9 pr-3 py-2.5 text-sm rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition resize-none"
+                  />
+                </div>
               </div>
+
+              {/* Button */}
               <div className="flex justify-center">
-                <button className="bg-red-600 hover:bg-red-700 text-white text-lg md:px-25 px-10 md:py-2 py-2 rounded-full font-semibold shadow-md transition-transform hover:scale-[0.9] cursor-pointer duration-300">
-                  Submit
-                </button>
+                <motion.button
+                  whileHover={{ scale: 0.95 }}
+                  whileTap={{ scale: 0.9 }}
+                  type="submit"
+                  className="inline-flex items-center gap-2 px-8 py-2.5 rounded-full bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-semibold shadow-md"
+                >
+                  <Send size={16} />
+                  Send Message
+                </motion.button>
               </div>
             </form>
-          </div>
+          </motion.div>
 
-          {/*=======img box ==========*/}
-          <div className="hidden lg:block border border-blue-50  max-w-[500px] rounded-2xl  ">
-            <figure>
-              <img src={contact} alt="" className="w-full rounded-md " />
-            </figure>
-          </div>
+          {/* Image Section */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+            className="hidden lg:flex justify-center"
+          >
+            <div className="rounded-2xl overflow-hidden shadow-lg max-w-md">
+              <img
+                src="/images/contact.png"
+                alt="Contact illustration"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
   );
 }
-
-export default Contact;

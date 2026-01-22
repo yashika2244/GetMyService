@@ -1,13 +1,34 @@
-// import React from 'react';
 import React from "react";
-import star from "./../../assets/Star.png";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { BsArrowRightCircle } from "react-icons/bs";
+import { BsArrowRight } from "react-icons/bs";
+import { FaUtensils, FaUserMd, FaHome } from "react-icons/fa";
+import star from "./../../assets/Star.png";
+
+/* Animation */
+const cardVariant = {
+  hidden: { opacity: 0, y: 40 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
+
+/* Icon selector */
+const getServiceIcon = (specialization = "", name = "") => {
+  const text = `${specialization} ${name}`.toLowerCase();
+
+  if (text.includes("food")) return <FaUtensils />;
+  if (text.includes("doctor")) return <FaUserMd />;
+  if (text.includes("home")) return <FaHome />;
+
+  return <FaHome />;
+};
 
 const Beset_s_card = ({ service }) => {
-
-
   const navigate = useNavigate();
+
   const {
     _id,
     name,
@@ -16,56 +37,79 @@ const Beset_s_card = ({ service }) => {
     photo,
     specialization,
     totalservice,
-    location,
   } = service;
 
-
   return (
-    <div className=" p-2 bg-gradient-to-b  from-white to-gray-100 shadow-xl rounded-2xl transition-transform   transform hover:scale-105 hover:shadow-2xl duration-300 border border-gray-200">
-      <div className="overflow-hidden md:h-[250px] rounded-lg">
+    <motion.div
+      variants={cardVariant}
+      whileHover={{ y: -8 }}
+      className="relative group bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300"
+    >
+      {/* IMAGE */}
+      <div className="relative h-[220px] overflow-hidden">
         <img
-          src={photo ||  "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"}
+          src={
+            photo ||
+            "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
+          }
           alt={name}
-          className="w-full md:h-full  object-cover rounded-lg hover:scale-110 transition-transform duration-300"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
-      </div>
 
-      {/* service Info */}
-      <h2 className="md:text-2xl text-lg font-bold text-gray-900 mt- ">
-        {name}
-      </h2>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
 
-      <div className="flex items-center justify-between mt-1">
-        <span className="bg-blue-500 text-white py-0 md:py-1 px-1 md:px-4 md:text-sm text-[10px] rounded-md md:rounded-full font-semibold shadow-md">
-          {specialization  || "servicer"}
-        </span>
-        <div className="flex items-center gap-1 md:gap-2 text-yellow-500">
-          <img src={star} alt="rating" className="md:w-5 md:h-5 h-[10px] " />
-          <span className=" md:text-lg text-[12px] font-bold">{ avgRating || 4.8}</span>
-          <span className="text-gray-500  text-[12px] text-sm">
-            ({totalRating || 4.8})
+        {/* SERVICE ICON */}
+        <div className="absolute bottom-4 left-4 bg-white p-3 rounded-full shadow-lg text-blue-600 text-xl">
+          {getServiceIcon(specialization, name)}
+        </div>
+
+        {/* RATING */}
+        <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full flex items-center gap-1 shadow">
+          <img src={star} alt="star" className="w-4 h-4" />
+          <span className="text-sm font-semibold">{avgRating || 4.8}</span>
+          <span className="text-xs text-gray-500">
+            ({totalRating || 120})
           </span>
         </div>
       </div>
 
-      {/* Patients & Hospital Info */}
-      <div className="flex items-center justify-between mt-2">
-        <div>
-          <h3 className="md:text-lg text-[15px] font-semibold text-gray-900">
-            {totalservice}  1500 Services
-          </h3>
-          <p className="md:text-sm text-[10px] text-gray-600">At {location}</p>
+      {/* CONTENT */}
+      <div className="p-6">
+        <h2 className="text-lg font-bold text-gray-900">{name}</h2>
+
+        <span className="inline-block mt-3 bg-blue-50 text-blue-600 text-xs font-semibold px-3 py-1 rounded-full">
+          {specialization || "Professional Service"}
+        </span>
+
+        <p className="text-sm text-gray-600 mt-3 line-clamp-2">
+          Trusted professionals delivering quality service with reliability.
+        </p>
+
+        <div className="flex justify-between items-center mt-6">
+          <button
+            onClick={() => navigate(`/service-profile/${_id}`)}
+            className="flex items-center gap-2 text-blue-600 font-semibold text-sm"
+          >
+            Learn more
+            <span className="bg-blue-600 text-white p-1 rounded-full">
+              <BsArrowRight />
+            </span>
+          </button>
+
+          <span className="text-sm text-gray-500">
+            {totalservice || 1500}+ Services
+          </span>
         </div>
-        <button
-          onClick={() => navigate(`/service-profile/${_id}`)}
-          className="flex items-center justify-center group"
-        >
-          <BsArrowRightCircle className="text-4xl text-blue-500 group-hover:text-white group-hover:bg-blue-600 rounded-full transition-all duration-300 p-1 shadow-md transform group-hover:scale-110" />
-        </button>
       </div>
 
-      {/* added own service */}
-    </div>
+      <div
+        className="absolute bottom-0 left-0 h-[3px] w-full 
+        bg-gradient-to-r from-blue-600 to-blue-400
+        scale-x-0 origin-left transition-transform duration-300 
+        group-hover:scale-x-100"
+      />
+    </motion.div>
   );
 };
+
 export default Beset_s_card;
