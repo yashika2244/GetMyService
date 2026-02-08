@@ -1,11 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-const RollSelection = () => {
+const RoleSelection = () => {
   const navigate = useNavigate();
 
   const handleRoleSelect = (role) => {
-    console.log("role h :", role)
     if (role === "customer") {
       navigate("/cutomer-register");
     } else if (role === "service-provider") {
@@ -14,31 +14,85 @@ const RollSelection = () => {
   };
 
   return (
+    <div className="min-h-screen flex items-center justify-center px-4 mt-20 md:mt-0">
+      <div className="max-w-4xl w-full">
+        {/* Heading Animation */}
+        <div className="text-center mb-10">
+          <motion.h1
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-3xl md:text-4xl font-bold text-gray-800"
+          >
+            Choose Your Role
+          </motion.h1>
 
-<div className="flex items-center justify-center h-screen px-4 ">
-  <div className="border-2 border-gray-300 rounded-lg p-8  flex flex-col items-center gap-6 shadow-md">
-    <h1 className="text-2xl md:text-3xl font-bold text-center">
-      Choose Your Role
-    </h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-3 text-gray-500 text-sm md:text-base"
+          >
+            Select how you want to continue and get started in seconds
+          </motion.p>
+        </div>
 
-    <div className="flex flex-col md:flex-row gap-4">
-      <button
-        onClick={() => handleRoleSelect("customer")}
-        className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
-      >
-        I'm a Customer
-      </button>
-      <button
-        onClick={() => handleRoleSelect("service-provider")}
-        className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all"
-      >
-        I'm a Service Provider
-      </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Customer Card */}
+          <motion.div
+            onClick={() => handleRoleSelect("customer")}
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            whileHover={{ y: -8, scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="cursor-pointer bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center text-center"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+              alt="Customer"
+              className="w-28 h-28 mb-4"
+            />
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              I'm a Customer
+            </h2>
+            <p className="text-gray-600 text-sm">
+              Looking for services? Register here and get started easily.
+            </p>
+            <button className="mt-5 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              Continue
+            </button>
+          </motion.div>
+
+          {/* Service Provider Card */}
+          <motion.div
+            onClick={() => handleRoleSelect("service-provider")}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            whileHover={{ y: -8, scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="cursor-pointer bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center text-center"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png"
+              alt="Service Provider"
+              className="w-28 h-28 mb-4"
+            />
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+              I'm a Service Provider
+            </h2>
+            <p className="text-gray-600 text-sm">
+              Want to offer services? Join us and grow your business.
+            </p>
+            <button className="mt-5 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+              Continue
+            </button>
+          </motion.div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
   );
 };
 
-export default RollSelection;
+export default RoleSelection;

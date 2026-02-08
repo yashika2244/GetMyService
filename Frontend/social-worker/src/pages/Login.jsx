@@ -1,170 +1,180 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useContext, useEffect } from "react";
-import {authContext} from '../context/AppContext'
+import { authContext } from "../context/AppContext";
 import { BASE_URL } from "../config";
-// import { useAuth } from "../context/AppContext";
 import { useAuth } from "../context/AppContext";
-import {toast} from 'react-toastify'
-
+import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
 function Login() {
-  const { user, role, logout } = useAuth();
+  const { user, role } = useAuth();
+  const navigate = useNavigate();
+  const { dispatch } = useContext(authContext);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    // role :""
   });
 
   const [loading, setLoading] = useState(false);
-  
-  const navigate = useNavigate();
-  const { dispatch } = useContext(authContext);
-  const [accounts, setAccounts] = useState([]);  // State to hold service data
-  // const [loading, setLoading] = useState(true);   // Loading state
-  const [error, setError] = useState(null);       // Error state
-  // const navigate = useNavigate();
-
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    if (loading) return;
+    setLoading(true);
 
+    try {
+      const res = await fetch(`${BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-  const submitHandler = async (event) => {
-  event.preventDefault();
-  if (loading) return; // Prevent multiple clicks
-  setLoading(true);
+      const result = await res.json();
 
-  try {
+      if (!res.ok) {
+        throw new Error(result.message || "Login failed");
+      }
 
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: {
+          user: result.data,
+          token: result.token,
+          role: result.role,
+        },
+      });
 
-    const res = await fetch(`${BASE_URL}/api/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
+      localStorage.setItem("user", JSON.stringify(result.data));
+      localStorage.setItem("token", result.token);
 
-    const result = await res.json();
-        console.log( "result is",result);
+      toast.success("Login Successful!");
 
-    if (!res.ok) {
-      throw new Error(result.message);
-      toast.success("Registration successful! Please login.");
+      if (result.role === "customer") {
+        navigate(`/user-profile/${result.data._id}`);
+      } else if (result.role === "service-provider") {
+        navigate(`/servicer-account/${result.data._id}`);
+      } else {
+        navigate("/");
+      }
 
+      window.location.reload();
+    } catch (err) {
+      toast.error(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-
-    dispatch({
-      type: "LOGIN_SUCCESS",
-      payload: {
-        user: result.data,
-        token: result.token,
-        role: result.role,
-      },
-    });
-
-    localStorage.setItem("user", JSON.stringify(result.data));
-    localStorage.setItem("token", result.token); 
- toast.success("Login Successful!"); 
-       
-    // Redirect based on role
-    if (role === "customer") {
-      // navigate("/user-profile");
-      navigate(`/user-profile/${user?._id}`);
-
-    } else if (role === "service-provider") {
-      navigate("/servicer-account/:id");
-    }
-    navigate("/");
-    window.location.reload();
-  } catch (error) {
-      toast.error(error.message || "Registration failed. Try again.");
-    setLoading(false);
-  }
-  finally {
-    setLoading(false); 
-  }
-  }
-
-
+  };
 
   return (
-    <section className="md:px-5 px-2 lg:px-0 mt-16 mb-32 md:mt-24 ">
-      <div className="w-full max-w-[570px] mx-auto rounded-lg shadow-md md:p-10">
-        <h3 className="mx-2 text-slate-900 text-[22px] leading-9 font-bold md:mb-8">
-          Hello! <span className="text-sky-600">Welcome</span> Back 🎉
-        </h3>
-        <form className="py-4 px-3 md:py-0" onSubmit={submitHandler}>
-          <div className="mb-5 ">
-            <input
-              type="email"
-              onChange={handleInputChange}
-              placeholder="Enter Your Email"
-              name="email"
-              className="w-full px-4  py-3 border-b border-[#0066ff61] rounded-md outline-[#1d365c61]  "
-              required
-            />
-          </div>
-          <div className="mb-5">
-            <input
-              type="password"
-              onChange={handleInputChange}
-              placeholder="Password"
-              name="password"
-              className="w-full px-4 py-3 border-b border-[#0066ff61] rounded-md outline-[#1d365c61]"
-              required
-            />
-          </div>
-        
-          <div className="flex justify-center md:mt-8">
-            <button
-              disabled={loading}
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white text-[20px] py-1 md:py-2 md:px-40 px-22 rounded-[10px] font-[600] flex items-center justify-center cursor-pointer transition-all hover:scale-[0.9] duration-300"
-            >
-              {loading ? (
-                <span className="flex items-center">
-                  <svg
-                    className="animate-spin h-5 w-5 mr-2 text-white"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8v8H4z"
-                    ></path>
-                  </svg>
-                  Logging in...
-                </span>
-              ) : (
-                "Login"
-              )}
-            </button>
-          </div>
-          <p className="mt-5 text-gray-500 text-center">
-            {" "}
-            Don't have an account?{" "}
-            <Link
-              // to="/register"
-              to="/select-role"
-              className="text-sky-600 font-medium ml-1 border-b"
-            >
-              {" "}
-              Register
-            </Link>
-          </p>
-        </form>
-      </div>
+    <section className="min-h-screen relative overflow-hidden">
+      
+      {/* BACKGROUND IMAGE (LEFT → CENTER) */}
+  <motion.div
+  initial={{ x: -150, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  transition={{ duration: 1, ease: "easeOut" }}
+  className="absolute inset-0 hidden md:block"
+>
+  <img
+    src="/images/login.png"
+    alt="Login Background"
+    className="w-full h-full object-cover"
+  />
+</motion.div>
+
+
+      {/* LOGIN FORM */}
+     <div className="relative z-10 min-h-screen flex items-center justify-center md:justify-end px-4 md:px-20">
+
+<motion.div
+  initial={{ x: 150, opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  transition={{ duration: 0.7, ease: "easeOut" }}
+  className="
+    w-full max-w-[420px]
+    backdrop-blur-xl
+    p-6 md:p-10
+    border border-white/30
+    bg-white/80 md:bg-transparent
+    rounded-xl
+  "
+>
+
+    {/* Heading */}
+    <h2 className="text-center text-3xl font-bold text-gray-800 mb-2 tracking-wide">
+      Welcome Back
+    </h2>
+    <p className="text-center text-sm text-gray-500 mb-2">
+      Login to continue
+    </p>
+
+ <form onSubmit={submitHandler} className="space-y-6">
+  
+  {/* Email */}
+  <div className="relative">
+    <input
+      type="email"
+      name="email"
+      placeholder=" Email"
+      onChange={handleInputChange}
+      className="w-full bg-transparent border-b-2 border-gray-300 py-3
+      text-gray-800 outline-none focus:border-blue-500 transition-all"
+      required
+    />
+  </div>
+
+  {/* Password */}
+  <div className="relative">
+    <input
+      type="password"
+      name="password"
+      placeholder="Password"
+      onChange={handleInputChange}
+      className="w-full bg-transparent border-b-2 border-gray-300 py-3
+      text-gray-800 outline-none focus:border-blue-500 transition-all"
+      required
+    />
+  </div>
+
+  {/* Forgot */}
+  <div className="text-right text-sm">
+    <span className="text-gray-500 hover:text-blue-500 cursor-pointer transition">
+      Forgot password?
+    </span>
+  </div>
+
+  {/* Button */}
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    disabled={loading}
+    className="w-full py-3 rounded-full text-white font-semibold text-lg
+    bg-gradient-to-r from-blue-700 to-sky-600 cursor-pointer
+    shadow-lg shadow-blue-500/30 hover:shadow-xl transition"
+  >
+    {loading ? "Logging in..." : "LOGIN"}
+  </motion.button>
+
+  {/* Register link */}
+  <div className="text-center mt-6 text-sm text-gray-600">
+    Already have an account?
+    <span
+      onClick={() => navigate("/select-role")}
+      className="ml-1 text-blue-700 font-semibold cursor-pointer hover:underline"
+    >
+      Register
+    </span>
+  </div>
+</form>
+
+  </motion.div>
+</div>
+
     </section>
   );
 }

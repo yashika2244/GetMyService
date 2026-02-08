@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import signup from "../../assets/signup.gif";
+import { motion } from "framer-motion";
 import uploadImageToClodinary from "../../../utils/uploadCloudinary";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
+import { FiUser, FiMail, FiLock, FiMapPin, FiUpload } from "react-icons/fi";
 
 function CustomerSignUp() {
-  const [selectedfile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [uploading, setUploading] = useState(false);
 
@@ -18,31 +18,28 @@ function CustomerSignUp() {
     gender: "male",
     location: "",
   });
-  const [errorMessage, setErrorMessage] = useState(null);
+
   const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
-  const handleFileInputChange = async (event) => {
-    const file = event.target.files[0];
+  const handleFileInputChange = async (e) => {
+    const file = e.target.files[0];
     setUploading(true);
-
     try {
       const data = await uploadImageToClodinary(file);
       setPreviewUrl(data.url);
-      setSelectedFile(data.url);
       setFormData({ ...formData, photo: data.url });
-    } catch (error) {
-      setErrorMessage("Error uploading image, please try again.");
+    } catch {
+      toast.error("Image upload failed");
     } finally {
-      setUploading(false); // finish uploading
+      setUploading(false);
     }
   };
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async (e) => {
+    e.preventDefault();
     try {
       const res = await fetch(`${BASE_URL}/api/auth/register-customer`, {
         method: "POST",
@@ -50,154 +47,203 @@ function CustomerSignUp() {
         body: JSON.stringify({ ...formData, role: "customer" }),
       });
 
-      const { message } = await res.json();
-
-      if (!res.ok) {
-        throw new Error(message);
-      }
-        toast.success("Registration Successful! Please login.");
-
-      navigate("/login"); // Redirect to login
-    } catch (error) {
-      setErrorMessage(error.message);
-          toast.error(error.message || "Login failed. Try again.");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+      toast.success("Registration Successful!");
+      navigate("/login");
+    } catch (err) {
+      toast.error(err.message);
     }
   };
 
   return (
-    <section className="md:px-5 px-2 xl:px-0 mt-16 mb-28 md:mt-28 md:mb-32">
-      <div className="max-w-[1100px] md:mt-8 mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2">
-          <div className="hidden lg:block bg-sky-600 max-w-[500px] rounded-2xl">
-            <figure>
-              <img src={signup} alt="Signup" className="w-full rounded-md" />
-            </figure>
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 via-white to-sky-100 md:px-4 md:py-18 py-15"
+    >
+      <div className="w-full max-w-8xl grid grid-cols-1 lg:grid-cols-2 overflow-hidden shadow-2xl bg-white rounded-sm">
+
+        {/* LEFT IMAGE – FROM LEFT */}
+        <motion.div
+          initial={{ x: -120, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="hidden lg:flex relative"
+        >
+          <img
+            src="/images/signUp.png"
+            alt="signup"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-blue-900/70 via-blue-600/30 to-transparent" />
+
+          <div className="relative z-10 py-12 px-4 text-white flex flex-col justify-end">
+            <h2 className="text-4xl font-bold mb-4 drop-shadow-lg">
+              Join as a Customer 💙
+            </h2>
+            <p className="text-sky-100 text-lg">
+              Discover services, connect with experts, and get things done
+              effortlessly.
+            </p>
           </div>
+        </motion.div>
 
-          <div className="rounded-md border border-gray-200 p-2 lg:pl-16 md:py-8 ">
-            <h3 className="text-slate-900 text-[22px] md:text-[30px] leading-9 font-bold md:mb-6 mb-2 ">
-              Create a <span className="text-sky-600"> Customer account</span>
-            </h3>
+        {/* FORM – FROM RIGHT */}
+        <motion.div
+          initial={{ x: 120, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
+          className="p-8 md:p-12"
+        >
+          <h3 className="text-3xl font-bold text-gray-900 mb-2">
+            Create Account
+          </h3>
+          <p className="text-gray-500 mb-8">
+            It only takes a minute to get started
+          </p>
 
-            <form onSubmit={submitHandler}>
-              <div className="mb-5  md:text-[20px] text-[17px] ">
+          <motion.form
+            onSubmit={submitHandler}
+            className="space-y-5"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: {
+                transition: { staggerChildren: 0.08 },
+              },
+            }}
+          >
+            {/* INPUTS */}
+            {[
+              { icon: <FiUser />, name: "name", type: "text", placeholder: "Full Name" },
+              { icon: <FiMail />, name: "email", type: "email", placeholder: "Email Address" },
+              { icon: <FiLock />, name: "password", type: "password", placeholder: "Password" },
+              { icon: <FiMapPin />, name: "location", type: "text", placeholder: "Location" },
+            ].map((field, i) => (
+              <motion.div
+                key={i}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+                transition={{ duration: 0.4 }}
+                className="input-box"
+              >
+                {field.icon}
                 <input
-                  type="text"
-                  value={formData.name}
+                  type={field.type}
+                  name={field.name}
+                  placeholder={field.placeholder}
+                  value={formData[field.name]}
                   onChange={handleInputChange}
-                  placeholder="Full Name"
-                  name="name"
-                  className="w-full px-4 py-3 border-b border-[#0066ff61] rounded-md text-gray-600 outline-none "
                   required
                 />
-              </div>
+              </motion.div>
+            ))}
 
-              <div className="mb-5">
+            {/* GENDER + UPLOAD */}
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.4 }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleInputChange}
+                className="select-box"
+              >
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+
+              <label className="upload-btn">
+                {previewUrl ? (
+                  <img
+                    src={previewUrl}
+                    alt="preview"
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                ) : (
+                  <FiUpload />
+                )}
+                <span>{uploading ? "Uploading..." : "Upload Photo"}</span>
                 <input
-                  type="email"
-                  placeholder="Email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-3 border-b border-[#0066ff61] rounded-md text-gray-600 text-[20px] outline-none"
-                  required
+                  type="file"
+                  hidden
+                  accept=".jpg,.png,.jpeg,.avif"
+                  onChange={handleFileInputChange}
                 />
-              </div>
+              </label>
+            </motion.div>
 
-              <div className="mb-5">
-                <input
-                  type="password"
-                  placeholder="Password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  name="password"
-                  className="w-full px-4 py-3 border-b border-[#0066ff61] rounded-md text-gray-600 text-[20px] outline-none"
-                  required
-                />
-              </div>
-              <div className="mb-5">
-                <input
-                  type="text"
-                  placeholder="Location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  name="location"
-                  className="w-full px-4 py-3 border-b border-[#0066ff61] rounded-md text-gray-600 text-[20px] outline-none"
-                  required
-                />
-              </div>
+            {/* BUTTON */}
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.96 }}
+              disabled={uploading}
+              className="w-full py-3 rounded-xl text-lg font-semibold text-white
+              bg-[#0369a1] hover:bg-[#075985] transition"
+            >
+              Create Account
+            </motion.button>
 
-              <div className=" flex justify-between">
-                <label className="text-slate-900 font-bold md:text-[16px] text-[14px]">
-                  Gender:
-                  <select
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleInputChange}
-                    className="md:ml-3 md:px-4 py-2 md:text-[16px] text-[14px] text-gray-700 rounded-md outline-none"
-                  >
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                  </select>
-                </label>
-                <div className="mb-5 flex items-center gap-3">
-                  {previewUrl && (
-                    <figure className="md:w-[50px] md:h-[50px] w-[35px] h-[35px rounded-full border-2 border-sky-600 overflow-hidden">
-                      <img
-                        src={previewUrl}
-                        alt="Preview"
-                        className="w-full h-full object-cover"
-                      />
-                    </figure>
-                  )}
-
-                  <div className="relative w-[120px] h-[40px]">
-                    <input
-                      type="file"
-                      name="photo"
-                      id="customfile"
-                      onChange={handleFileInputChange}
-                      accept=".jpg, .png, .gif, .jpeg,.avif"
-                      className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-                    />
-                    <label
-                      htmlFor="customfile"
-                      className="absolute top-0 left-0 w-full h-full flex items-center md:text-[15px] text-[14px]  justify-center   ${uploading ? bg-blue-600 text-white font-bold rounded-lg  cursor-pointer hover:bg-blue-700 transition"
-                      disabled={uploading}
-                    >
-                      {uploading ? "Uploading..." : "Upload Picture"}
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-center ">
-                <button
-                  className="bg-red-600 hover:bg-red-700 text-white text-[20px] py-1 px-20 rounded-[10px] font-semibold transition-transform hover:scale-[0.95] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={uploading}
-                >
-                  {uploading ? "Sign Up" : "Sign up"}
-                </button>
-              </div>
-{/* 
-              {errorMessage && (
-                <p className="mt-3 text-red-600 text-center">{errorMessage}</p>
-              )} */}
-
-              <p className="mt-3 text-gray-500 text-center text-[14px]">
-                Already have an account?{" "}
-                <Link
-                  to="/login"
-                  className="text-sky-600 font-medium border-b ml-1 text-[15px]"
-                >
-                  Login
-                </Link>
-              </p>
-            </form>
-          </div>
-        </div>
+            <p className="text-center text-gray-500 text-sm">
+              Already have an account?
+              <Link to="/login" className="text-sky-700 ml-1 font-medium">
+                Login
+              </Link>
+            </p>
+          </motion.form>
+        </motion.div>
       </div>
-    </section>
+
+      {/* STYLES */}
+      <style>{`
+        .input-box {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 16px;
+          border-radius: 14px;
+          border: 1px solid #e5e7eb;
+          background: #fff;
+          transition: 0.3s;
+        }
+        .input-box:focus-within {
+          border-color: #0284c7;
+          box-shadow: 0 0 0 3px #bae6fd;
+        }
+        .select-box {
+          flex: 1;
+          padding: 14px;
+          border-radius: 14px;
+          border: 1px solid #e5e7eb;
+        }
+        .upload-btn {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 14px;
+          border-radius: 14px;
+          cursor: pointer;
+          background: #0369a1;
+          color: white;
+        }
+        .upload-btn:hover {
+          background: #075985;
+        }
+      `}</style>
+    </motion.section>
   );
 }
 

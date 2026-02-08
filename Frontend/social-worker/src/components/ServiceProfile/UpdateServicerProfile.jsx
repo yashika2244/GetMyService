@@ -1,90 +1,62 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BASE_URL } from "../../config";
 import uploadImageToClodinary from "../../../utils/uploadCloudinary";
 import { authContext } from "../../context/AppContext";
-import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaCamera, FaUser, FaMapMarkerAlt, FaBriefcase } from "react-icons/fa";
 
 function UpdateServicerProfile() {
   const { dispatch, token, user } = useContext(authContext);
-  const [uploading, setUploading] = useState(false);
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  const { id } = useParams(); // grabs :id from URL
+  const [uploading, setUploading] = useState(false);
+  const [previewSrc, setPreviewSrc] = useState(null);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    // password: "",
-    photo: null,
     gender: "",
-    // role: "service-provider",
     age: "",
-    TicketPrice: "",
-    about: "",
     specialization: "",
-    exprole: "",
     location: "",
+    TicketPrice: "",
     expDateStart: "",
     expDateEnd: "",
+    about: "",
+    photo: "",
   });
-  const [previewSrc, setPreviewSrc] = useState(null);
-  const navigate = useNavigate();
+
   useEffect(() => {
     if (user) {
-      setFormData({
-        name: user.name || "",
-        email: user.email || "",
-        // password: "",
-        photo: user.photo || null,
-        gender: user.gender || "",
-        // role: user.role || "service-provider",
-        age: user.age || "",
-        TicketPrice: user.TicketPrice || "",
-        about: user.about || "",
-        specialization: user.specialization || "",
-        exprole: user.exprole || "",
-        location: user.location || "",
-        expDateStart: user.expDateStart || "",
-        expDateEnd: user.expDateEnd || "",
-      });
-      setPreviewSrc(user.photo || null);
+      setFormData({ ...user });
+      setPreviewSrc(user.photo);
     }
   }, [user]);
 
-  const handleInputChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
-  const handleFileInputChange = async (event) => {
-    const file = event.target.files[0];
+  const handleFile = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
     setUploading(true);
-
-    //   if (file) {
-    //     const data = await uploadImageToClodinary(file);
-    //     setFormData({ ...formData, photo: data.url });
-    //     setPreviewSrc(data.url);
-    //   }
-    // };
-    if (file) {
-      try {
-        const data = await uploadImageToClodinary(file);
-        setFormData({ ...formData, photo: data.url });
-        setPreviewSrc(data.url);
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        toast.error("Image upload failed!");
-      } finally {
-        setUploading(false); // Uploading complete
-      }
-    } else {
-      setUploading(false); // No file selected, stop uploading
+    try {
+      const data = await uploadImageToClodinary(file);
+      setFormData({ ...formData, photo: data.url });
+      setPreviewSrc(data.url);
+      toast.success("Photo updated");
+    } catch {
+      toast.error("Upload failed");
+    } finally {
+      setUploading(false);
     }
   };
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async (e) => {
+    e.preventDefault();
     try {
       const res = await fetch(`${BASE_URL}/api/services/${id}`, {
         method: "PUT",
@@ -92,201 +64,145 @@ function UpdateServicerProfile() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        credentials: "include",
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json(); // get updated user data or message
-
+      const data = await res.json();
       if (res.ok) {
-        if (data.service) {
-          dispatch({ type: "UPDATE_USER", payload: data.service });
-          toast.success("Profile updated successfully!");
-          navigate(`/servicer-account/${data.service._id}`); // use updated id here
-          window.location.reload();
-        }
+        dispatch({ type: "UPDATE_USER", payload: data.service });
+        toast.success("Profile Updated");
+        navigate(`/servicer-account/${data.service._id}`);
       }
-    } catch (error) {
-      toast.error("Error updating profile");
-      console.error("Error in updating profile:", error);
+    } catch {
+      toast.error("Update failed");
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto md:mt-20  mt-12 md:p-10 p-4 bg-gradient-to-br from-white via-blue-50 to-blue-100 mb-5 rounded-3xl shadow-2xl">
-      <div className="flex  gap-5 md:gap-45 md:mb-3  ">
-        <FaArrowLeft
-          className="text-xl  md:ml-3 md:mb-0 mt-2 "
-          // onClick={() => navigate("/chat", { state: { name, photo, id } })}
-          onClick={() => navigate(-1)}
-        />
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex justify-center py-10 px-4">
+      <div className="w-full max-w-5xl bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden border border-gray-200">
 
-        <h2 className="text-3xl font-bold text-center text-sky-700 mb-6">
-          Update Your Profile
-        </h2>
-      </div>
+        {/* Top Gradient */}
+        <div className="h-26 bg-gradient-to-r from-blue-200 via-indigo-200 to-purple-200" />
 
-      <form onSubmit={submitHandler} className="space-y-8">
-        {/* Name, Email, Password */}
-        <div className="grid gap-6 md:grid-cols-3">
-          <input
-            type="text"
-            placeholder="Full Name"
-            name="name"
-            value={formData.name}
-            required
-            onChange={handleInputChange}
-            className="w-full px-6 py-4 rounded-xl border border-gray-300 bg-white placeholder-gray-400 text-gray-800 text-lg font-medium transition-shadow focus:outline-none focus:ring-1 focus:ring-blue-300 shadow-sm focus:shadow-md"
-          />
-          <input
-            type="email"
-            placeholder="Enter Your Email"
-            name="email"
-            value={formData.email}
-            required
-            onChange={handleInputChange}
-            className="w-full px-6 py-4 rounded-xl border border-gray-300 bg-white placeholder-gray-400 text-gray-800 text-lg font-medium transition-shadow focus:outline-none focus:ring-1 focus:ring-blue-400 shadow-sm focus:shadow-md"
-          />
-        </div>
+        {/* Header */}
+        <div className="px-8 -mt-14 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
 
-        {/* Age, Specialization, Ticket Price */}
-        <div className="grid gap-6 md:grid-cols-3">
-          <input
-            type="number"
-            placeholder="Age"
-            name="age"
-            value={formData.age}
-            required
-            onChange={handleInputChange}
-            className="w-full px-6 py-4 rounded-xl border border-gray-300 bg-white placeholder-gray-400 text-gray-800 text-lg font-medium transition-shadow focus:outline-none focus:ring-1 focus:ring-blue-300 shadow-sm focus:shadow-md"
-          />
-          <input
-            type="text"
-            placeholder="Specialization"
-            name="specialization"
-            value={formData.specialization}
-            required
-            onChange={handleInputChange}
-            className="w-full px-6 py-4 rounded-xl border border-gray-300 bg-white placeholder-gray-400 text-gray-800 text-lg font-medium transition-shadow focus:outline-none focus:ring-1 focus:ring-blue-400 shadow-sm focus:shadow-md"
-          />
-          <input
-            type="number"
-            placeholder="Ticket Price"
-            name="TicketPrice"
-            value={formData.TicketPrice}
-            required
-            onChange={handleInputChange}
-            className="w-full px-6 py-4 rounded-xl border border-gray-300 bg-white placeholder-gray-400 text-gray-800 text-lg font-medium transition-shadow focus:outline-none focus:ring-1 focus:ring-blue-400 shadow-sm focus:shadow-md"
-          />
-        </div>
-
-        {/* Experience Section */}
-        <h2 className="text-2xl font-semibold text-gray-900 mb-6 border-b border-blue-300 pb-2">
-          Experience Details
-        </h2>
-
-        <div className="grid gap-6 md:grid-cols-4">
-          <input
-            type="text"
-            placeholder="Location"
-            name="location"
-            value={formData.location}
-            required
-            onChange={handleInputChange}
-            className="px-5 py-4 rounded-xl border border-gray-300 bg-white placeholder-gray-400 text-gray-800 text-lg font-medium transition-shadow focus:outline-none focus:ring-1 focus:ring-blue-400 shadow-sm focus:shadow-md"
-          />
-          <input
-            type="date"
-            placeholder="Start date"
-            name="expDateStart"
-            value={formData.expDateStart}
-            required
-            onChange={handleInputChange}
-            className="px-5 py-4 rounded-xl border border-gray-300 bg-white placeholder-gray-400 text-gray-800 text-lg font-medium transition-shadow focus:outline-none focus:ring-1 focus:ring-blue-300 shadow-sm focus:shadow-md"
-          />
-          <input
-            type="date"
-            placeholder="End date"
-            name="expDateEnd"
-            value={formData.expDateEnd}
-            required
-            onChange={handleInputChange}
-            className="px-5 py-4 rounded-xl border border-gray-300 bg-white placeholder-gray-400 text-gray-800 text-lg font-medium transition-shadow focus:outline-none focus:ring-1 focus:ring-blue-300 shadow-sm focus:shadow-md"
-          />
-        </div>
-
-        {/* About Textarea */}
-        <textarea
-          rows={5}
-          placeholder="Enter a Paragraph About Yourself"
-          name="about"
-          value={formData.about}
-          required
-          onChange={handleInputChange}
-          className="w-full px-6 py-4 rounded-xl border border-gray-300 bg-white placeholder-gray-400 text-gray-800 text-lg font-medium resize-none transition-shadow focus:outline-none focus:ring-1 focus:ring-blue-300 shadow-sm focus:shadow-md"
-        />
-
-        {/* Profile Picture & Gender */}
-        <div className="flex  md:flex-row  items-center justify-between  md:gap-10">
-          <div className="flex items-center gap-2">
-            {previewSrc && (
-              <figure className="md:w-18 md:h-18 w-12 h-12  rounded-full border-2 border-blue-500 overflow-hidden shadow-lg">
-                <img
-                  src={previewSrc}
-                  alt="Profile Preview"
-                  className="w-full h-full object-cover"
-                />
-              </figure>
-            )}
-            <div className="relative">
-              <input
-                type="file"
-                name="photo"
-                id="customfile"
-                onChange={handleFileInputChange}
-                accept=".jpg, .png.,.jpeg, .avif ,.webp , .html"
-                className="absolute top-0 left-0 w-full h-full  opacity-0 cursor-pointer"
+          {/* Avatar */}
+          <div className="flex items-center gap-5">
+            <div className="relative group">
+              <img
+                src={previewSrc || "https://via.placeholder.com/120"}
+                alt="profile"
+                className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover"
               />
-              <label
-                htmlFor="customfile"
-                className="bg-gradient-to-b from-blue-400 to-blue-700  hover:from-blue-500 hover:to-blue-800 text-white font-semibold md:px-5 md:py-3 px-2 py-2 rounded-2xl cursor-pointer select-none shadow-md transition ${uploading ?  bg-blue-600 text-white font-bold rounded-lg md:text-[15px] text-[13px] cursor-pointer hover:bg-blue-700 transition"
-              >
-                {uploading ? "Uploading..." : "Upload Picture"}
 
-                {/* Update Picture */}
+              <label className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition">
+                <FaCamera className="text-white text-lg" />
+                <input type="file" hidden onChange={handleFile} />
               </label>
+            </div>
+
+            <div>
+              <h2 className="text-xl font-bold text-gray-800">{formData.name}</h2>
+              <p className="text-gray-500 text-sm">{formData.email}</p>
             </div>
           </div>
 
-          <label className="text-gray-900 font-semibold md:text-lg    flex items-center md:gap-4 gap-2 text-sm">
-            Gender
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleInputChange}
-              required
-              className="md:px-7 md:py-3 px-3 py-1 rounded-xl border border-gray-300 bg-white text-gray-800 md:text-lg font-medium focus:outline-none   shadow-sm transition"
-            >
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-          </label>
+          {/* Save */}
+      <button
+  onClick={submitHandler}
+  disabled={uploading}
+  className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 
+  hover:from-blue-700 hover:to-indigo-800 text-white px-7 py-2.5 rounded-xl shadow-lg 
+  font-semibold tracking-wide transition-all duration-300 cursor-pointer
+  hover:shadow-blue-300/40 hover:-translate-y-[1px] active:scale-95 
+  disabled:opacity-60 disabled:cursor-not-allowed"
+>
+  <span className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition duration-300 blur-xl"></span>
+
+  <span className="relative flex items-center justify-center gap-2">
+    {uploading && (
+      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+    )}
+    {uploading ? "Saving Changes..." : "Save Changes"}
+  </span>
+</button>
+
+
         </div>
 
-        {/* Submit Button */}
-        <div className="flex justify-center mt-6">
-        
-          <button
-            type="submit"
-            disabled={uploading} 
-            className={`bg-gradient-to-b from-green-500 to-green-700 hover:from-green-600 hover:to-green-700 text-white font-bold text-lg px-20 py-2 rounded-xl shadow-xl transition-transform transform hover:scale-105 ${
-              uploading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-          >
-            {uploading ? "Uploading" : "Update"}
-          </button>
-        </div>
-      </form>
+        {/* Form */}
+        <form className="p-8 space-y-6">
+
+          {/* Section Card */}
+          <div className="bg-gray-50 rounded-xl p-6 shadow-sm space-y-5">
+
+            <div className="grid md:grid-cols-2 gap-5">
+              <Input label="Full Name" name="name" value={formData.name} onChange={handleChange} icon={<FaUser />} />
+              <Input label="Age" type="number" name="age" value={formData.age} onChange={handleChange} />
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-5">
+              <Select label="Gender" name="gender" value={formData.gender} onChange={handleChange} />
+              <Input label="Location" name="location" value={formData.location} onChange={handleChange} icon={<FaMapMarkerAlt />} />
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-5">
+              <Input label="Specialization" name="specialization" value={formData.specialization} onChange={handleChange} icon={<FaBriefcase />} />
+              <Input label="Ticket Price" type="number" name="TicketPrice" value={formData.TicketPrice} onChange={handleChange} />
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-5">
+              <Input label="Start Date" type="date" name="expDateStart" value={formData.expDateStart} onChange={handleChange} />
+              <Input label="End Date" type="date" name="expDateEnd" value={formData.expDateEnd} onChange={handleChange} />
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-600 mb-1 block">About</label>
+              <textarea
+                rows={4}
+                name="about"
+                value={formData.about}
+                onChange={handleChange}
+                className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none"
+                placeholder="Write something about yourself..."
+              />
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+/* Reusable Input */
+function Input({ label, icon, ...props }) {
+  return (
+    <div>
+      <label className="text-sm text-gray-600 mb-1 block">{label}</label>
+      <div className="flex items-center border border-gray-200 rounded-lg bg-white px-3 focus-within:ring-2 focus-within:ring-blue-100">
+        {icon && <span className="text-gray-400 mr-2">{icon}</span>}
+        <input {...props} className="w-full py-2 outline-none bg-transparent" />
+      </div>
+    </div>
+  );
+}
+
+/* Gender Select */
+function Select({ label, ...props }) {
+  return (
+    <div>
+      <label className="text-sm text-gray-600 mb-1 block">{label}</label>
+      <select
+        {...props}
+        className="w-full px-3 py-2 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-blue-100 outline-none"
+      >
+        <option value="">Select Gender</option>
+        <option>Male</option>
+        <option>Female</option>
+      </select>
     </div>
   );
 }

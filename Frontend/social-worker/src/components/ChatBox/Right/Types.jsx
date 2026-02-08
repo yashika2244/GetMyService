@@ -1,47 +1,3 @@
-// import React, { useState } from "react";
-// import { IoMdSend } from "react-icons/io";
-// import UseSendMessage from "../../../context/UseSendMessage.js";
-
-// function Types() {
-//   const { loading, sendMessages } = UseSendMessage();
-//   const [message, setMessage] = useState("");
-
-
-// const handleSubmit = (e) => {
-//   e.preventDefault();
-//   if (!message.trim()) return; // empty guard
-//   sendMessages(message); 
-//   setMessage("");        
-// }
-
-//   return (
-//     <form
-//      onSubmit={handleSubmit}
-//     >
-//       <div className="flex md:space-x-4 h-[8vh] text-center bg-slate-700 w-full mt-3 ">
-//         <div className="md:w-[90%] md:pl-0 pl-2  w-full">
-//           <input
-//             type="text"
-//             value={message}
-//             onChange={(e) => {
-//               setMessage(e.target.value);
-//             }}
-//             placeholder="Type here"
-//             className="  text-white mt-1  py-2  px-3 md:ml-3 rounded-md w-full grow outline-none bg-slate-900"
-//           />
-//         </div>
-//         <button className="text-3xl mt-2 ml-1 rounded-full md:bg-gray-500 w-10 h-10 flex items-center justify-center">
-//           <IoMdSend className="text-2xl" />
-//         </button>
-//       </div>
-//     </form>
-//   );
-// }
-
-// export default Types;
-
-
-
 import React, { useState } from "react";
 import { IoMdSend } from "react-icons/io";
 import UseSendMessage from "../../../context/UseSendMessage.js";
@@ -58,22 +14,39 @@ function Types() {
   };
 
   return (
+    <form
+      onSubmit={handleSubmit}
+      className="w-full bg-blue-200 border-t border-blue-100 px-3 py-2"
+    >
+      <div className="flex items-center gap-2">
 
-<form onSubmit={handleSubmit} className="w-full bg-slate-700 p-2">
-  <div className="flex space-x-2">
-    <input
-      type="text"
-      value={message}
-      onChange={(e) => setMessage(e.target.value)}
-      placeholder="Type here"
-      className="flex-1 bg-slate-900 text-white p-2 rounded-md outline-none"
-    />
-    <button className="bg-gray-500 text-white w-10 h-10 flex items-center justify-center rounded-full">
-      <IoMdSend className="text-2xl" />
-    </button>
-  </div>
-</form>
+        {/* INPUT */}
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Type a message..."
+          className="flex-1 px-4 py-2 rounded-full border border-blue-100 bg-white text-gray-800 outline-none focus:ring-2 focus:ring-blue-200 placeholder:text-gray-400 text-sm"
+        />
 
+        {/* SEND BUTTON */}
+        <button
+          type="submit"
+          disabled={loading || !message.trim()}
+          className={`
+            w-10 h-10 flex items-center justify-center rounded-full text-white
+            transition-all duration-200 shadow-sm
+            ${
+              loading || !message.trim()
+                ? "bg-blue-300 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 active:scale-95"
+            }
+          `}
+        >
+          <IoMdSend className="text-lg" />
+        </button>
+      </div>
+    </form>
   );
 }
 

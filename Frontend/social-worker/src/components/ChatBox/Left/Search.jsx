@@ -1,19 +1,14 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState } from "react";
 import { IoSearchSharp } from "react-icons/io5";
 import UserGetAtll from "../../../context/UserGetAll";
 import useConversation from "../../../stateManage/useConversation.js";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { useAccounts } from "../../../context/AppContext.jsx";
 
 function Search() {
-  const [filteredAccounts, setFilteredAccounts] = useState([]);
   const [search, setSearch] = useState("");
-  const [allUsers] = UserGetAtll();
   const { setSelcetedConversation } = useConversation();
-  const { accounts, loading, error } = useAccounts();
-
-  const navigate = useNavigate();
+  const { accounts } = useAccounts();
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -32,20 +27,30 @@ function Search() {
   };
 
   return (
-    <div className=" px-2 py-1 md:py-3 pb-3 md:pb-2">
+    <div className="px-2 py-2">
       <form onSubmit={handleSearch}>
-        <div className="flex space-x-2">
-          <label className="border-[1px] rounded-lg flex items-center gap-2 w-[90%]  border-gray-700 bg-slate-900">
+        <div className="flex items-center gap-2">
+
+          {/* INPUT */}
+          <div className="flex items-center gap-2 w-full px-3 py-2 rounded-xl bg-white border border-blue-100 shadow-sm focus-within:ring-2 focus-within:ring-blue-200">
+
+            <IoSearchSharp className="text-blue-500 text-lg" />
+
             <input
               type="search"
-              className="grow  bg-transparent outline-none  text-slate-200 pl-2 "
-              placeholder="Search"
+              className="w-full bg-transparent outline-none text-gray-700 placeholder:text-gray-400 text-sm"
+              placeholder="Search users..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-          </label>
-          <button type="submit">
-            <IoSearchSharp className=" text-4xl p-2 hover:bg-gray-600 rounded-full duration-300" />
+          </div>
+
+          {/* BUTTON */}
+          <button
+            type="submit"
+            className="p-2.5 rounded-xl bg-blue-600 text-white shadow hover:bg-blue-700 active:scale-95 transition-all duration-200"
+          >
+            <IoSearchSharp className="text-lg" />
           </button>
         </div>
       </form>

@@ -6,16 +6,14 @@ import { useNavigate } from "react-router-dom";
 
 function ChatUser() {
   const { selcetedConversation, setSelcetedConversation } = useConversation();
-  const { socket, onlineUsers } = useSocketContext();
+  const { onlineUsers } = useSocketContext();
   const navigate = useNavigate();
-  const getOnlineUsers = (userId) => {
-    return onlineUsers.includes(userId) ? "Online" : "Offline";
-  };
+
+  const isOnline = onlineUsers.includes(selcetedConversation?._id);
 
   const handleNameClick = () => {
     if (!selcetedConversation) return;
 
-    // Assuming selcetedConversation.role exists and can be "user" or "service"
     if (selcetedConversation.role === "customer") {
       navigate(`/users-profile/${selcetedConversation._id}`);
     } else if (
@@ -23,41 +21,54 @@ function ChatUser() {
       selcetedConversation.role === "servicer"
     ) {
       navigate(`/service-profile/${selcetedConversation._id}`);
-    } else {
-      // fallback or unknown role
-      console.warn("Unknown user role:", selcetedConversation.role);
     }
   };
 
   return (
-    <div className="flex space-x-4 pl-5 md:pt-5 pt-2 pb-2  md:pb-3 bg-gray-900 hover:bg-gray-600 duration-300">
+    <div className="flex items-center gap-4 px-4 py-3 bg-white/80 backdrop-blur-xl border-b border-blue-100 shadow-sm">
+
+      {/* BACK BUTTON (MOBILE) */}
       <FaArrowLeft
-        className="md:hidden"
+        className="md:hidden text-gray-600 text-lg cursor-pointer hover:text-blue-600 transition"
         onClick={() => setSelcetedConversation(null)}
       />
 
-      <div>
-        {/* <div className="avatar online"> */}
-        <div className="md:w-14 md:h-14 w-12 h-12 rounded-full">
+      {/* AVATAR */}
+      <div className="relative">
+        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full overflow-hidden border border-blue-100 shadow-sm">
           <img
             src={
-              selcetedConversation.photo ||
+              selcetedConversation?.photo ||
               "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
             }
-            className="rounded-full w-full h-full object-cover"
+            alt="profile"
+            className="w-full h-full object-cover"
           />
         </div>
-        {/* </div> */}
+
+        {/* ONLINE DOT */}
+        <span
+          className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-white ${
+            isOnline ? "bg-green-500" : "bg-gray-300"
+          }`}
+        />
       </div>
-      <div>
-        <h1 className="md:text-xl font-[600] text-md" onClick={handleNameClick}>
-          {" "}
-          {selcetedConversation.name}
+
+      {/* USER INFO */}
+      <div className="flex flex-col">
+        <h1
+          className="text-[15px] md:text-lg font-semibold text-gray-800 cursor-pointer hover:text-blue-600 transition"
+          onClick={handleNameClick}
+        >
+          {selcetedConversation?.name}
         </h1>
-        {/* <h1 className="text-xl">yashu</h1> */}
-        <span className="md:text-sm text-[12px] text-gray-200 ">
-          {" "}
-          {getOnlineUsers(selcetedConversation._id)}
+
+        <span
+          className={`text-xs md:text-sm ${
+            isOnline ? "text-green-600" : "text-gray-400"
+          }`}
+        >
+          {isOnline ? "Online" : "Offline"}
         </span>
       </div>
     </div>

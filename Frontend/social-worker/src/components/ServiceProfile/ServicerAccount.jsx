@@ -50,108 +50,156 @@ const ServicerAccount = () => {
     .toFixed(1);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r md:mt-15 mt-12 from-gray-50 to-blue-50 md:py-10 md:px-4 px-3 flex flex-col items-center">
-      <div className="bg-white shadow-2xl rounded-xl w-full max-w-5xl p-8 flex flex-col md:flex-row items-center gap-10">
-        <img
-          src={user.photo || "https://via.placeholder.com/150"}
-          alt="Profile"
-          className="w-40 h-40 rounded-full object-cover border-4 border-blue-400 shadow-md"
-        />
+<div className="min-h-screen bg-gray-100 md:mt-14 mt-12 px-3 py-6 flex justify-center">
 
-        <div className="flex-1 text-center md:text-left">
-          <h1 className="text-4xl font-bold text-gray-800 flex items-center gap-2 justify-center md:justify-start">
-            {user.name} <MdOutlineVerified className="text-purple-600" />
-          </h1>
-          <p className="text-gray-500 mt-1 text-sm flex items-center gap-1 justify-center md:justify-start">
-            <FaLocationDot /> {user.location || "Location not specified"}
-          </p>
+  <div className="w-full max-w-6xl grid md:grid-cols-3 gap-6">
 
-        
+    {/* ===== LEFT PANEL ===== */}
+<div className="bg-white rounded-xl p-6 shadow-md relative overflow-hidden">
 
-          <div className="mt-6">
-            <h2 className="text-xl font-semibold mb-2 text-gray-700">About</h2>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              {expanded ? aboutText : shortText}
-              {aboutText.length > 270 && (
-                <button
-                  onClick={() => setExpanded(!expanded)}
-                  className="ml-2 text-blue-500 text-xs hover:underline"
-                >
-                  {expanded ? "See less" : "See more"}
-                </button>
-              )}
-            </p>
-          </div>
+  {/* subtle background accent */}
+  <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-blue-50 to-indigo-50"></div>
 
-          <div className="mt-4">
-            <h2 className="text-xl font-semibold mb-2 text-gray-700">
-              Experience
-            </h2>
-            <p className="text-gray-600 text-sm">{totalExperience} years</p>
-          </div>
+  <div className="relative flex flex-col items-center text-center">
 
-         
-          <div className="mt-6 flex justify-center md:justify-start gap-4">
-            <button
-              onClick={() => navigate(`/update_service/${user._id}`)}
-              className="px-6 py-2 bg-gray-200 text-gray-700 rounded-full shadow hover:bg-gray-300 transition-all duration-300"
-            >
-              <FaUserEdit className="inline mr-2" /> Edit Profile
-            </button>
+    {/* profile image with ring */}
+    <div className="relative -mt-2">
+      <img
+        src={user.photo || "https://via.placeholder.com/150"}
+        alt="Profile"
+        className="w-28 h-28 rounded-full object-cover shadow-md ring-4 ring-white"
+      />
+    </div>
 
-            <button
-              onClick={logoutHandler}
-              className="px-6 py-2 bg-red-500 text-white rounded-full shadow hover:bg-red-600 transition-all duration-300"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
+    {/* name */}
+    <h2 className="mt-3 text-lg font-semibold text-gray-800 flex items-center gap-1">
+      {user.name}
+      <MdOutlineVerified className="text-blue-500" />
+    </h2>
+
+    {/* location */}
+    <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
+      <FaLocationDot /> {user.location || "Location not specified"}
+    </p>
+
+    {/* stats row */}
+    <div className="mt-4 w-full grid grid-cols-2 gap-3">
+      <div className="bg-gray-50 rounded-lg py-2">
+        <p className="text-xs text-gray-500">Experience</p>
+        <p className="font-semibold text-gray-700">
+          {totalExperience} yrs
+        </p>
       </div>
 
-      <div className="w-full max-w-5xl mt-12">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">
-          Similar Professionals
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {accounts
-            .filter((profile) => profile._id !== user._id)
-            .map((profile) => (
-              <div
-                key={profile._id}
-                className="bg-white shadow-md rounded-lg p-5 flex flex-col items-center hover:shadow-xl transition"
-              >
+      <div className="bg-gray-50 rounded-lg py-2">
+        <p className="text-xs text-gray-500">Profile</p>
+        <p className="font-semibold text-gray-700">Active</p>
+      </div>
+    </div>
+
+    {/* divider */}
+    <div className="w-full h-px bg-gray-200 my-5"></div>
+
+    {/* Buttons */}
+    <div className="w-full flex flex-col gap-2">
+
+      <button
+        onClick={() => navigate(`/update_service/${user._id}`)}
+        className="w-full py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition"
+      >
+        <FaUserEdit className="inline mr-1" />
+        Edit Profile
+      </button>
+
+      <button
+        onClick={logoutHandler}
+        className="w-full py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition"
+      >
+        Logout
+      </button>
+    </div>
+  </div>
+</div>
+
+    {/* ===== CENTER PANEL ===== */}
+    <div className="md:col-span-2 bg-white rounded-xl p-6 shadow-md">
+
+      <h3 className="text-lg font-semibold text-gray-800 mb-3">
+        About Professional
+      </h3>
+
+      <p className="text-sm text-gray-600 leading-relaxed">
+        {expanded ? aboutText : shortText}
+        {aboutText.length > 270 && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="ml-2 text-blue-600 text-xs hover:underline"
+          >
+            {expanded ? "See less" : "See more"}
+          </button>
+        )}
+      </p>
+
+      {/* Divider */}
+      <div className="my-6 h-[1px] bg-gray-200 rounded"></div>
+
+      {/* Similar */}
+      <h3 className="text-lg font-semibold text-gray-800 mb-4">
+        Similar Professionals
+      </h3>
+
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        {accounts
+          .filter((profile) => profile._id !== user._id)
+          .map((profile) => (
+            <div
+              key={profile._id}
+              className="bg-gray-50 rounded-lg p-3 hover:shadow-sm transition"
+            >
+              <div className="flex items-center gap-2">
+
                 <img
                   src={profile.photo || "https://via.placeholder.com/100"}
                   alt={profile.name}
-                  className="w-20 h-20 rounded-full object-cover mb-3 border-2 border-gray-200"
+                  className="w-12 h-12 rounded-full object-cover"
                 />
-                <p
-                  onClick={() => navigate(`/Service-profile/${profile._id}`)}
-                  className="text-blue-600 font-semibold cursor-pointer hover:underline text-center"
-                >
-                  {profile.name}
-                </p>
-                <p className="text-xs text-gray-500 mt-1 text-center">
-                  {profile.about || "No details"}
-                </p>
-                <button
-                  onClick={() => {
-                    setSelcetedConversation(profile);
-                    navigate("/msg");
-                  }}
-                  className="mt-3 px-4 py-1 bg-blue-500 text-white text-xs rounded-full hover:bg-blue-600"
-                >
-                  Message
-                </button>
+
+                <div>
+                  <p
+                    onClick={() => navigate(`/Service-profile/${profile._id}`)}
+                    className="text-sm font-semibold cursor-pointer hover:text-blue-600"
+                  >
+                    {profile.name}
+                  </p>
+
+                  <p className="text-xs text-gray-500 line-clamp-1">
+                    {profile.about || "No details"}
+                  </p>
+                </div>
               </div>
-            ))}
-          {accounts.length <= 1 && (
-            <p className="text-sm text-gray-500">No other profiles found.</p>
-          )}
-        </div>
+
+              <button
+                onClick={() => {
+                  setSelcetedConversation(profile);
+                  navigate("/msg");
+                }}
+                className="mt-2 w-full py-1.5 text-xs bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+              >
+                Message
+              </button>
+            </div>
+          ))}
+
+        {accounts.length <= 1 && (
+          <p className="text-sm text-gray-500">No other profiles found.</p>
+        )}
       </div>
     </div>
+  </div>
+</div>
+
+
   );
 };
 

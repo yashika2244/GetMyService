@@ -1,56 +1,92 @@
-
 @import "tailwindcss";
 
-@layer components{
+@layer components {
 
+  .header {
+    @apply bg-[url('./assets/header-bg.png')] bg-no-repeat bg-center bg-cover w-full;
+  }
 
-    .header{
-        @apply bg-[url('./assets/header-bg.png')] bg-no-repeat bg-center bg-cover w-full
-    }
-    .hero_container{
-        @apply bg-[url('./assets/hero-bg.png')] bg-no-repeat bg-center bg-cover w-full
-    }
-    .feature_container{
-        @apply bg-[url('./assets/hero-bg.png')] bg-no-repeat bg-center bg-cover
-    }
+  .hero_container {
+    @apply bg-[url('./assets/hero-bg.png')] bg-no-repeat bg-center bg-cover w-full;
+  }
+
+  .feature_container {
+    @apply bg-[url('./assets/hero-bg.png')] bg-no-repeat bg-center bg-cover;
+  }
 }
 
 
-.flex-userContainer  ::-webkit-scrollbar {
-    display: none;
+/* ================= HIDE SCROLLBAR (GLOBAL) ================= */
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
-/* Only Chat List div scrollbar */
+.no-scrollbar {
+  -ms-overflow-style: none;   /* IE / Edge */
+  scrollbar-width: none;      /* Firefox */
+}
+
+
+/* ================= USER LIST SCROLL HIDE ================= */
+
+.flex-userContainer::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* ================= CHAT MESSAGE SCROLL (THIN) ================= */
+
 .chat-scroll::-webkit-scrollbar {
-  width: 3px;
+  width: 4px;
 }
 
 .chat-scroll::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: transparent;
 }
 
 .chat-scroll::-webkit-scrollbar-thumb {
-  background-color: #64748b;
-  border-radius: 4px;
-}
-
-
-/* Only Chat List div scrollbar */
-.custom-scroll::-webkit-scrollbar {
-  width: 3px;
-}
-
-.custom-scroll::-webkit-scrollbar-track {
- background: #c1c6ce;
-  /* background: #0f172a; */
-
-}
-
-.custom-scroll::-webkit-scrollbar-thumb {
-  background-color:  #868e99;
+  background: rgba(37, 99, 235, 0.35);  /* Blue theme */
   border-radius: 10px;
 }
 
+.chat-scroll:hover::-webkit-scrollbar-thumb {
+  background: rgba(37, 99, 235, 0.6);
+}
+
+
+/* ================= CUSTOM SCROLL (SOFT BLUE) ================= */
+
+.custom-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #e5edff; /* soft blue */
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #93c5fd; /* blue-300 */
+  border-radius: 10px;
+}
+
+.custom-scroll:hover::-webkit-scrollbar-thumb {
+  background: #60a5fa; /* blue-400 */
+}
+
+
+/* ================= SMOOTH SCROLL FIX ================= */
+
 html, body {
-  scroll-behavior: auto;
+  scroll-behavior: smooth;
+}
+/* Remove ALL focus outlines */
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove mobile tap highlight */
+* {
+  -webkit-tap-highlight-color: transparent;
 }

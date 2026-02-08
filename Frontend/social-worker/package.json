@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.17",
+    "browser-image-compression": "^2.0.2",
     "express": "^5.1.0",
     "framer-motion": "^12.27.1",
     "jwt-decode": "^4.0.0",

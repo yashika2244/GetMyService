@@ -35,83 +35,119 @@ const AllServiceProfile = () => {
   }, 0).toFixed(1);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-gray-50 to-blue-50 py-10 px-4 flex flex-col items-center">
-      <button
-        onClick={() => navigate(-1)}
-        className="self-start mb-8 text-sm text-blue-700 hover:underline flex items-center gap-1"
-      >
-        <span>&larr;</span> Back
-      </button>
+    <div className="min-h-screen bg-gray-100 py-8 px-3 flex flex-col items-center">
 
-      <div className="bg-white shadow-2xl rounded-xl w-full max-w-5xl p-8 flex flex-col md:flex-row items-center gap-10">
-        <img
-          src={photo || "https://via.placeholder.com/150"}
-          alt="Profile"
-          className="w-40 h-40 rounded-full object-cover border-4 border-blue-400 shadow-md"
-        />
+  {/* Back Button */}
+  <button
+    onClick={() => navigate(-1)}
+    className="w-full max-w-6xl mb-4 text-sm text-blue-600 hover:underline"
+  >
+    ← Back
+  </button>
 
-        <div className="flex-1 text-center md:text-left">
-          <h1 className="text-4xl font-bold text-gray-800">{name}</h1>
-          <p className="text-gray-500 mt-1 text-sm">{location || "Location not specified"}</p>
+  <div className="w-full max-w-6xl grid md:grid-cols-3 gap-6">
 
-          <button
-            onClick={() => {
-              setSelcetedConversation(profile);
-              navigate("/msg");
-            }}
-            className="mt-4 px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-full shadow hover:scale-105 transition"
-          >
-            Message {name}
-          </button>
+    {/* ===== LEFT PANEL ===== */}
+    <div className="bg-white rounded-xl p-6 shadow-md flex flex-col items-center text-center">
 
-          <div className="mt-6">
-            <h2 className="text-xl font-semibold mb-2 text-gray-700">About</h2>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              {about || "No about information provided."}
-            </p>
-          </div>
+      <img
+        src={photo || "https://via.placeholder.com/150"}
+        alt="Profile"
+        className="w-32 h-32 rounded-full object-cover shadow-sm"
+      />
 
-          <div className="mt-4">
-            <h2 className="text-xl font-semibold mb-2 text-gray-700">Experience</h2>
-            <p className="text-gray-600 text-sm">{totalExperience} years</p>
-          </div>
-        </div>
+      <h2 className="mt-3 text-lg font-semibold text-gray-800">{name}</h2>
+
+      <p className="text-sm text-gray-500 mt-1">
+        {location || "Location not specified"}
+      </p>
+
+      <div className="mt-3">
+        <p className="text-xs text-gray-500">Experience</p>
+        <p className="font-semibold text-gray-700">{totalExperience} Years</p>
       </div>
 
-      <div className="w-full max-w-5xl mt-12">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">Similar Professionals</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {accounts.filter(user => user._id !== id).map(user => (
-            <div key={user._id} className="bg-white shadow-md rounded-lg p-5 flex flex-col items-center hover:shadow-xl transition">
-              <img
-                src={user.photo || "https://via.placeholder.com/100"}
-                alt="Other User"
-                className="w-20 h-20 rounded-full object-cover mb-3 border-2 border-gray-200"
-              />
-              <p
-                onClick={() => navigate(`/Service-profile/${user._id}`)}
-                className="text-blue-600 font-semibold cursor-pointer hover:underline text-center"
-              >
-                {user.name}
-              </p>
-              <p className="text-xs text-gray-500 mt-1 text-center">{user.about || "No details"}</p>
+      <button
+        onClick={() => {
+          setSelcetedConversation(profile);
+          navigate("/msg");
+        }}
+        className="mt-4 w-full py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition"
+      >
+        Message {name}
+      </button>
+    </div>
+
+    {/* ===== RIGHT PANEL ===== */}
+    <div className="md:col-span-2 bg-white rounded-xl p-6 shadow-md">
+
+      <h3 className="text-lg font-semibold text-gray-800 mb-3">
+        About Professional
+      </h3>
+
+      <p className="text-sm text-gray-600 leading-relaxed">
+        {about || "No about information provided."}
+      </p>
+
+      {/* Divider */}
+      <div className="my-6 h-[1px] bg-gray-200 rounded"></div>
+
+      {/* Similar Professionals */}
+      <h3 className="text-lg font-semibold text-gray-800 mb-4">
+        Similar Professionals
+      </h3>
+
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        {accounts
+          .filter((user) => user._id !== id)
+          .map((user) => (
+            <div
+              key={user._id}
+              className="bg-gray-50 rounded-lg p-3 hover:shadow-sm transition"
+            >
+              <div className="flex items-center gap-2">
+
+                <img
+                  src={user.photo || "https://via.placeholder.com/100"}
+                  alt={user.name}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+
+                <div>
+                  <p
+                    onClick={() => navigate(`/Service-profile/${user._id}`)}
+                    className="text-sm font-semibold cursor-pointer hover:text-blue-600"
+                  >
+                    {user.name}
+                  </p>
+
+                  <p className="text-xs text-gray-500 line-clamp-1">
+                    {user.about || "No details"}
+                  </p>
+                </div>
+              </div>
+
               <button
                 onClick={() => {
                   setSelcetedConversation(user);
                   navigate("/msg");
                 }}
-                className="mt-3 px-4 py-1 bg-blue-500 text-white text-xs rounded-full hover:bg-blue-600"
+                className="mt-2 w-full py-1.5 text-xs bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
               >
                 Message
               </button>
             </div>
           ))}
-          {accounts.length <= 1 && (
-            <p className="text-sm text-gray-500">No other profiles found.</p>
-          )}
-        </div>
+
+        {accounts.length <= 1 && (
+          <p className="text-sm text-gray-500">No other profiles found.</p>
+        )}
       </div>
     </div>
+  </div>
+</div>
+
   );
 };
 
