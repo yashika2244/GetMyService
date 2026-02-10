@@ -69,35 +69,53 @@ function Header() {
         </ul>
 
         {/* RIGHT ACTIONS */}
-        {!user ? (
-          <button
-            onClick={() => navigate("/login")}
-            className="hidden md:block bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition"
-          >
-            Book Now
-          </button>
-        ) : (
-          <div className="hidden md:flex items-center gap-4">
-            <IoChatbubbleEllipsesOutline
-              className="text-2xl text-gray-600 hover:text-blue-600 cursor-pointer"
-              onClick={() => navigate("/msg")}
-            />
+   {!user ? (
+  <button
+    onClick={() => navigate("/login")}
+    className="hidden md:block bg-blue-600 text-white px-6 py-2 rounded-full font-semibold
+               hover:bg-blue-700 active:scale-[0.97]
+               shadow-sm hover:shadow-md
+               transition duration-200"
+  >
+    Book Now
+  </button>
+) : (
+  <div className="hidden md:flex items-center gap-4">
 
-            <div
-              onClick={handleProfileClick}
-              className="w-9 h-9 rounded-full overflow-hidden border cursor-pointer"
-            >
-              <img
-                src={
-                  user?.photo ||
-                  "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
-                }
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        )}
+    {/* Chat Icon */}
+    <div className="relative group cursor-pointer" onClick={() => navigate("/msg")}>
+      <IoChatbubbleEllipsesOutline
+        className="text-2xl text-gray-600 group-hover:text-blue-600 transition"
+      />
+
+      {/* soft glow */}
+      <span className="absolute inset-0 rounded-full bg-blue-400/10 blur-md opacity-0 group-hover:opacity-100 transition"></span>
+    </div>
+
+    {/* Avatar */}
+    <div
+      onClick={handleProfileClick}
+      className="relative w-9 h-9 rounded-full overflow-hidden cursor-pointer
+                 border border-gray-200
+                 hover:ring-2 hover:ring-blue-500/60
+                 shadow-sm hover:shadow-md
+                 transition duration-200"
+    >
+      <img
+        src={
+          user?.photo ||
+          "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
+        }
+        alt="Profile"
+        className="w-full h-full object-cover"
+      />
+
+      {/* optional online indicator */}
+      <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full"></span>
+    </div>
+  </div>
+)}
+
 
         {/* MOBILE MENU ICON */}
         <button

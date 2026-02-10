@@ -1,4 +1,3 @@
-
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../config";
@@ -7,6 +6,7 @@ import { authContext } from "../../context/AppContext";
 import { toast } from "react-toastify";
 import { FaUserCircle } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa6";
+import { motion } from "framer-motion";
 
 function UpdateUser() {
   const { user, token, dispatch } = useContext(authContext);
@@ -79,15 +79,11 @@ function UpdateUser() {
       });
 
       const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to update profile.");
-      }
+      if (!res.ok) throw new Error(data.message || "Failed to update profile.");
 
       dispatch({ type: "UPDATE_USER", payload: data.updatedUser });
       toast.success("Profile updated successfully!");
-      // navigate(`/update_user/${data.updatedUser._id}`);
-      navigate(`/User-profile/${user._id}`)
+      navigate(`/User-profile/${user._id}`);
     } catch (error) {
       toast.error(error.message);
     } finally {
@@ -95,116 +91,158 @@ function UpdateUser() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-r from-sky-100 to-blue-200 flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-2xl shadow-lg rounded-xl p-8 mt-10">
-        <div className="flex  gap-5 md:gap-30 ">
-          <FaArrowLeft
-            className="text-xl  md:ml-3 md:mb-0 mt-2 "
-            // onClick={() => navigate("/chat", { state: { name, photo, id } })}
-            onClick={() => navigate(-1)}
-          />
+return (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.35 }}
+    className="min-h-screen bg-gradient-to-b from-blue-50 via-[#f8fbff] to-blue-100 flex justify-center px-4"
+  >
+    <div className="w-full max-w-3xl mt-20">
 
-          <h2 className="text-3xl font-bold text-center text-sky-700 mb-6">
-            Update Your Profile
-          </h2>
+      {/* Desktop Back */}
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="hidden md:flex fixed top-20 left-6 items-center gap-2 z-50
+        bg-white/90 backdrop-blur-md border border-blue-100
+        px-3 py-2 rounded-xl shadow-sm hover:shadow-md transition group cursor-pointer"
+        onClick={() => navigate(-1)}
+      >
+        <FaArrowLeft size={16} className="text-blue-600" />
+        <span className="text-sm font-medium text-gray-700">
+          Back to Profile
+        </span>
+      </motion.div>
+
+      {/* Mobile Back */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="md:hidden sticky top-3 z-40 px-3 mb-2"
+        onClick={() => navigate(-1)}
+      >
+        <div className="flex items-center gap-2 bg-white/90 backdrop-blur-md border border-blue-100 px-3 py-2 rounded-xl shadow-sm cursor-pointer">
+          <FaArrowLeft size={16} className="text-blue-600" />
+          <span className="text-sm font-medium text-gray-700">
+            Back to Profile
+          </span>
         </div>
+      </motion.div>
 
-        <div className="flex flex-col items-center mb-6">
-          {previewSrc ? (
-            <img
-              src={previewSrc}
-              alt="Profile"
-              className="w-24 h-24 rounded-full object-cover border-4 border-blue-500 shadow"
-            />
-          ) : (
-            <FaUserCircle className="w-24 h-24 text-gray-400" />
-          )}
+      {/* Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="bg-white rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-blue-100 p-7"
+      >
+        {/* Profile Photo */}
+        <div className="flex flex-col items-center mb-7">
+          <motion.div
+            whileHover={{ scale: 1.04 }}
+            transition={{ type: "spring", stiffness: 200 }}
+            className="relative"
+          >
+            {previewSrc ? (
+              <img
+                src={previewSrc}
+                alt="Profile"
+                className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-lg"
+              />
+            ) : (
+              <FaUserCircle className="w-28 h-28 text-gray-300" />
+            )}
 
-          <label className="mt-3 cursor-pointer relative inline-block text-white font-medium bg-blue-600 px-4 py-2 rounded-md hover:bg-blue-700 transition">
-            {imageUploading ? "Uploading..." : "Change Picture"}
+            <div className="absolute inset-0 rounded-full ring-2 ring-blue-200"></div>
+          </motion.div>
+
+          <label className="mt-4 cursor-pointer text-sm font-medium text-blue-600 hover:text-blue-700 transition">
+            {imageUploading ? "Uploading..." : "Change profile photo"}
             <input
               type="file"
               accept="image/*"
               onChange={handleFileInputChange}
-              className="absolute inset-0 opacity-0 cursor-pointer"
+              className="hidden"
             />
           </label>
         </div>
 
-        <form onSubmit={submitHandler} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              value={formData.name}
-              onChange={handleInputChange}
-              required
-              className="p-3 rounded-md border  border-gray-300  focus:ring-1 focus:ring-sky-300 outline-none"
-            />
+        {/* Form */}
+        <motion.form
+          onSubmit={submitHandler}
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.06 },
+            },
+          }}
+          className="space-y-5"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-              className="p-3 rounded-md border  border-gray-300  focus:ring-1 focus:ring-sky-300 outline-none"
-            />
+            <MotionInput label="Full Name" name="name" value={formData.name} onChange={handleInputChange} />
+            <MotionInput label="Email" name="email" type="email" value={formData.email} onChange={handleInputChange} />
+            <MotionInput label="Age" name="age" type="number" value={formData.age} onChange={handleInputChange} />
+            <MotionInput label="Location" name="location" value={formData.location} onChange={handleInputChange} />
 
-            <input
-              type="number"
-              name="age"
-              placeholder="Age"
-              value={formData.age}
-              onChange={handleInputChange}
-              required
-              className="p-3 rounded-md border  border-gray-300  focus:ring-1 focus:ring-sky-300 outline-none"
-            />
+            <motion.div variants={inputAnim}>
+              <label className="text-sm text-gray-600">Gender</label>
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleInputChange}
+                className="w-full mt-1 p-3 border border-gray-200 rounded-xl bg-white focus:ring-2 focus:ring-blue-400 outline-none"
+              >
+                <option value="">Select gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+            </motion.div>
 
-            <input
-              type="text"
-              name="location"
-              placeholder="Location"
-              value={formData.location}
-              onChange={handleInputChange}
-              required
-              className="p-3 rounded-md border  border-gray-300  focus:ring-1 focus:ring-sky-300 outline-none"
-            />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleInputChange}
-              required
-              className="p-3 rounded-md border  border-gray-300  text-gray-700 bg-white focus:ring-1 focus:ring-sky-300 outline-none"
-            >
-              <option value="">Select Gender</option>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
-            </select>
-          </div>
-
-          <button
+          {/* Submit */}
+          <motion.button
+            whileTap={{ scale: 0.97 }}
             type="submit"
             disabled={updatingProfile}
-            className={`w-full py-3 text-white font-semibold rounded-md transition ${
+            className={`w-full py-3 rounded-xl text-white font-medium transition ${
               updatingProfile
-                ? "bg-gray-500 cursor-not-allowed"
-                : "bg-green-600 hover:bg-green-700"
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 shadow hover:shadow-lg"
             }`}
           >
-            {updatingProfile ? "Updating..." : "Update Profile"}
-          </button>
-        </form>
-      </div>
+            {updatingProfile ? "Updating Profile..." : "Save Changes"}
+          </motion.button>
+        </motion.form>
+      </motion.div>
     </div>
-  );
+  </motion.div>
+);
+
+
 }
+
+/* Reusable Input */
+const inputAnim = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const MotionInput = ({ label, ...props }) => (
+  <motion.div variants={inputAnim}>
+    <label className="text-sm text-gray-600">{label}</label>
+    <input
+      {...props}
+      className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+      required
+    />
+  </motion.div>
+);
+
 
 export default UpdateUser;

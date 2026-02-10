@@ -5,6 +5,7 @@ import uploadImageToClodinary from "../../../utils/uploadCloudinary";
 import { authContext } from "../../context/AppContext";
 import { toast } from "react-toastify";
 import { FaCamera, FaUser, FaMapMarkerAlt, FaBriefcase } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 function UpdateServicerProfile() {
   const { dispatch, token, user } = useContext(authContext);
@@ -34,6 +35,27 @@ function UpdateServicerProfile() {
       setPreviewSrc(user.photo);
     }
   }, [user]);
+
+  /* ---------- Smooth Motion ---------- */
+
+  const smooth = {
+    type: "spring",
+    stiffness: 60,
+    damping: 18,
+    mass: 0.6,
+  };
+
+  const fade = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    transition: { duration: 0.6, ease: "easeOut" },
+  };
+
+  const slideUp = {
+    initial: { opacity: 0, y: 18 },
+    animate: { opacity: 1, y: 0 },
+    transition: smooth,
+  };
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -79,9 +101,14 @@ function UpdateServicerProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex justify-center py-10 px-4">
-      <div className="w-full max-w-5xl bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden border border-gray-200">
-
+    <motion.div
+      {...fade}
+      className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 flex justify-center py-10 px-4"
+    >
+      <motion.div
+        {...slideUp}
+        className="w-full max-w-5xl bg-white/90 backdrop-blur rounded-3xl shadow-xl overflow-hidden border border-gray-200"
+      >
         {/* Top Gradient */}
         <div className="h-26 bg-gradient-to-r from-blue-200 via-indigo-200 to-purple-200" />
 
@@ -90,7 +117,10 @@ function UpdateServicerProfile() {
 
           {/* Avatar */}
           <div className="flex items-center gap-5">
-            <div className="relative group">
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              className="relative group"
+            >
               <img
                 src={previewSrc || "https://via.placeholder.com/120"}
                 alt="profile"
@@ -101,7 +131,7 @@ function UpdateServicerProfile() {
                 <FaCamera className="text-white text-lg" />
                 <input type="file" hidden onChange={handleFile} />
               </label>
-            </div>
+            </motion.div>
 
             <div>
               <h2 className="text-xl font-bold text-gray-800">{formData.name}</h2>
@@ -109,35 +139,33 @@ function UpdateServicerProfile() {
             </div>
           </div>
 
-          {/* Save */}
-      <button
-  onClick={submitHandler}
-  disabled={uploading}
-  className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 
-  hover:from-blue-700 hover:to-indigo-800 text-white px-7 py-2.5 rounded-xl shadow-lg 
-  font-semibold tracking-wide transition-all duration-300 cursor-pointer
-  hover:shadow-blue-300/40 hover:-translate-y-[1px] active:scale-95 
-  disabled:opacity-60 disabled:cursor-not-allowed"
->
-  <span className="absolute inset-0 bg-white/20 opacity-0 hover:opacity-100 transition duration-300 blur-xl"></span>
-
-  <span className="relative flex items-center justify-center gap-2">
-    {uploading && (
-      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-    )}
-    {uploading ? "Saving Changes..." : "Save Changes"}
-  </span>
-</button>
-
-
+          {/* Save Button */}
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            transition={{ duration: 0.15 }}
+            onClick={submitHandler}
+            disabled={uploading}
+            className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 
+            hover:from-blue-700 hover:to-indigo-800 text-white px-7 py-2.5 rounded-xl shadow-lg 
+            font-semibold tracking-wide transition-all duration-300 cursor-pointer
+            disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            <span className="relative flex items-center justify-center gap-2">
+              {uploading && (
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              )}
+              {uploading ? "Saving Changes..." : "Save Changes"}
+            </span>
+          </motion.button>
         </div>
 
         {/* Form */}
         <form className="p-8 space-y-6">
-
-          {/* Section Card */}
-          <div className="bg-gray-50 rounded-xl p-6 shadow-sm space-y-5">
-
+          <motion.div
+            {...slideUp}
+            transition={{ ...smooth, delay: 0.05 }}
+            className="bg-gray-50 rounded-xl p-6 shadow-sm space-y-5"
+          >
             <div className="grid md:grid-cols-2 gap-5">
               <Input label="Full Name" name="name" value={formData.name} onChange={handleChange} icon={<FaUser />} />
               <Input label="Age" type="number" name="age" value={formData.age} onChange={handleChange} />
@@ -166,18 +194,16 @@ function UpdateServicerProfile() {
                 value={formData.about}
                 onChange={handleChange}
                 className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none"
-                placeholder="Write something about yourself..."
               />
             </div>
-
-          </div>
+          </motion.div>
         </form>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
-/* Reusable Input */
+/* Input */
 function Input({ label, icon, ...props }) {
   return (
     <div>
@@ -190,7 +216,7 @@ function Input({ label, icon, ...props }) {
   );
 }
 
-/* Gender Select */
+/* Select */
 function Select({ label, ...props }) {
   return (
     <div>
