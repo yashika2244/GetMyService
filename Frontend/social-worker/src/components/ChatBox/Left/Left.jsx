@@ -24,7 +24,6 @@ function Left() {
         </div>
       </div>
 
-      {/* USER LIST — Scrollbar Hidden */}
       <div className="flex-1 overflow-y-auto no-scrollbar px-2 py-2 space-y-1">
         <User />
       </div>

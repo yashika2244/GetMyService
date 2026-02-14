@@ -5,7 +5,6 @@ import { BsArrowRight } from "react-icons/bs";
 import { FaUtensils, FaUserMd, FaHome } from "react-icons/fa";
 import star from "./../../assets/Star.png";
 
-/* Animation */
 const cardVariant = {
   hidden: { opacity: 0, y: 40 },
   show: {
@@ -67,9 +66,7 @@ const Beset_s_card = ({ service }) => {
         <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full flex items-center gap-1 shadow">
           <img src={star} alt="star" className="w-4 h-4" />
           <span className="text-sm font-semibold">{avgRating || 4.8}</span>
-          <span className="text-xs text-gray-500">
-            ({totalRating || 120})
-          </span>
+          <span className="text-xs text-gray-500">({totalRating || 120})</span>
         </div>
       </div>
 

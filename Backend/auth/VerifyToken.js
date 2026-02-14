@@ -1,4 +1,3 @@
-
 import jwt from "jsonwebtoken";
 import UserModels from "../Models/UserModels.js";
 import ServiceProviderModel from "../Models/ServiceProviderModel.js";
@@ -11,7 +10,9 @@ export const authenticate = async (req, res, next) => {
 
     // Check if token exists
     if (!authToken || !authToken.startsWith("Bearer ")) {
-      return res.status(401).json({ success: false, message: "No token, authorization denied" });
+      return res
+        .status(401)
+        .json({ success: false, message: "No token, authorization denied" });
     }
 
     // Extract the token from the "Bearer" header
@@ -23,12 +24,17 @@ export const authenticate = async (req, res, next) => {
     // Attach user information to the request object
     req.userId = decoded.id;
     req.role = decoded.role;
-    req.user = { _id: decoded.id, role: decoded.role }; // ✅ Add this li
+    req.user = { _id: decoded.id, role: decoded.role };
     next(); // Move to the next middleware or route
   } catch (err) {
     console.error(err.message);
     if (err.name === "TokenExpiredError") {
-      return res.status(401).json({ success: false, message: "Token expired, please log in again" });
+      return res
+        .status(401)
+        .json({
+          success: false,
+          message: "Token expired, please log in again",
+        });
     }
     res.status(500).json({ success: false, message: "Server error" });
   }
@@ -58,7 +64,9 @@ export const restrict = (roles) => async (req, res, next) => {
 
   // Check if the user's role is in the allowed roles list
   if (!roles.includes(user.role)) {
-    return res.status(401).json({ success: false, message: "You're not authorized" });
+    return res
+      .status(401)
+      .json({ success: false, message: "You're not authorized" });
   }
 
   next(); // Proceed to the next middleware or route

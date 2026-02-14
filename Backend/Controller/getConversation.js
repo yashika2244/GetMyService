@@ -1,8 +1,7 @@
-
-import mongoose from 'mongoose';
-import ConversationModel from '../Models/ConversationModel.js';
-import UserModels from '../Models/UserModels.js';
-import ServiceProviderModel from '../Models/ServiceProviderModel.js';
+import mongoose from "mongoose";
+import ConversationModel from "../Models/ConversationModel.js";
+import UserModels from "../Models/UserModels.js";
+import ServiceProviderModel from "../Models/ServiceProviderModel.js";
 
 export const getChatPartners = async (req, res) => {
   try {
@@ -16,13 +15,14 @@ export const getChatPartners = async (req, res) => {
 
     // Find conversations where user is a participant
     const conversations = await ConversationModel.find({
-      'participants.id': userObjectId
-    }).populate('messages').sort({ updatedAt: -1 })
-
+      "participants.id": userObjectId,
+    })
+      .populate("messages")
+      .sort({ updatedAt: -1 });
 
     const customerIds = [];
     const serviceProviderIds = [];
-    const lastMessageMap = {}; // userId (string) -> lastMessageAt timestamp
+    const lastMessageMap = {};
 
     conversations.forEach((conv) => {
       conv.participants.forEach((participant) => {
@@ -35,14 +35,12 @@ export const getChatPartners = async (req, res) => {
             serviceProviderIds.push(participantIdStr);
           }
 
-            
-
-          // Update lastMessageMap with the latest updatedAt timestamp per participant
           if (
             conv.updatedAt &&
             !isNaN(new Date(conv.updatedAt).getTime()) &&
             (!lastMessageMap[participantIdStr] ||
-              new Date(lastMessageMap[participantIdStr]) < new Date(conv.updatedAt))
+              new Date(lastMessageMap[participantIdStr]) <
+                new Date(conv.updatedAt))
           ) {
             lastMessageMap[participantIdStr] = conv.updatedAt;
           }
@@ -55,47 +53,46 @@ export const getChatPartners = async (req, res) => {
     const uniqueServiceProviderIds = [...new Set(serviceProviderIds)];
 
     // Fetch user data from DB
-    const customers = await UserModels.find({ _id: { $in: uniqueCustomerIds } });
-    const serviceProviders = await ServiceProviderModel.find({ _id: { $in: uniqueServiceProviderIds } });
+    const customers = await UserModels.find({
+      _id: { $in: uniqueCustomerIds },
+    });
+    const serviceProviders = await ServiceProviderModel.find({
+      _id: { $in: uniqueServiceProviderIds },
+    });
 
     // Add explicit role to each user object
-    const customersWithRole = customers.map(u => ({
+    const customersWithRole = customers.map((u) => ({
       ...u.toObject(),
-      role: 'customer'
+      role: "customer",
     }));
 
-    const serviceProvidersWithRole = serviceProviders.map(u => ({
+    const serviceProvidersWithRole = serviceProviders.map((u) => ({
       ...u.toObject(),
-      role: 'service-provider'
+      role: "service-provider",
     }));
 
     const combinedUsers = [...customersWithRole, ...serviceProvidersWithRole];
 
     // Attach lastMessageAt from lastMessageMap
-    const usersWithLastMessage = combinedUsers.map(user => ({
+    const usersWithLastMessage = combinedUsers.map((user) => ({
       ...user,
-      lastMessageAt: lastMessageMap[user._id.toString()] || null
+      lastMessageAt: lastMessageMap[user._id.toString()] || null,
     }));
 
     // Debug: check if any user missing lastMessageAt
-    usersWithLastMessage.forEach(user => {
+    usersWithLastMessage.forEach((user) => {
       if (!user.lastMessageAt) {
       }
     });
 
     // Sort: Customers first, then service providers; within role sort by latest message
     usersWithLastMessage.sort((a, b) => {
-  
-
       const aTime = a.lastMessageAt ? new Date(a.lastMessageAt).getTime() : 0;
       const bTime = b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0;
       return bTime - aTime;
     });
 
-
-
     res.status(200).json(usersWithLastMessage);
-
   } catch (err) {
     console.error("Error fetching chat partners", err);
     res.status(500).json({ error: "Failed to fetch chat users" });

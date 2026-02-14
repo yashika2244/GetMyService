@@ -10,7 +10,6 @@ export default function Contact() {
       <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-indigo-200/40 rounded-full blur-3xl" />
 
       <div className="relative max-w-6xl mx-auto ">
-          
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center ">
           {/* Form Card */}
           <motion.div
@@ -24,7 +23,8 @@ export default function Contact() {
               Contact Us
             </h2>
             <p className="text-gray-600 text-center mt-2 max-w-sm mx-auto text-sm">
-              Have a question or feedback? Fill the form and we’ll reach out soon.
+              Have a question or feedback? Fill the form and we’ll reach out
+              soon.
             </p>
 
             <form className="space-y-5 mt-6">
@@ -34,7 +34,10 @@ export default function Contact() {
                   Your Email
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                  <Mail
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    size={16}
+                  />
                   <input
                     type="email"
                     placeholder="you@example.com"
@@ -61,7 +64,10 @@ export default function Contact() {
                   Message
                 </label>
                 <div className="relative">
-                  <MessageSquare className="absolute left-3 top-3 text-gray-400" size={16} />
+                  <MessageSquare
+                    className="absolute left-3 top-3 text-gray-400"
+                    size={16}
+                  />
                   <textarea
                     rows={4}
                     placeholder="Write your message here..."

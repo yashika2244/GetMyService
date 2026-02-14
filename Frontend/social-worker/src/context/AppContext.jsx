@@ -46,8 +46,6 @@ const authReducer = (state, action) => {
     // };
     case "UPDATE_USER":
       return {
-        // ...state,
-        // user: action.payload,
         ...state,
         user: action.payload,
       };
@@ -65,10 +63,9 @@ export const useAccounts = () => useContext(accountsContext);
 export const AuthContextProvider = ({ children }) => {
   const [authState, dispatch] = useReducer(authReducer, initialAuthState);
 
-  const [onlineUsers, setOnlineUsers] = useState([])
-  
-  const [socket, setSocket] = useState(null)
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
+  const [socket, setSocket] = useState(null);
 
   const [chatUser, setChatUser] = useState(() => {
     const stored = localStorage.getItem("chatUser");
@@ -99,32 +96,29 @@ export const AuthContextProvider = ({ children }) => {
     }
   }, [chatUser]);
 
+  useEffect(() => {
+    setAccountsLoading(true);
+    setAccountsError(null);
 
-useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/api/services`, {
+          headers: { Authorization: `Bearer ${authState.token}` },
+        });
 
-  setAccountsLoading(true);
-  setAccountsError(null);
+        if (!res.ok) throw new Error("Failed to fetch accounts");
 
-  const fetchAccounts = async () => {
-    try {
-      const res = await fetch(`${BASE_URL}/api/services`, {
-        headers: { Authorization: `Bearer ${authState.token}` },
-      });
+        const data = await res.json();
+        setAccounts(data);
+      } catch (err) {
+        setAccountsError(err.message);
+      } finally {
+        setAccountsLoading(false);
+      }
+    };
 
-      if (!res.ok) throw new Error("Failed to fetch accounts");
-
-      const data = await res.json();
-      setAccounts(data);
-    } catch (err) {
-      setAccountsError(err.message);
-    } finally {
-      setAccountsLoading(false);
-    }
-  };
-
-  fetchAccounts();
-}, [authState.token]);
-
+    fetchAccounts();
+  }, [authState.token]);
 
   return (
     <authContext.Provider

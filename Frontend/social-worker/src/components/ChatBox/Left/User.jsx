@@ -11,7 +11,7 @@ function User() {
   const { user } = useAuth();
   const [chatList, setChatList] = useState([]);
 
-  /* ================= FETCH CHAT USERS ================= */
+  /*  FETCH CHAT USERS  */
   useEffect(() => {
     const fetchChatUsers = async () => {
       try {
@@ -35,7 +35,7 @@ function User() {
     if (user?._id) fetchChatUsers();
   }, [user]);
 
-  /* ================= FILTER + SORT USERS ================= */
+  /*  FILTER + SORT USERS  */
   const filteredUsers = useMemo(() => {
     const chatById = new Map(chatList.map((u) => [u._id, u]));
 
@@ -81,7 +81,7 @@ function User() {
     [chatList]
   );
 
-  /* ================= UI ================= */
+ 
   return (
     <div
       style={{ maxHeight: "72vh" }}

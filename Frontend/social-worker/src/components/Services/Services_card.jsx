@@ -8,9 +8,7 @@ const ServiceCard = () => {
 
   if (loading) {
     return (
-      <div className="text-center py-10 text-gray-600">
-        Loading services...
-      </div>
+      <div className="text-center py-10 text-gray-600">Loading services...</div>
     );
   }
 

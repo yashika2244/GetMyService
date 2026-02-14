@@ -47,15 +47,7 @@ const ReviewForm = ({ serviceProviderId, onReviewSubmitted }) => {
     <form onSubmit={submitReview} className="flex flex-col space-y-2 p-4 bg-white rounded shadow">
       <label className="flex items-center">
         <span className="mr-2">Rating:</span>
-        {/* <select
-          value={rating}
-          onChange={(e) => setRating(parseInt(e.target.value, 10))}
-          className="border rounded p-1"
-        >
-          {[1,2,3,4,5].map((n) => (
-            <option key={n} value={n}>{n} Star{n > 1 ? 's' : ''}</option>
-          ))}
-        </select> */}
+       
          {[1, 2, 3, 4, 5].map((star) => (
           <FaStar
             key={star}

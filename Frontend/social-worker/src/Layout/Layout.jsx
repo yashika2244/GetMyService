@@ -15,7 +15,6 @@ const Layout = () => {
         <Routers/>
      </main>
         {!shouldHideFooter && <Footer />}
-     {/* <Footer/> */}
     </div>
   )
 }

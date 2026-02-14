@@ -28,7 +28,7 @@ function Users({ user }) {
     }
   };
   const handleMouseDown = (e) => {
-    e.preventDefault(); // focus aane hi nahi dega
+    e.preventDefault();
   };
 
   return (

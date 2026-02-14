@@ -6,7 +6,6 @@ const About = () => {
   return (
     <section className="flex  py-12 px-4 bg-white">
       <div className="w-full max-w-[1300px] grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-
         {/* LEFT – IMAGE */}
         <div className="flex justify-center lg:justify-end">
           <img

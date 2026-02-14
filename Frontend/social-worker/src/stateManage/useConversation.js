@@ -14,7 +14,7 @@ const useConversation = create((set) => ({
 
   unreadCounts: {},
 
-  // 🔥 Unread increment karne ka function
+  // Unread increment karne ka function
   increaseUnreadCount: (userId) =>
     set((state) => ({
       unreadCounts: {
@@ -23,12 +23,12 @@ const useConversation = create((set) => ({
       },
     })),
 
-  // 🔥 Reset (clear) count without deleting key
+  //  Reset (clear) count without deleting key
   clearUnreadCount: (userId) =>
     set((state) => ({
       unreadCounts: {
         ...state.unreadCounts,
-        [userId]: 0, // 👈 Set to 0 instead of deleting
+        [userId]: 0, //  Set to 0 instead of deleting
       },
     })),
 }));

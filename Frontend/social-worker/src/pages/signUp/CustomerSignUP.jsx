@@ -64,7 +64,6 @@ function CustomerSignUp() {
       className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 via-white to-sky-100 md:px-4 md:py-18 py-15"
     >
       <div className="w-full max-w-8xl grid grid-cols-1 lg:grid-cols-2 overflow-hidden shadow-2xl bg-white rounded-sm">
-
         {/* LEFT IMAGE – FROM LEFT */}
         <motion.div
           initial={{ x: -120, opacity: 0 }}
@@ -119,10 +118,30 @@ function CustomerSignUp() {
           >
             {/* INPUTS */}
             {[
-              { icon: <FiUser />, name: "name", type: "text", placeholder: "Full Name" },
-              { icon: <FiMail />, name: "email", type: "email", placeholder: "Email Address" },
-              { icon: <FiLock />, name: "password", type: "password", placeholder: "Password" },
-              { icon: <FiMapPin />, name: "location", type: "text", placeholder: "Location" },
+              {
+                icon: <FiUser />,
+                name: "name",
+                type: "text",
+                placeholder: "Full Name",
+              },
+              {
+                icon: <FiMail />,
+                name: "email",
+                type: "email",
+                placeholder: "Email Address",
+              },
+              {
+                icon: <FiLock />,
+                name: "password",
+                type: "password",
+                placeholder: "Password",
+              },
+              {
+                icon: <FiMapPin />,
+                name: "location",
+                type: "text",
+                placeholder: "Location",
+              },
             ].map((field, i) => (
               <motion.div
                 key={i}

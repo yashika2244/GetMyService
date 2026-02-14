@@ -18,17 +18,15 @@ export const SocketProvider = ({ children }) => {
       const socket = io("https://serivce-2.onrender.com", {
         query: {
           userId: user._id,
-              role: user.role,
-
+          role: user.role,
         },
       });
       setSocket(socket);
 
-          socket.emit("addUser", user._id);
+      socket.emit("addUser", user._id);
 
       socket.on("getOnline", (users) => {
         setOnlineusers(users);
-
       });
       return () => socket.close();
     } else {

@@ -9,7 +9,6 @@ function AccountList({ selectedUser, setSelectedUser }) {
   const { accounts, loading, error } = useAccounts();
   const navigate = useNavigate();
   const location = useLocation();
-  // const user = location.state;
   const user =
     location.state || JSON.parse(localStorage.getItem("selectedUser"));
 
@@ -23,10 +22,10 @@ function AccountList({ selectedUser, setSelectedUser }) {
       try {
         const res = await fetch(`${BASE_URL}/api/conversations/`, {
           method: "GET",
-          credentials: "include", // important if you're using cookies
+          credentials: "include", 
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // If you're using JWT in header
+            Authorization: `Bearer ${token}`, 
           },
         });
 
@@ -45,37 +44,13 @@ function AccountList({ selectedUser, setSelectedUser }) {
     fetchChats();
   }, []);
 
-  // const handleNavigate = ({ ...conv.user, conversationId: conv._id }) => {
-  //   // User ko localStorage me save karo
-  //   localStorage.setItem("selectedUser", JSON.stringify({ ...conv.user, conversationId: conv._id }));
-  //   // localStorage.setItem("selectedUser", JSON.stringify(user));
-  //   console.log("user is ssdsdsdsd ", user);
 
-  //   // Fir navigate karo chat page pe
-  //   navigate("/msg", { state: user });
-  // };
   const handleNavigate = (userObj) => {
     localStorage.setItem("selectedUser", JSON.stringify(userObj));
     navigate("/msg", { state: userObj });
   };
 
-  // const handleNavigate = (account) => {
-  //   navigate("/msg", {
-  //     state: {
-  //       name: account.name || "Service Name Not Available",
-  //       photo:
-  //         account.photo ||
-  //         "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg",
-  //       id: account._id,
-  //       loc: account.location || "Location not available",
-  //       about: account.about || "No information available",
-  //       accounts: accounts,
-  //       rating: account.totalRating || "No rating",
-  //       experience: account.experience || "Experience not available",
-  //     } ,}
-  // console.log("acc", account);
 
-  // )}
   if (loading) return <div>Loading...</div>;
   if (error) return <div className="text-red-500">{error}</div>;
 
@@ -85,10 +60,8 @@ function AccountList({ selectedUser, setSelectedUser }) {
         {conversations.map((conv, i) => (
           <div
             key={conv.user._id}
-            // key={i}
             onClick={() => {
-              // setSelectedUser({ ...conv.user, conversationId: conv.user._id });
-              // setSelectedUser({ ...conv.user, conversationId: conv.user._id });
+      
               const userWithConvId = { ...conv.user, conversationId: conv._id };
               setSelectedUser(userWithConvId);
               handleNavigate(userWithConvId);
@@ -96,17 +69,10 @@ function AccountList({ selectedUser, setSelectedUser }) {
             className={` relative flex items-center gap-2 p-2 pl-4 rounded-md cursor-pointer max-sm:text-sm ${
               selectedUser?._id == conv.user._id && " bg-gray-100"
             }`}
-            // className="p-3 bg-white shadow rounded cursor-pointer hover:bg-gray-50"
-            // onClick={() => handleNavigate(conv.user)} // ✅ Add this line
-            //     onClick={() => {
-            // console.log("Clicked user:", conv.user);
-            // localStorage.setItem("selectedUser", JSON.stringify(conv.user));
-            // navigate("/msg");
-            // }}
+           
           >
             <div className="flex items-center gap-3">
               <img
-                // src={conv.user.photo || "/default-avatar.jpg"}
                 src={
                   conv.user?.photo ||
                   "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
@@ -116,7 +82,6 @@ function AccountList({ selectedUser, setSelectedUser }) {
               />
               <div>
                 <p
-                  // onClick={() => handleNavigate(conv.user)}
                   className="font-medium"
                 >
                   {conv.user?.name || "yashu"}

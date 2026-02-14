@@ -26,7 +26,6 @@ function ChatUser() {
 
   return (
     <div className="flex items-center gap-4 px-4 py-3 bg-white/80 backdrop-blur-xl border-b border-blue-100 shadow-sm">
-
       {/* BACK BUTTON (MOBILE) */}
       <FaArrowLeft
         className="md:hidden text-gray-600 text-lg cursor-pointer hover:text-blue-600 transition"

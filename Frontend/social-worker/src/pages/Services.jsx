@@ -5,7 +5,6 @@ import Loading from "../components/Loading";
 function Services() {
   const [loading, setLoading] = useState(true);
 
-  // fake delay / api simulation
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);

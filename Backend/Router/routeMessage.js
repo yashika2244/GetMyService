@@ -1,5 +1,4 @@
 import express from 'express'
-// import {  getMessage, sendMessages } from '../Controller/conrollerMessage.js';
 import { authenticate } from '../auth/VerifyToken.js';
 import {  sendMessages,getMessage} from '../Controller/conrollerMessage.js';
 const routeMessageRouter = express.Router();

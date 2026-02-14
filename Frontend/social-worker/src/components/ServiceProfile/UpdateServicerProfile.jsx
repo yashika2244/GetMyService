@@ -114,13 +114,9 @@ function UpdateServicerProfile() {
 
         {/* Header */}
         <div className="px-8 -mt-14 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-
           {/* Avatar */}
           <div className="flex items-center gap-5">
-            <motion.div
-              whileHover={{ scale: 1.03 }}
-              className="relative group"
-            >
+            <motion.div whileHover={{ scale: 1.03 }} className="relative group">
               <img
                 src={previewSrc || "https://via.placeholder.com/120"}
                 alt="profile"
@@ -134,7 +130,9 @@ function UpdateServicerProfile() {
             </motion.div>
 
             <div>
-              <h2 className="text-xl font-bold text-gray-800">{formData.name}</h2>
+              <h2 className="text-xl font-bold text-gray-800">
+                {formData.name}
+              </h2>
               <p className="text-gray-500 text-sm">{formData.email}</p>
             </div>
           </div>
@@ -167,23 +165,70 @@ function UpdateServicerProfile() {
             className="bg-gray-50 rounded-xl p-6 shadow-sm space-y-5"
           >
             <div className="grid md:grid-cols-2 gap-5">
-              <Input label="Full Name" name="name" value={formData.name} onChange={handleChange} icon={<FaUser />} />
-              <Input label="Age" type="number" name="age" value={formData.age} onChange={handleChange} />
+              <Input
+                label="Full Name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                icon={<FaUser />}
+              />
+              <Input
+                label="Age"
+                type="number"
+                name="age"
+                value={formData.age}
+                onChange={handleChange}
+              />
             </div>
 
             <div className="grid md:grid-cols-2 gap-5">
-              <Select label="Gender" name="gender" value={formData.gender} onChange={handleChange} />
-              <Input label="Location" name="location" value={formData.location} onChange={handleChange} icon={<FaMapMarkerAlt />} />
+              <Select
+                label="Gender"
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+              />
+              <Input
+                label="Location"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                icon={<FaMapMarkerAlt />}
+              />
             </div>
 
             <div className="grid md:grid-cols-2 gap-5">
-              <Input label="Specialization" name="specialization" value={formData.specialization} onChange={handleChange} icon={<FaBriefcase />} />
-              <Input label="Ticket Price" type="number" name="TicketPrice" value={formData.TicketPrice} onChange={handleChange} />
+              <Input
+                label="Specialization"
+                name="specialization"
+                value={formData.specialization}
+                onChange={handleChange}
+                icon={<FaBriefcase />}
+              />
+              <Input
+                label="Ticket Price"
+                type="number"
+                name="TicketPrice"
+                value={formData.TicketPrice}
+                onChange={handleChange}
+              />
             </div>
 
             <div className="grid md:grid-cols-2 gap-5">
-              <Input label="Start Date" type="date" name="expDateStart" value={formData.expDateStart} onChange={handleChange} />
-              <Input label="End Date" type="date" name="expDateEnd" value={formData.expDateEnd} onChange={handleChange} />
+              <Input
+                label="Start Date"
+                type="date"
+                name="expDateStart"
+                value={formData.expDateStart}
+                onChange={handleChange}
+              />
+              <Input
+                label="End Date"
+                type="date"
+                name="expDateEnd"
+                value={formData.expDateEnd}
+                onChange={handleChange}
+              />
             </div>
 
             <div>

@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useAccounts } from "../../context/AppContext";
@@ -35,7 +33,10 @@ const AllUserProfiles = () => {
 
   return (
     <section className="min-h-screen py-8 px-4 bg-gradient-to-r from-gray-50  mt-7 to-purple-100 flex flex-col items-center">
-      <button onClick={() => navigate(-1)} className="self-start mb-4 text-blue-600 flex items-center gap-1 hover:underline">
+      <button
+        onClick={() => navigate(-1)}
+        className="self-start mb-4 text-blue-600 flex items-center gap-1 hover:underline"
+      >
         <FaArrowLeft /> Back
       </button>
 
@@ -54,41 +55,57 @@ const AllUserProfiles = () => {
           </p>
           <div className="mt-4 flex gap-2">
             <button
-              onClick={() => { setSelcetedConversation(profile); navigate("/msg"); }}
+              onClick={() => {
+                setSelcetedConversation(profile);
+                navigate("/msg");
+              }}
               className="bg-blue-600 px-4 py-1 rounded-full text-white hover:bg-blue-700 text-sm"
             >
               Message
             </button>
           </div>
         </div>
-
       </div>
 
       <div className="mt-8 bg-white rounded-xl shadow-md w-full max-w-5xl p-4">
         <h3 className="text-lg font-bold mb-4">More Service Profiles</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {accounts.filter(p => p._id !== profile._id).map((p) => (
-            <div key={p._id} className="border border-gray-300 rounded-xl p-3 flex flex-col items-center hover:shadow-lg">
-              <img
-                src={p.photo || "https://via.placeholder.com/100"}
-                alt={p.name}
-                className="w-20 h-20 rounded-full object-cover"
-              />
-              <p
-                className="font-semibold mt-2 cursor-pointer hover:underline"
-                onClick={() => navigate(`/Service-profile/${p._id}`, { state: { id: p._id } })}
+          {accounts
+            .filter((p) => p._id !== profile._id)
+            .map((p) => (
+              <div
+                key={p._id}
+                className="border border-gray-300 rounded-xl p-3 flex flex-col items-center hover:shadow-lg"
               >
-                {p.name}
-              </p>
-              <p className="text-sm text-gray-500 text-center">{p.about || "No details"}</p>
-              <button
-                onClick={() => { setSelcetedConversation(p); navigate("/msg"); }}
-                className="mt-2 px-3 py-1 bg-purple-500 text-white text-xs rounded-full hover:bg-purple-600"
-              >
-                Message
-              </button>
-            </div>
-          ))}
+                <img
+                  src={p.photo || "https://via.placeholder.com/100"}
+                  alt={p.name}
+                  className="w-20 h-20 rounded-full object-cover"
+                />
+                <p
+                  className="font-semibold mt-2 cursor-pointer hover:underline"
+                  onClick={() =>
+                    navigate(`/Service-profile/${p._id}`, {
+                      state: { id: p._id },
+                    })
+                  }
+                >
+                  {p.name}
+                </p>
+                <p className="text-sm text-gray-500 text-center">
+                  {p.about || "No details"}
+                </p>
+                <button
+                  onClick={() => {
+                    setSelcetedConversation(p);
+                    navigate("/msg");
+                  }}
+                  className="mt-2 px-3 py-1 bg-purple-500 text-white text-xs rounded-full hover:bg-purple-600"
+                >
+                  Message
+                </button>
+              </div>
+            ))}
         </div>
       </div>
     </section>
