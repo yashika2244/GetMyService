@@ -1,270 +1,311 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAccounts } from "../../context/AppContext";
-import { BASE_URL } from "../../config";
-import useConversation from "../../stateManage/useConversation.js";
-import { toast } from "react-toastify";
-import { FaArrowLeft, FaLocationDot } from "react-icons/fa6";
-import { MdOutlineVerified, MdOutlineLogout } from "react-icons/md";
-import { FaUserEdit } from "react-icons/fa";
+import React, { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { useAuth, useAccounts } from "../../context/AppContext";
+import { BASE_URL } from "../../config";
+import ProfileSkeleton from "./components/ProfileSkeleton";
+import ProfileHeader from "./components/ProfileHeader";
+import ProfileStats from "./components/ProfileStats";
+import ProfileBioCard from "./components/ProfileBioCard";
+import ProfileDetailsCard from "./components/ProfileDetailsCard";
+import ActivityTimeline from "./components/ActivityTimeline";
+import ConnectedServices from "./components/ConnectedServices";
+import QuickActionsSidebar from "./components/QuickActionsSidebar";
+import EmptyState from "./components/EmptyState";
+import { AlertCircle, RefreshCw, Home } from "lucide-react";
 
 const UserProfile = () => {
-  const { accounts } = useAccounts();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { user: authUser, dispatch } = useAuth();
+  const { accounts = [], accountsLoading } = useAccounts();
+
   const [user, setUser] = useState(null);
   const [bio, setBio] = useState("");
-  const [editingBio, setEditingBio] = useState(false);
-  const navigate = useNavigate();
-  const { setSelcetedConversation } = useConversation();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [conversations, setConversations] = useState([]);
 
-  /* ---------------- SMOOTH MOTION CONFIG ---------------- */
+  // Determine if viewing own profile
+  const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+  const effectiveUserId = id || storedUser?._id || authUser?._id;
+  const isOwnProfile =
+    Boolean(effectiveUserId) &&
+    (effectiveUserId === storedUser?._id || effectiveUserId === authUser?._id);
 
-  const smoothSpring = {
-    type: "spring",
-    stiffness: 70,
-    damping: 18,
-    mass: 0.6,
-  };
+  /* ---------------- FETCH USER PROFILE ---------------- */
+  const fetchUserProfile = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-  const fadeUp = {
-    hidden: { opacity: 0, y: 18, scale: 0.98 },
-    show: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: smoothSpring,
-    },
-  };
+    try {
+      // 1. Check local storage / context for instant loading if it's the current user
+      if (
+        storedUser &&
+        (!effectiveUserId || storedUser._id === effectiveUserId)
+      ) {
+        setUser(storedUser);
+        setBio(storedUser.bio || "");
+      }
 
-  const containerStagger = {
-    hidden: {},
-    show: {
-      transition: {
-        staggerChildren: 0.06,
-        delayChildren: 0.05,
-      },
-    },
-  };
+      // 2. Fetch from backend API
+      const token = localStorage.getItem("token");
+      const apiUrl = `${BASE_URL || "http://localhost:5000"}/api/users/${effectiveUserId}`;
 
-  /* ---------------- LOAD USER ---------------- */
+      const res = await fetch(apiUrl, {
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
 
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      setUser(storedUser);
-      setBio(storedUser.bio || "");
+      if (res.ok) {
+        const data = await res.json();
+        const fetchedUser = data.user || data;
+        setUser(fetchedUser);
+        setBio(fetchedUser.bio || storedUser?.bio || "");
+
+        // If it's the active logged-in user, keep local storage in sync
+        if (isOwnProfile) {
+          const merged = { ...storedUser, ...fetchedUser };
+          localStorage.setItem("user", JSON.stringify(merged));
+          if (dispatch) {
+            dispatch({ type: "UPDATE_USER", payload: merged });
+          }
+        }
+      } else if (!user && !storedUser) {
+        // If fetch failed and no local fallback
+        throw new Error("Unable to locate user profile");
+      }
+    } catch (err) {
+      console.error("Error loading user profile:", err);
+      // If we don't already have local user data, set error
+      if (!user && !storedUser) {
+        setError(err.message || "Failed to load profile");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [effectiveUserId, isOwnProfile, dispatch]);
+
+  /* ---------------- FETCH USER CONVERSATIONS (REAL ACTIVITY) ---------------- */
+  const fetchConversations = useCallback(async (userId, role) => {
+    if (!userId) return;
+    try {
+      const token = localStorage.getItem("token");
+      const userRole = role || "customer";
+      const res = await fetch(
+        `${BASE_URL || "http://localhost:5000"}/api/chat/chat-users/${userId}/${userRole}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setConversations(data);
+        }
+      }
+    } catch (err) {
+      console.warn("Could not fetch user conversations:", err);
     }
   }, []);
 
-  /* ---------------- LOGOUT ---------------- */
+  useEffect(() => {
+    fetchUserProfile();
+  }, [fetchUserProfile]);
 
-  const logoutHandler = async () => {
+  useEffect(() => {
+    if (user?._id) {
+      fetchConversations(user._id, user.role);
+    }
+  }, [user?._id, user?.role, fetchConversations]);
+
+  /* ---------------- SAVE BIO (PRESERVES EXISTING FEATURE) ---------------- */
+  const handleSaveBio = (newBio) => {
+    setBio(newBio);
+    const updated = { ...user, bio: newBio };
+    setUser(updated);
+    localStorage.setItem("user", JSON.stringify(updated));
+    if (dispatch) {
+      dispatch({ type: "UPDATE_USER", payload: updated });
+    }
+    toast.success("Bio updated successfully!");
+  };
+
+  /* ---------------- LOGOUT HANDLER (PRESERVES EXISTING FEATURE) ---------------- */
+  const handleLogout = async () => {
     try {
-      const res = await fetch(`${BASE_URL}/api/auth/logout`, {
+      const res = await fetch(`${BASE_URL || "http://localhost:5000"}/api/auth/logout`, {
         method: "POST",
         credentials: "include",
       });
       if (res.ok) {
+        if (dispatch) dispatch({ type: "LOGOUT" });
         localStorage.clear();
-        window.location.href = "/";
         toast.success("Logged out successfully");
-      } else toast.error("Logout failed");
-    } catch {
+        navigate("/");
+      } else {
+        toast.error("Logout failed. Please try again.");
+      }
+    } catch (err) {
       toast.error("Error during logout");
     }
   };
 
-  /* ---------------- SAVE BIO ---------------- */
-
-  const saveBio = () => {
-    setUser((prev) => ({ ...prev, bio }));
-    localStorage.setItem("user", JSON.stringify({ ...user, bio }));
-    setEditingBio(false);
-    toast.success("Bio updated");
+  /* ---------------- COMPUTE STATS & MILESTONES ---------------- */
+  // Member since calculation from MongoDB ObjectId
+  const getMemberSince = (userId) => {
+    if (!userId || typeof userId !== "string" || userId.length < 8)
+      return "Active Member";
+    try {
+      const timestamp = parseInt(userId.substring(0, 8), 16) * 1000;
+      const date = new Date(timestamp);
+      if (isNaN(date.getTime())) return "Active Member";
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        year: "numeric",
+      });
+    } catch {
+      return "Active Member";
+    }
   };
 
-  if (!user)
+  // Profile completion meter
+  const calculateCompletion = (u, currentBio) => {
+    if (!u) return 0;
+    const checks = [
+      Boolean(u.name),
+      Boolean(u.email),
+      Boolean(u.photo),
+      Boolean(u.phone),
+      Boolean(u.location),
+      Boolean(u.age),
+      Boolean(u.gender),
+      Boolean(currentBio && currentBio.trim().length > 0),
+    ];
+    const completed = checks.filter(Boolean).length;
+    return Math.round((completed / checks.length) * 100);
+  };
+
+  const memberSince = getMemberSince(user?._id);
+  const completionPercentage = calculateCompletion(user, bio);
+
+  /* ---------------- LOADING STATE ---------------- */
+  if (loading && !user) {
+    return <ProfileSkeleton />;
+  }
+
+  /* ---------------- ERROR STATE ---------------- */
+  if (error && !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
+      <div className="min-h-screen bg-[#F8FAFC] pt-24 pb-16 px-4 flex items-center justify-center">
+        <div className="max-w-md w-full bg-white p-8 rounded-2xl border border-[#E2E8F0] shadow-sm text-center">
+          <div className="w-14 h-14 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center mx-auto mb-4">
+            <AlertCircle className="w-7 h-7" />
+          </div>
+          <h2 className="text-xl font-bold text-[#071A33] mb-2">
+            Profile Unavailable
+          </h2>
+          <p className="text-sm text-slate-500 mb-6 leading-relaxed">
+            {error || "We could not find the requested user profile. It may have been removed or is temporarily unreachable."}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              onClick={fetchUserProfile}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#1769FF] hover:bg-[#1255d4] text-white text-sm font-semibold transition"
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span>Retry</span>
+            </button>
+            <button
+              onClick={() => navigate("/")}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-[#E2E8F0] hover:bg-slate-50 text-slate-700 text-sm font-semibold transition"
+            >
+              <Home className="w-4 h-4" />
+              <span>Return Home</span>
+            </button>
+          </div>
+        </div>
       </div>
     );
+  }
 
+  /* ---------------- MAIN DASHBOARD RENDER ---------------- */
   return (
-    <motion.section
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-100"
+      transition={{ duration: 0.35 }}
+      className="min-h-screen bg-[#F8FAFC] pt-20 pb-16"
     >
-      {/* HEADER */}
-      <motion.div
-        initial={{ y: -30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={smoothSpring}
-        className="h-44 bg-gradient-to-r from-blue-100 to-blue-200 relative"
-      >
-        <button
-          onClick={() => navigate(-1)}
-          className="absolute top-4 left-4 text-gray-700 flex items-center gap-2"
-        >
-          <FaArrowLeft /> Back
-        </button>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* 1. PROFILE HEADER / COVER */}
+        <ProfileHeader
+          user={user}
+          isOwnProfile={isOwnProfile}
+          onLogout={handleLogout}
+          memberSince={memberSince}
+        />
 
-        {/* PROFILE IMAGE */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={smoothSpring}
-          className="absolute left-1/2 -translate-x-1/2 bottom-[-60px]"
-        >
-          <img
-            src={user.photo || "https://via.placeholder.com/150"}
-            className="w-32 h-32 rounded-full border-4 border-white shadow object-cover"
-            alt="User"
-          />
-        </motion.div>
-      </motion.div>
+        {/* 2. REAL METRIC STATS */}
+        <ProfileStats
+          completionPercentage={completionPercentage}
+          activeChatsCount={conversations.length}
+          availableProvidersCount={accounts.length}
+          userRole={user?.role}
+        />
 
-      {/* PROFILE INFO */}
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        animate="show"
-        className="max-w-3xl mx-auto mt-20 text-center px-4"
-      >
-        <h2 className="text-2xl font-semibold flex justify-center items-center gap-2 text-gray-800">
-          {user.name}
-          <MdOutlineVerified className="text-blue-600" />
-        </h2>
-
-        <p className="text-gray-500 text-sm flex justify-center items-center gap-1 mt-1">
-          <FaLocationDot /> {user.location || "No location"}
-        </p>
-
-        <div className="flex justify-center gap-3 mt-4">
-          <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => navigate(`/update_user/${user._id}`)}
-            className="px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 shadow"
-          >
-            <FaUserEdit className="inline mr-1" /> Edit
-          </motion.button>
-
-          <motion.button
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={logoutHandler}
-            className="px-4 py-2 rounded-xl bg-red-500 text-white hover:bg-red-600 shadow"
-          >
-            <MdOutlineLogout className="inline mr-1" /> Logout
-          </motion.button>
-        </div>
-      </motion.div>
-
-      {/* ABOUT */}
-      <motion.div
-        variants={fadeUp}
-        initial="hidden"
-        animate="show"
-        className="max-w-3xl mx-auto mt-6 bg-white rounded-2xl shadow p-6"
-      >
-        <h3 className="text-lg font-semibold text-blue-700 mb-2">About</h3>
-
-        {editingBio ? (
-          <>
-            <textarea
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-              className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-400"
-              rows="4"
+        {/* 3. RESPONSIVE DASHBOARD GRID */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* MAIN CONTENT COLUMN (Left 2 cols on desktop) */}
+          <div className="lg:col-span-2 space-y-2">
+            {/* Bio & Summary Card */}
+            <ProfileBioCard
+              bio={bio}
+              onSaveBio={handleSaveBio}
+              isOwnProfile={isOwnProfile}
+              user={user}
             />
 
-            <div className="flex gap-3 mt-3">
-              <button
-                onClick={() => setEditingBio(false)}
-                className="px-4 py-1 bg-gray-100 rounded"
-              >
-                Cancel
-              </button>
+            {/* Account Details 2-Column Grid Card */}
+            <ProfileDetailsCard
+              user={user}
+              memberSince={memberSince}
+            />
 
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                onClick={saveBio}
-                className="px-4 py-1 bg-blue-600 text-white rounded"
-              >
-                Save
-              </motion.button>
-            </div>
-          </>
-        ) : (
-          <>
-            <p className="text-gray-600">{bio || "No bio added yet."}</p>
-            <button
-              onClick={() => setEditingBio(true)}
-              className="text-blue-600 mt-2 hover:underline"
-            >
-              Edit Bio
-            </button>
-          </>
-        )}
-      </motion.div>
+            {/* Recent Activity Timeline Feed */}
+            <ActivityTimeline
+              conversations={conversations}
+              memberSince={memberSince}
+              userName={user?.name}
+            />
 
-      {/* SERVICE PROFILES */}
-      <div className="max-w-5xl mx-auto mt-8 px-4 pb-10">
-        <h3 className="text-xl font-semibold text-blue-700 mb-4 text-center">
-          More Service Profiles
-        </h3>
+            {/* Connected Specialists Directory & Quick Message */}
+            <ConnectedServices
+              accounts={accounts}
+              conversations={conversations}
+              currentUserId={user?._id}
+            />
+          </div>
 
-        <motion.div
-          variants={containerStagger}
-          initial="hidden"
-          animate="show"
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5"
-        >
-          {accounts
-            .filter((p) => p._id !== user._id)
-            .map((p) => (
-              <motion.div
-                key={p._id}
-                variants={fadeUp}
-                whileHover={{ y: -5, scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                className="bg-white rounded-2xl shadow p-4 text-center hover:shadow-lg transition"
-              >
-                <img
-                  src={p.photo || "https://via.placeholder.com/100"}
-                  className="w-20 h-20 rounded-full mx-auto object-cover"
-                  alt={p.name}
-                />
-
-                <p
-                  onClick={() => navigate(`/Service-profile/${p._id}`)}
-                  className="mt-2 font-medium cursor-pointer hover:text-blue-600"
-                >
-                  {p.name}
-                </p>
-
-                <p className="text-xs text-gray-500 mt-1 line-clamp-2">
-                  {p.about || "No details"}
-                </p>
-
-                <motion.button
-                  whileTap={{ scale: 0.96 }}
-                  onClick={() => {
-                    setSelcetedConversation(p);
-                    navigate("/msg");
-                  }}
-                  className="mt-3 px-4 py-1 bg-blue-600 text-white rounded-full hover:bg-blue-700"
-                >
-                  Message
-                </motion.button>
-              </motion.div>
-            ))}
-        </motion.div>
+          {/* SIDEBAR COLUMN (Right 1 col on desktop) */}
+          <div className="space-y-6">
+            <QuickActionsSidebar
+              user={user}
+              isOwnProfile={isOwnProfile}
+              onLogout={handleLogout}
+              completionPercentage={completionPercentage}
+            />
+          </div>
+        </div>
       </div>
-    </motion.section>
+    </motion.div>
   );
 };
 

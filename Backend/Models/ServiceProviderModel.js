@@ -55,6 +55,14 @@ const ServiceProviderSchema = new mongoose.Schema({
         enum: ["pending", "approved", "cancelled"],
         default: "pending",
       },
+      TicketPrice: {
+        type: Number,
+        default: 50,
+      },
+      consultationFee: {
+        type: Number,
+        default: 50,
+      },
 
 })
 export default mongoose.model("Service-provider", ServiceProviderSchema );

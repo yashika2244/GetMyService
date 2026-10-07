@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./AppContext";
 import io from "socket.io-client";
+import { BASE_URL } from "../config";
 
 const socketContext = createContext();
 
@@ -15,7 +16,7 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (user && user._id) {
-      const socket = io("https://serivce-2.onrender.com", {
+      const socket = io(BASE_URL || "http://localhost:5000", {
         query: {
           userId: user._id,
           role: user.role,

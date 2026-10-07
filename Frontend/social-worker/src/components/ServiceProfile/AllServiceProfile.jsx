@@ -1,202 +1,193 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAccounts } from "../../context/AppContext";
-import useConversation from "../../stateManage/useConversation";
 import { motion } from "framer-motion";
+import { useAccounts, useAuth } from "../../context/AppContext";
+import useConversation from "../../stateManage/useConversation";
+import { BASE_URL } from "../../config";
+
+// Modular Subcomponents
+import ServiceBreadcrumb from "./serviceDetails/ServiceBreadcrumb";
+import ServiceHero from "./serviceDetails/ServiceHero";
+import ServiceInfoDetails from "./serviceDetails/ServiceInfoDetails";
+import ServiceDescription from "./serviceDetails/ServiceDescription";
+import ServicerProfileCard from "./serviceDetails/ServicerProfileCard";
+import ServiceReviewsSection from "./serviceDetails/ServiceReviewsSection";
+import RelatedServicesSection from "./serviceDetails/RelatedServicesSection";
+import ServiceDetailsSkeleton from "./serviceDetails/ServiceDetailsSkeleton";
+import { AlertCircle, RefreshCw, Home } from "lucide-react";
 
 const AllServiceProfile = () => {
-  const { accounts } = useAccounts();
   const { id } = useParams();
   const navigate = useNavigate();
+  const { accounts = [] } = useAccounts();
+  const { user: authUser } = useAuth();
   const { setSelcetedConversation } = useConversation();
+
   const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const isOwnProfile = Boolean(authUser?._id && authUser._id === id);
+
+  /* ---------------- 1. FETCH SERVICE DATA (API + CACHE) ---------------- */
+  const fetchServiceProfile = useCallback(async () => {
+    if (!id) {
+      setError("No service identifier provided.");
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // 1. Check local accounts context for instant presentation
+      const cached = accounts.find((acc) => acc._id === id);
+      if (cached) {
+        setProfile(cached);
+      }
+
+      // 2. Fetch fresh service data directly from backend
+      const res = await fetch(`${BASE_URL}/api/services/${id}`);
+
+      if (!res.ok) {
+        if (res.status === 404) {
+          throw new Error("Service Not Found. This listing may have been moved or removed.");
+        }
+        throw new Error("Failed to load service profile.");
+      }
+
+      const data = await res.json();
+      const serviceData = data.service || data.user || data;
+
+      if (serviceData) {
+        setProfile(serviceData);
+      } else if (!cached) {
+        throw new Error("Service data unavailable.");
+      }
+    } catch (err) {
+      console.error("Error loading service details:", err);
+      if (!profile) {
+        setError(err.message || "Failed to load service listing.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [id, accounts]);
 
   useEffect(() => {
-    const user = accounts.find((acc) => acc._id === id);
-    setProfile(user);
-  }, [accounts, id]);
+    fetchServiceProfile();
+  }, [fetchServiceProfile]);
 
-  if (!profile) {
+  /* ---------------- 2. PRIMARY ACTION: BOOK & MESSAGE ---------------- */
+  const handleMessage = () => {
+    if (!profile) return;
+    setSelcetedConversation(profile);
+    navigate("/msg");
+  };
+
+  /* ---------------- 3. CALCULATE REAL EXPERIENCE ---------------- */
+  const totalExperience = profile?.experience
+    ?.reduce((sum, exp) => {
+      if (!exp.startdate || !exp.enddate) return sum;
+      const start = new Date(exp.startdate);
+      const end = new Date(exp.enddate);
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) return sum;
+      return sum + Math.abs(end - start) / (1000 * 60 * 60 * 24 * 365);
+    }, 0)
+    ?.toFixed(1) || "0.0";
+
+  /* ---------------- 4. RENDER LOADING ---------------- */
+  if (loading && !profile) {
+    return <ServiceDetailsSkeleton />;
+  }
+
+  /* ---------------- 5. RENDER ERROR / NOT FOUND ---------------- */
+  if (error && !profile) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-400 text-lg animate-pulse">
-          Fetching profile data...
-        </p>
+      <div className="min-h-screen bg-[#F8FAFC] pt-28 pb-16 px-4 flex items-center justify-center">
+        <div className="max-w-md w-full bg-white p-8 rounded-3xl border border-[#E2E8F0] shadow-sm text-center">
+          <div className="w-14 h-14 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center mx-auto mb-4">
+            <AlertCircle className="w-7 h-7" />
+          </div>
+          <h2 className="text-xl font-bold text-[#0F172A] mb-2">
+            Service Unavailable
+          </h2>
+          <p className="text-sm text-slate-500 mb-6 leading-relaxed">
+            {error || "Unable to locate this service listing."}
+          </p>
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={fetchServiceProfile}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition cursor-pointer"
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span>Retry</span>
+            </button>
+            <button
+              onClick={() => navigate("/services")}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition cursor-pointer"
+            >
+              <Home className="w-4 h-4" />
+              <span>Browse Services</span>
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
-  const { name, photo, about, location, experience } = profile;
+  const primaryCategory = profile?.specialization?.[0] || "Services";
 
-  const totalExperience = experience
-    ?.reduce((sum, exp) => {
-      const start = new Date(exp.startdate);
-      const end = new Date(exp.enddate);
-      return sum + Math.abs(end - start) / (1000 * 60 * 60 * 24 * 365);
-    }, 0)
-    .toFixed(1);
-
-  /* ---------- Smooth Motion Settings ---------- */
-
-  const smooth = {
-    type: "spring",
-    stiffness: 60,
-    damping: 18,
-    mass: 0.6,
-  };
-
-  const fade = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    transition: { duration: 0.6, ease: "easeOut" },
-  };
-
-  const slideUp = {
-    initial: { opacity: 0, y: 18 },
-    animate: { opacity: 1, y: 0 },
-    transition: smooth,
-  };
-
-  const staggerParent = {
-    hidden: {},
-    show: {
-      transition: { staggerChildren: 0.06 },
-    },
-  };
-
-  const staggerChild = {
-    hidden: { opacity: 0, y: 14 },
-    show: { opacity: 1, y: 0, transition: smooth },
-  };
-
+  /* ---------------- 6. MAIN SERVICE PROFILE RENDER ---------------- */
   return (
     <motion.div
-      {...fade}
-      className="min-h-screen bg-gray-100 py-8 px-3 flex flex-col items-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="min-h-screen bg-[#F8FAFC] pt-24 pb-16"
     >
-      {/* Back Button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="w-full max-w-6xl mb-4 text-sm text-blue-600 hover:underline"
-      >
-        ← Back
-      </button>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* 1. Breadcrumb Navigation */}
+        <ServiceBreadcrumb
+          category={primaryCategory}
+          serviceName={profile.name}
+        />
 
-      <div className="w-full max-w-6xl grid md:grid-cols-3 gap-6">
-        {/* ---------- LEFT PANEL ---------- */}
-        <motion.div
-          {...slideUp}
-          whileHover={{ y: -2 }}
-          transition={smooth}
-          className="bg-white rounded-xl p-6 shadow-sm flex flex-col items-center text-center"
-        >
-          <motion.img
-            src={photo || "https://via.placeholder.com/150"}
-            alt="Profile"
-            className="w-32 h-32 rounded-full object-cover shadow-sm"
-            whileHover={{ scale: 1.03 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-          />
+        {/* 2. Main Service Hero (2-Column Hero: Left Gallery, Right Details & CTA) */}
+        <ServiceHero
+          profile={profile}
+          onMessage={handleMessage}
+          isOwnProfile={isOwnProfile}
+        />
 
-          <h2 className="mt-3 text-lg font-semibold text-gray-800">{name}</h2>
+        {/* 3. Service Information & Specifications */}
+        <ServiceInfoDetails
+          profile={profile}
+          totalExperience={totalExperience}
+        />
 
-          <p className="text-sm text-gray-500 mt-1">
-            {location || "Location not specified"}
-          </p>
+        {/* 4. Service Description & Guarantees */}
+        <ServiceDescription
+          about={profile.about || profile.bio}
+          serviceName={profile.name}
+        />
 
-          <div className="mt-3">
-            <p className="text-xs text-gray-500">Experience</p>
-            <p className="font-semibold text-gray-700">
-              {totalExperience} Years
-            </p>
-          </div>
+        {/* 5. Servicer Card */}
+        <ServicerProfileCard
+          profile={profile}
+          totalExperience={totalExperience}
+          onMessage={handleMessage}
+        />
 
-          <motion.button
-            whileTap={{ scale: 0.97 }}
-            transition={{ duration: 0.15 }}
-            onClick={() => {
-              setSelcetedConversation(profile);
-              navigate("/msg");
-            }}
-            className="mt-4 w-full py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700"
-          >
-            Message {name}
-          </motion.button>
-        </motion.div>
+        {/* 6. Ratings & Reviews Section */}
+        <ServiceReviewsSection profile={profile} />
 
-        {/* ---------- RIGHT PANEL ---------- */}
-        <motion.div
-          {...slideUp}
-          transition={{ ...smooth, delay: 0.05 }}
-          className="md:col-span-2 bg-white rounded-xl p-6 shadow-sm"
-        >
-          <h3 className="text-lg font-semibold text-gray-800 mb-3">
-            About Professional
-          </h3>
-
-          <p className="text-sm text-gray-600 leading-relaxed">
-            {about || "No about information provided."}
-          </p>
-
-          <div className="my-6 h-[1px] bg-gray-200 rounded"></div>
-
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">
-            Similar Professionals
-          </h3>
-
-          <motion.div
-            variants={staggerParent}
-            initial="hidden"
-            animate="show"
-            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"
-          >
-            {accounts
-              .filter((user) => user._id !== id)
-              .map((user) => (
-                <motion.div
-                  key={user._id}
-                  variants={staggerChild}
-                  whileHover={{ y: -2 }}
-                  className="bg-gray-50 rounded-lg p-3"
-                >
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={user.photo || "https://via.placeholder.com/100"}
-                      alt={user.name}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
-
-                    <div>
-                      <p
-                        onClick={() =>
-                          navigate(`/Service-profile/${user._id}`)
-                        }
-                        className="text-sm font-semibold cursor-pointer hover:text-blue-600"
-                      >
-                        {user.name}
-                      </p>
-
-                      <p className="text-xs text-gray-500 line-clamp-1">
-                        {user.about || "No details"}
-                      </p>
-                    </div>
-                  </div>
-
-                  <motion.button
-                    whileTap={{ scale: 0.97 }}
-                    transition={{ duration: 0.15 }}
-                    onClick={() => {
-                      setSelcetedConversation(user);
-                      navigate("/msg");
-                    }}
-                    className="mt-2 w-full py-1.5 text-xs bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                  >
-                    Message
-                  </motion.button>
-                </motion.div>
-              ))}
-          </motion.div>
-        </motion.div>
+        {/* 7. Related Verified Professionals */}
+        <RelatedServicesSection
+          accounts={accounts}
+          currentServiceId={id}
+        />
       </div>
     </motion.div>
   );

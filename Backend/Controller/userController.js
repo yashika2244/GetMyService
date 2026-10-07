@@ -9,22 +9,32 @@ const generateToken = (user) => {
 
 export const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { name, email, photo, gender, age, location } = req.body;
+  const { name, email, photo, gender, age, location, phone, bio } = req.body;
   // Prepare the updates object
   const updates = {};
   if (name) updates.name = name;
   if (email) updates.email = email;
   if (gender) updates.gender = gender;
   if (age) updates.age = age;
-  if (photo) updates.photo = photo;
+  if (photo !== undefined) updates.photo = photo;
   if (location) updates.location = location;
+  if (phone !== undefined) updates.phone = phone;
+  if (bio !== undefined) updates.bio = bio;
 
   try {
-    const updatedUser = await UserModels.findByIdAndUpdate(
+    let updatedUser = await UserModels.findByIdAndUpdate(
       id,
       { $set: updates },
       { new: true },
     );
+
+    if (!updatedUser) {
+      updatedUser = await ServiceProviderModel.findByIdAndUpdate(
+        id,
+        { $set: updates },
+        { new: true },
+      );
+    }
 
     if (!updatedUser) {
       return res.status(404).json({
@@ -62,5 +72,21 @@ export const getAllUSersPorfile = async (req, res) => {
     console.log(error);
 
     res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const getUserById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let user = await UserModels.findById(id).select("-password");
+    if (!user) {
+      user = await ServiceProviderModel.findById(id).select("-password");
+    }
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };

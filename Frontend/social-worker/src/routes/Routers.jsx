@@ -2,11 +2,11 @@ import React from "react";
 import Home from "../pages/Home";
 import Contact from "../pages/Contact";
 import Services from "../pages/Services";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import About from "../components/About/About";
 import Login from "../pages/Login";
 import SignUp from "../pages/signUp/CustomerSignUP";
-import FindService from "../pages/FindService";
+import HowItWorks from "../pages/HowItWorks";
 import AllServiceProfile from "../components/ServiceProfile/AllServiceProfile";
 import UserProfile from "../components/UserProfile/UserProfile";
 import RollSelection from "../components/RollSelection/RollSelection";
@@ -28,13 +28,23 @@ const Routers = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/services" element={<Services />} />
+        <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
-        <Route path="/find-Service" element={<FindService />} />
+        <Route path="/find-Service" element={<Navigate to="/how-it-works" replace />} />
+        <Route path="/find-service" element={<Navigate to="/how-it-works" replace />} />
         <Route path="/user-profile/:id" element={<UserProfile />} />
         <Route path="/users-profile/:id" element={<AllUserProfiles />} />
         <Route
           path="/Service-profile/:id"
+          element={
+            <ProtectedRoute>
+              <AllServiceProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/service-profile/:id"
           element={
             <ProtectedRoute>
               <AllServiceProfile />

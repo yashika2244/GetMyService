@@ -7,6 +7,7 @@ export const updateService = async (req, res) => {
   const {
     name,
     email,
+    phone,
     photo,
     gender,
     age,
@@ -15,6 +16,8 @@ export const updateService = async (req, res) => {
     about,
     specialization,
     location,
+    timeSlots,
+    isApproved,
     expDateStart,
     expDateEnd,
   } = req.body;
@@ -25,7 +28,6 @@ export const updateService = async (req, res) => {
       req.body,
       { new: true },
     );
-    // res.status(200).json({ success: true, user: service });
     if (!service) {
       return res
         .status(404)
@@ -34,18 +36,21 @@ export const updateService = async (req, res) => {
 
     if (name) service.name = name;
     if (email) service.email = email;
+    if (phone !== undefined) service.phone = phone;
     if (gender) service.gender = gender;
     if (age) service.age = age;
     if (photo) service.photo = photo;
-    if (TicketPrice) service.TicketPrice = TicketPrice;
+    if (location) service.location = location;
+    if (TicketPrice !== undefined) service.TicketPrice = TicketPrice;
     if (specialization) service.specialization = specialization;
-    if (bio) service.bio = bio;
-    if (about) service.about = about;
+    if (timeSlots) service.timeSlots = timeSlots;
+    if (bio !== undefined) service.bio = bio;
+    if (about !== undefined) service.about = about;
+    if (isApproved) service.isApproved = isApproved;
 
-    if (location || expDateStart || expDateEnd) {
+    if (expDateStart || expDateEnd) {
       service.experience.push({
-        // role: exprole,
-        location,
+        location: location || service.location,
         startdate: expDateStart,
         enddate: expDateEnd,
       });

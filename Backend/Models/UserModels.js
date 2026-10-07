@@ -24,6 +24,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  bio: {
+    type: String,
+  },
 });
 
 export default mongoose.model("User", UserSchema);
